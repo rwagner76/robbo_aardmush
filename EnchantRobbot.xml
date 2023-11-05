@@ -855,7 +855,9 @@ end
 
 function doItemSort(name, line, wildcards)
    sortTotal = wildcards[1]
-   if type(sortTotal) ~= "number" then sortTotal = 1 end
+   if tonumber(sortTotal) == nil then
+      sortTotal = 1
+   end
    local delay = 0.2
    for x = 1,sortTotal do
       DoAfterSpecial(delay,"identify "..x.."."..sortKeyword,0)
@@ -871,11 +873,9 @@ function recordScore(name, line, wildcards)
    -- Set ID,score key/value pair
    sortCount = sortCount + 1
    identifiedItems[sortCount] = { id = sortID, score = tonumber(wildcards[1]) }
-   --Note("Count: "..sortCount.." of "..sortTotal)
    if tonumber(sortTotal) == sortCount then
       --sort ascending by score
       table.sort(identifiedItems, function(a,b) return a.score < b.score end)
-      Note("Sorted...")
       local delay = 0.2
       for i,item in ipairs(identifiedItems) do
          DoAfterSpecial(delay,"put "..item.id.." "..sortBag,0)
