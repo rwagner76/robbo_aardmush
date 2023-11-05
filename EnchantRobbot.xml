@@ -252,7 +252,7 @@ This plugin is to allow for one-command enchanting of items, sorting items into 
   <trigger
    name="grabItemSingle"
    enabled="n"
-   match="^You get (\D) \* .+.$"
+   match="^You get (\D).+.$"
    script="doItemSort"
    regexp="y"
    sequence="100"
