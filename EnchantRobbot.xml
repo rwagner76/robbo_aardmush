@@ -921,9 +921,11 @@ function sortEqSet(name, line, wildcards)
    -- Sort full set in a bag
    sortPrefix = wildcards[1]
    sortBag = wildcards[2]
-   -- Reset our list of items to sort
-   sortWearables = uniqueWearables
-   Note("sort count:"..#sortWearables.." unique count: "..#uniqueWearables)
+   -- Reset our list of items to sort -- Lua sucks and can't clone a list
+   sortWearables = {}
+   for i,w in ipairs(uniqueWearables) do
+      table.insert(sortWearables,w)
+   end
    sortNextWearable()
 end
 
