@@ -6,7 +6,7 @@ Robbo's Enchantbot is a script to improve the quality of life for Enchanters on 
 - Enchant an item from a shopkeeper one at a time, but use some logic to determine if the item should be kept or tossed.
 - Intelligently choose whether to attempt a re-enchant on items with poor stats.
 - Provide some utility functions for sorting and managing equipment and sets carried.
-
+- Complain if Enchanter's Focus isn't up when you run it.
 
 ### Installation
 Download EnchantRobbot.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin.
