@@ -40,3 +40,21 @@ Type 'ebot config' to check plugin default configuration.
  	                             (all possible wear locations)
  cancelsort                --> Cancels set sort in progress
  ```
+ 
+## Newbie Channel Activity Tracker
+The Newbie Channel Activity tracker is made for our imm friends (and spouses)
+- Provides a report of how many times helpers/advisors/imms talk on the Newbie channel.
+- Saves state, can be reset whenever you want.
+
+### Installation
+Download EnchantRobbot.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin.
+Type 'ebot config' to check plugin default configuration.
+
+### Usage
+```
+                      NewbieTracker Help
+=============================================================================
+ newbietracker show        --> Display saved activity data
+ newbietracker reset       --> Reset tracker
+
+```
