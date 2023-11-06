@@ -48,7 +48,6 @@ The Newbie Channel Activity tracker is made for our imm friends (and spouses)
 
 ### Installation
 Download EnchantRobbot.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin.
-Type 'ebot config' to check plugin default configuration.
 
 ### Usage
 ```
