@@ -906,7 +906,7 @@ function bagEq(name, line, wildcards)
    local prefix = wildcards[1]
    local bag = wildcards[2]
    for i,w in ipairs(wearables) do
-      Send("take "..prefix..w.." "..bag)
+      Send("put "..prefix..w.." "..bag)
    end
 end
 
