@@ -47,7 +47,7 @@ The Newbie Channel Activity tracker is made for our imm friends (and spouses)
 - Saves state, can be reset whenever you want.
 
 ### Installation
-Download EnchantRobbot.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin.
+Download NewbieChannelTracker.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin.
 
 ### Usage
 ```
