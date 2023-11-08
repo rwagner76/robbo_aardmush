@@ -57,3 +57,36 @@ Download NewbieChannelTracker.xml and place into your MUSHClient Worlds\Plugins 
  newbietracker reset       --> Reset tracker
 
 ```
+
+## Guinness's Test Port Toolbox (GuinnessTools.xml)
+This has a variety of simple aliases and tools mostly for Guinness' use, but would be of value to anybody reviewing mobs, objects, rooms, and programs in an area. It's mostly to prevent a lot of repetitive typing, and many commands are ideally run while saving output to a log file for offline review.
+- Commands that dump a lot of data (like mstatall, rstatall, etc) use temporary timers to pause slightly between each command, so you don't get automatically disconnected.
+- Bulk commands will turn off your prompt during execution
+- mpdumpall command will enable 'rawcolors' during execution
+
+
+### Installation
+Download GuinnessTools.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin. (make sure this is your test port instance!)
+
+### Usage
+```
+                      Test Port Toolbox Help
+=============================================================================
+ ggo                       --> Alias for rgoto that increments the room vnum
+                               you're in. Starts at 'rgoto 0'. (Guinness Go!)
+ ggo reset                 --> Sets ggo back to 0.
+ mstatall keyword N        --> Dumps mstat for each mob in 'keyword' area,
+                               counting from 0 to N. (N is a number)
+ rstatall keyword N        --> Dumps rstat for each room in 'keyword' area,
+                               counting from 0 to N.
+ ostatall keyword N        --> Dumps ostat for each room in 'keyword' area,
+                               counting from 0 to N. The object is loaded
+                               before ostat.
+ mpdumpall keyword N       --> Does mpdump of all programs 0 to N.
+                               Uses rawcolor mode and noline.
+ meditall keyword N        --> Similar to mstatall, dumps mob editor
+                               details.
+ reditall keyword N        --> Similar to rstatall, dumps room editor
+                               details.
+ oeditall keyword N        --> Similar to rstatall, dumps room editor
+                               details.                               
