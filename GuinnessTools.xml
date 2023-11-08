@@ -78,7 +78,6 @@
    sequence="100"
   >
   </alias>
-
   <alias
    match="mpdumpall * *"
    enabled="y"
@@ -86,7 +85,6 @@
    sequence="100"
   >
   </alias>
-
   <alias
    match="toolbox help"
    enabled="y"
