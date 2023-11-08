@@ -88,7 +88,7 @@
   <alias
    match="toolbox help"
    enabled="y"
-   script="mpdumpAll"
+   script="OnHelp"
    sequence="100"
   >
   </alias>
