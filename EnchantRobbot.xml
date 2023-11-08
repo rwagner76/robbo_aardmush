@@ -471,6 +471,7 @@ function OnHelp ()
  puteqset <prefix> <bag>   --> Put a set starting with prefix into a bag
  	                             (all possible wear locations)
  cancelsort                --> Cancels set sort in progress
+ ebot help                 --> Get help
 =============================================================================
  ebot enchant will:
  1) Buy item by keyword

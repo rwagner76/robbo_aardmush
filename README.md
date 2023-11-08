@@ -39,6 +39,7 @@ Type 'ebot config' to check plugin default configuration.
  puteqset <prefix> <bag>   --> Put a set starting with prefix into a bag
  	                             (all possible wear locations)
  cancelsort                --> Cancels set sort in progress
+ ebot help                 --> Get help
  ```
  
 ## Newbie Channel Activity Tracker
@@ -55,6 +56,7 @@ Download NewbieChannelTracker.xml and place into your MUSHClient Worlds\Plugins 
 =============================================================================
  newbietracker show        --> Display saved activity data
  newbietracker reset       --> Reset tracker
+ newbietracker help        --> Get help
 
 ```
 
@@ -89,4 +91,5 @@ Download GuinnessTools.xml and place into your MUSHClient Worlds\Plugins folder,
  reditall keyword N        --> Similar to rstatall, dumps room editor
                                details.
  oeditall keyword N        --> Similar to rstatall, dumps room editor
-                               details.                               
+                               details.
+ toolbox help              --> Get help
