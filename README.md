@@ -76,20 +76,22 @@ Download GuinnessTools.xml and place into your MUSHClient Worlds\Plugins folder,
 =============================================================================
  ggo                       --> Alias for rgoto that increments the room vnum
                                you're in. Starts at 'rgoto 0'. (Guinness Go!)
+ ggo #                     --> Sets ggo to # and goes!
  ggo reset                 --> Sets ggo back to 0.
- mstatall keyword N        --> Dumps mstat for each mob in 'keyword' area,
-                               counting from 0 to N. (N is a number)
- rstatall keyword N        --> Dumps rstat for each room in 'keyword' area,
-                               counting from 0 to N.
- ostatall keyword N        --> Dumps ostat for each room in 'keyword' area,
-                               counting from 0 to N. The object is loaded
+ mstatall keyword #        --> Dumps mstat for each mob in 'keyword' area,
+                               counting from 0 to #.
+ rstatall keyword #        --> Dumps rstat for each room in 'keyword' area,
+                               counting from 0 to #.
+ ostatall keyword #        --> Dumps ostat for each room in 'keyword' area,
+                               counting from 0 to #. The object is loaded
                                before ostat.
- mpdumpall keyword N       --> Does mpdump of all programs 0 to N.
+ mpdumpall keyword #       --> Does mpdump of all programs 0 to N.
                                Uses rawcolor mode and noline.
- meditall keyword N        --> Similar to mstatall, dumps mob editor
+ meditall keyword #        --> Similar to mstatall, dumps mob editor
                                details.
- reditall keyword N        --> Similar to rstatall, dumps room editor
+ reditall keyword #        --> Similar to rstatall, dumps room editor
                                details.
- oeditall keyword N        --> Similar to rstatall, dumps room editor
-                               details.
- toolbox help              --> Get help
+ oeditall keyword #        --> Similar to rstatall, dumps room editor
+                               details.                     
+ toolbox help              --> Show this help file
+ ```
