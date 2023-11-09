@@ -44,10 +44,17 @@
 
 <aliases>
   <alias
+   match="garea *"
+   enabled="y"
+   script="setArea"
+   sequence="100"
+  >
+  </alias>
+  <alias
    match="ggo"
    enabled="y"
    script="ggoNext"
-   sequence="100"
+   sequence="101"
   >
   </alias>
   <alias
@@ -58,7 +65,29 @@
   >
   </alias>
   <alias
+   match="gmgo"
+   enabled="y"
+   script="gmgoNext"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="gmgo *"
+   enabled="y"
+   script="gmgoParam"
+   sequence="100"
+  >
+  </alias>
+
+  <alias
    match="mstatall * *"
+   enabled="y"
+   script="mstatAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="mstatall * * *"
    enabled="y"
    script="mstatAll"
    sequence="100"
@@ -68,11 +97,25 @@
    match="rstatall * *"
    enabled="y"
    script="rstatAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="rstatall * * *"
+   enabled="y"
+   script="rstatAll"
    sequence="100"
   >
   </alias>
   <alias
    match="ostatall * *"
+   enabled="y"
+   script="ostatAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="ostatall * * *"
    enabled="y"
    script="ostatAll"
    sequence="100"
@@ -85,6 +128,14 @@
    sequence="100"
   >
   </alias>
+  <alias
+   match="mpdumpall * * *"
+   enabled="y"
+   script="mpdumpAll"
+   sequence="100"
+  >
+  </alias>
+
   <alias
    match="toolbox help"
    enabled="y"
@@ -105,25 +156,32 @@ function OnHelp()
 
                       Test Port Toolbox Help
 =============================================================================
+ garea keyword             --> Set the area you're working in so you don't
+                               need to type keywords
  ggo                       --> Alias for rgoto that increments the room vnum
                                you're in. Starts at 'rgoto 0'. (Guinness Go!)
  ggo #                     --> Sets ggo to # and goes!
  ggo reset                 --> Sets ggo back to 0.
- mstatall keyword #        --> Dumps mstat for each mob in 'keyword' area,
+ gmgo                      --> Alias for mgoto that increments the mob vnum
+                               you're in. Starts at 'mgoto area-0'. (Guinness Go!)
+ gmgo #                    --> Sets ggo to # and goes!
+ gmgo reset                --> Sets ggo back to 0.
+
+ mstatall # [#]            --> Dumps mstat for each mob in 'keyword' area,
                                counting from 0 to #.
- rstatall keyword #        --> Dumps rstat for each room in 'keyword' area,
+ rstatall # [#]            --> Dumps rstat for each room in 'keyword' area,
                                counting from 0 to #.
- ostatall keyword #        --> Dumps ostat for each room in 'keyword' area,
+ ostatall # [#]            --> Dumps ostat for each room in 'keyword' area,
                                counting from 0 to #. The object is loaded
                                before ostat.
- mpdumpall keyword #       --> Does mpdump of all programs 0 to N.
+ mpdumpall # [#]           --> Does mpdump of all programs 0 to N.
                                Uses rawcolor mode and noline.
- meditall keyword #        --> Similar to mstatall, dumps mob editor
+ meditall # [#]            --> Similar to mstatall, dumps mob editor
                                details.
- reditall keyword #        --> Similar to rstatall, dumps room editor
+ reditall # [#]            --> Similar to rstatall, dumps room editor
                                details.
- oeditall keyword #        --> Similar to rstatall, dumps room editor
-                               details.                     
+ oeditall # [#]            --> Similar to rstatall, dumps room editor
+                               details.
  toolbox help              --> Show this help file
 ]]
 
@@ -131,12 +189,14 @@ function OnHelp()
 end
 
 function ggoNext()
-   -- Figure out our current room
+  local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+    -- Figure out our current room
    ggoCurrent = GetVariable("ggoNext")
    if ggoCurrent == nil then ggoCurrent = 0 end
    ggoCurrent = tonumber(ggoCurrent)
 
-   Send("rgoto "..ggoCurrent)
+   Send("rgoto "..area.."-"..ggoCurrent)
    ggoCurrent = ggoCurrent + 1
    SetVariable("ggoNext",tostring(ggoCurrent))
 end
@@ -151,9 +211,47 @@ function ggoParam(name,line,wildcards)
    end
 end
 
+function setArea(name,line,wildcards)
+   -- Which area is Guinness working in?
+   SetVariable("garea",wildcards[1])
+end
+
+
+function gmgoNext()
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   -- Figure out our current mob
+   gmgoCurrent = GetVariable("gmgoNext")
+   if gmgoCurrent == nil then gmgoCurrent = 0 end
+   gmgoCurrent = tonumber(gmgoCurrent)
+
+   Send("mgoto "..area.."-"..gmgoCurrent)
+   gmgoCurrent = gmgoCurrent + 1
+   SetVariable("gmgoNext",tostring(gmgoCurrent))
+end
+
+function gmgoParam(name,line,wildcards)
+   local p = wildcards[1]
+   if p == "reset" then
+      DeleteVariable("gmgoNext")
+   else
+      SetVariable("gmgoNext",p)
+      gmgoNext()
+   end
+end
+
+
 function rstatAll(name, line, wildcards)
-   local area = wildcards[1]
-   local max = tonumber(wildcards[2])
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local min = 0
+   local max = 0
+   if #wildcards == 1 then
+      max = tonumber(wildcards[1])
+   else
+      min = tonumber(wildcards[1])
+      max = tonumber(wildcards[2])
+   end
    local delay = wait
    local logfile = "rstat_"..area..".txt"
    local logEnabled = false
@@ -163,7 +261,7 @@ function rstatAll(name, line, wildcards)
    end
    OpenLog(logfile,false)
    Send("prompt")
-   for i = 0,max do
+   for i = min,max do
       DoAfter(delay,"rstat "..area.."-"..i)
       delay = delay + wait
    end
@@ -177,41 +275,91 @@ function rstatAll(name, line, wildcards)
 end
 
 function mstatAll(name, line, wildcards)
-   local area = wildcards[1]
-   local max = tonumber(wildcards[2])
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local min = 0
+   local max = 0
+   if #wildcards == 1 then
+      max = tonumber(wildcards[1])
+   else
+      min = tonumber(wildcards[1])
+      max = tonumber(wildcards[2])
+   end
    local delay = wait
+   local logfile = "mstat_"..area..".txt"
+   local logEnabled = false
+   if IsLogOpen() == true then
+      logEnabled = true
+      CloseLog()
+   end
+   OpenLog(logfile,false)
    Send("prompt")
-   for i = 0,max do
+   for i = min,max do
       DoAfter(delay,"mstat "..area.."-"..i)
       delay = delay + wait
    end
    DoAfter(delay,"prompt")
+   delay = delay + 3
+   DoAfterSpecial(delay,'CloseLog()',sendto.script)
+   if logEnabled == true then
+      delay = delay + wait
+      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
+   end
+
 end
 
 function ostatAll(name, line, wildcards)
-   local area = wildcards[1]
-   local max = tonumber(wildcards[2])
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local min = 0
+   local max = 0
+   if #wildcards == 1 then
+      max = tonumber(wildcards[1])
+   else
+      min = tonumber(wildcards[1])
+      max = tonumber(wildcards[2])
+   end
    local delay = wait
+   local logfile = "ostat_"..area..".txt"
+   local logEnabled = false
+   if IsLogOpen() == true then
+      logEnabled = true
+      CloseLog()
+   end
+   OpenLog(logfile,false)
    Send("prompt")
-   for i = 0,max do
+   for i = min,max do
       DoAfter(delay,"oload "..area.."-"..i)
       delay = delay + wait
       DoAfter(delay,"ostat "..area.."-"..i.." world")
       delay = delay + wait
    end
    DoAfter(delay,"prompt")
+   delay = delay + 3
+   DoAfterSpecial(delay,'CloseLog()',sendto.script)
+   if logEnabled == true then
+      delay = delay + wait
+      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
+   end
+
 end
 
 function mpdumpAll(name, line, wildcards)
    -- Add some triggers to gag Flags, size, old vnum, etc and replace the Mobprog Id line.
    -- Single trigger matching on ^@Y would work, actually!
    local area = wildcards[1]
-   local max = tonumber(wildcards[2])
+   local min = 0
+   if #wildcards == 2 then
+      local max = tonumber(wildcards[2])
+   else
+      local min = tonumber(wildcards[2])
+      local max = tonumber(wildcards[3])
+   end
    local delay = wait
    EnableTrigger("gagMpdumpHeaders",true)
    Send("rawcolor")
    Send("prompt")
-   for i = 1,max do
+   for i = min,max do
       DoAfter(delay,"mpdump "..area.."-"..i.." noline")
       delay = delay + wait
    end
