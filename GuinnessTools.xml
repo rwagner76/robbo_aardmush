@@ -33,9 +33,22 @@
    match="^@Y"
    regexp="y"
    omit_from_output="y"
-   sequence="100"
+   omit_from_log="y"
+   sequence="101"
   >
   </trigger>
+  <trigger
+   name="allowMpdumpHeader"
+   enabled="n"
+   match="^@YMobprog Id@w: (.+)"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script = "rewriteMpdumpHeader"
+  >
+  </trigger>
+
 </triggers>
 
 
@@ -122,14 +135,14 @@
   >
   </alias>
   <alias
-   match="mpdumpall * *"
+   match="mpdumpall *"
    enabled="y"
    script="mpdumpAll"
-   sequence="100"
+   sequence="101"
   >
   </alias>
   <alias
-   match="mpdumpall * * *"
+   match="mpdumpall * *"
    enabled="y"
    script="mpdumpAll"
    sequence="100"
@@ -149,7 +162,7 @@
 
 <script>
 <![CDATA[
-local wait = 0.3
+local wait = 0.8
 
 function OnHelp()
    local help = [[
@@ -188,6 +201,13 @@ function OnHelp()
   print(help)
 end
 
+function rewriteMpdumpHeader(name,line,wildcards)
+   local mpkey = wildcards[1]
+   WriteLog("Dumping mobprog: "..mpkey)
+   Note("Dumping mobprog: "..mpkey)
+end
+
+
 function ggoNext()
   local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
@@ -215,7 +235,6 @@ function setArea(name,line,wildcards)
    -- Which area is Guinness working in?
    SetVariable("garea",wildcards[1])
 end
-
 
 function gmgoNext()
    local area = GetVariable("garea")
@@ -347,16 +366,27 @@ end
 function mpdumpAll(name, line, wildcards)
    -- Add some triggers to gag Flags, size, old vnum, etc and replace the Mobprog Id line.
    -- Single trigger matching on ^@Y would work, actually!
-   local area = wildcards[1]
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local min = 0
-   if #wildcards == 2 then
-      local max = tonumber(wildcards[2])
+   local max = 0
+   if #wildcards == 1 then
+      max = tonumber(wildcards[1])
    else
-      local min = tonumber(wildcards[2])
-      local max = tonumber(wildcards[3])
+      min = tonumber(wildcards[1])
+      max = tonumber(wildcards[2])
    end
    local delay = wait
    EnableTrigger("gagMpdumpHeaders",true)
+   EnableTrigger("allowMpdumpHeader",true)
+   local logfile = "mpdump_"..area..".txt"
+   local logEnabled = false
+   if IsLogOpen() == true then
+      logEnabled = true
+      CloseLog()
+   end
+   OpenLog(logfile,false)
+
    Send("rawcolor")
    Send("prompt")
    for i = min,max do
@@ -368,6 +398,14 @@ function mpdumpAll(name, line, wildcards)
    DoAfter(delay,"prompt")
    delay = delay + wait
    DoAfterSpecial(delay,'EnableTrigger("gagMpdumpHeaders",false)',sendto.script)
+   DoAfterSpecial(delay,'EnableTrigger("allowMpdumpHeader",false)',sendto.script)
+   delay = delay + 3
+   DoAfterSpecial(delay,'CloseLog()',sendto.script)
+   if logEnabled == true then
+      delay = delay + wait
+      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
+   end
+
 end
 
 ]]>
