@@ -17,7 +17,6 @@
    requires="5.06"
    version="1.0"
    >
-
 </plugin>
 
 
@@ -45,10 +44,564 @@
    omit_from_output="y"
    omit_from_log="y"
    sequence="100"
-   script = "rewriteMpdumpHeader"
+   script="rewriteMpdumpHeader"
+  >
+  </trigger>
+  <trigger
+   name="trg_startMedit"
+   enabled="y"
+   match="Editing Mob: (\w+-\d+)"
+   regexp="y"
+   sequence="100"
+   script="startMedit"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditA"
+   enabled="n"
+   match="A\) Keywords\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditA"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditB"
+   enabled="n"
+   match="B\) Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditB"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditD"
+   enabled="n"
+   match="D\) Room Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditD"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditF"
+   enabled="n"
+   match="F\) Story\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditF"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditHJ"
+   enabled="n"
+   match="H\) Level\s+:\s+(\d+)\s+J\) Alignment : (\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditHJ"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditIK"
+   enabled="n"
+   match="I\) Gold\s+:\s+(\d+)\s+K\) Sex\s+: (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditIK"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditLM"
+   enabled="n"
+   match="L\) Race\s+: (\w+)\s+M\) Position  : (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditLM"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditN"
+   enabled="n"
+   match="N\) Guilds     : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditN"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditO"
+   enabled="n"
+   match="O\) Subclass   : (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditO"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditR"
+   enabled="n"
+   match="R\) Flags   : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditR"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditR_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditRAdd"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditS"
+   enabled="n"
+   match="S\) Affects : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditS"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditS_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditSAdd"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditT"
+   enabled="n"
+   match="T\) Immune  : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditT"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditW"
+   enabled="n"
+   match="W\) Mobprogs: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditW"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditX"
+   enabled="n"
+   match="X\) Shop    : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditX"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsA"
+   enabled="n"
+   match=": (Str|Dex):\s+([-]?\d+)\s+(Int|Con):\s+([-]?\d+)\s+(Wis |Luck):\s+([-]?\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsA"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsBD"
+   enabled="n"
+   match="B\) Hitroll\s+:\s+(\d+)\sD\) Saves\s:\s(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsBD"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsCE"
+   enabled="n"
+   match="C\) Damroll\s+:\s+(\d+)\sE\) Extra Hits :\s(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsCE"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsF"
+   enabled="n"
+   match="F\) Dam Type   : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsF"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsG"
+   enabled="n"
+   match="G\) Spellset   : (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsG"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsV"
+   enabled="n"
+   match="V\) Move Verb  : (.+) \[(.+)\]"
+   regexp="y"
+   sequence="100"
+   script="meditStatsV"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsResists"
+   enabled="n"
+   match="Resists    : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsResists"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsIJK"
+   enabled="n"
+   match="Damage Range   I\) Max  :\s+(\d+),  J\) Avg:\s+(\d+),  K\) Min:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsIJK"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsLMN"
+   enabled="n"
+   match="Hp/Move Range  L\) Max  :\s+(\d+),  M\) Avg:\s+(\d+),  N\) Min:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsLMN"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsO"
+   enabled="n"
+   match="O\) Bonus:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsO"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsPRS"
+   enabled="n"
+   match="Mana Range     P\) Max  :\s+(\d+),  R\) Avg:\s+(\d+),  S\) Min:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsPRS"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsT"
+   enabled="n"
+   match="T\) Bonus:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsT"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditDesc"
+   enabled="n"
+   match="Begin editing. .q on a new line to quit, .a to abort, .h for help*"
+   regexp="n"
+   sequence="100"
+   script="meditDescStart"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditDescMiddle"
+   enabled="n"
+   match="(.+)"
+   regexp="y"
+   sequence="101"
+   script="meditDescMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditDescEnd"
+   enabled="n"
+   match="\> Save"
+   regexp="y"
+   sequence="100"
+   script="meditDescEnd"
   >
   </trigger>
 
+  <trigger
+   name="trg_meditEnd"
+   enabled="n"
+   match="You are back in the game"
+   regexp="y"
+   sequence="100"
+   script="meditEnd"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_startOedit"
+   enabled="y"
+   match="Editing Obj: (\w+-\d+)"
+   regexp="y"
+   sequence="100"
+   script="startOedit"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditA"
+   enabled="n"
+   match="A\) Keywords\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditB"
+   enabled="n"
+   match="B\) Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditD"
+   enabled="n"
+   match="D\) Room Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditD"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditF"
+   enabled="n"
+   match="F\) Object Type: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditF"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditHI"
+   enabled="n"
+   match="H\) Level\s+:\s+(\d+)\s+I\) Value\s+ : (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditHI"
+   group="oeditCaptures"
+  >
+  </trigger>  
+  <trigger
+   name="trg_oeditJK"
+   enabled="n"
+   match="J\) Weight\s+:\s+(\d+)\s+K\) Size\s+:\s+ (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditJK"
+   group="oeditCaptures"
+  >
+  </trigger>  
+  <trigger
+   name="trg_oeditL"
+   enabled="n"
+   match="L\) Material\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditL"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditM"
+   enabled="n"
+   match="M\) Flags\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditM"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditM_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditMAdd"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditN"
+   enabled="n"
+   match="N\) Wearable\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditN"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditO"
+   enabled="n"
+   match="\*O\) Descs\s+: (\d+) .+\."
+   regexp="y"
+   sequence="100"
+   script="oeditO"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditP"
+   enabled="n"
+   match="\*P\) Affects\s+: (\d+) .+\."
+   regexp="y"
+   sequence="100"
+   script="oeditP"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditR"
+   enabled="n"
+   match="\*R\) Weapon Menu"
+   regexp="y"
+   sequence="100"
+   script="oeditR"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditS"
+   enabled="n"
+   match="\*S\) Objprogs\s+: (\d+) (.+)\."
+   regexp="y"
+   sequence="100"
+   script="oeditS"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditAffectStart"
+   enabled="n"
+   match="Object Affect Editor"
+   regexp="y"
+   sequence="100"
+   script="oeditAffectStart"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditAffectValues"
+   enabled="n"
+   match="(\d+)\) (Stat|Resist)\s+: (.+?)\s+: ([\+|-]?\d+)"
+   regexp="y"
+   sequence="101"
+   script="oeditAffectValues"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditAffectEnd"
+   enabled="n"
+   match="Select affect"
+   regexp="y"
+   sequence="100"
+   script="oeditAffectEnd"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponA"
+   enabled="n"
+   match="A\) Weapon Type\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponB"
+   enabled="n"
+   match="B\) Damage Type\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponD"
+   enabled="n"
+   match="D\) Avg Damage\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponD"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponF"
+   enabled="n"
+   match="F\) Specials\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponF"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponG"
+   enabled="n"
+   match="G\) Damage Verb\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponG"
+   group="oeditCaptures"
+  >
+  </trigger>
+
+
+  
 </triggers>
 
 
@@ -148,6 +701,13 @@
    sequence="100"
   >
   </alias>
+  <alias
+   match="mexport *"
+   enabled="y"
+   script="OnHelp"
+   sequence="100"
+  >
+  </alias>
 
   <alias
    match="toolbox help"
@@ -156,6 +716,100 @@
    sequence="100"
   >
   </alias>
+  <alias
+   match="meditdump *"
+   enabled="y"
+   script="meditDump"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="dmt"
+   enabled="y"
+   script="displayMtable"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="oeditdump *"
+   enabled="y"
+   script="oeditDump"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="oeditdumpall *"
+   enabled="y"
+   script="editDumpAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="oeditdumpall * *"
+   enabled="y"
+   script="editDumpAll"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="meditdumpall *"
+   enabled="y"
+   script="editDumpAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="meditdumpall * *"
+   enabled="y"
+   script="editDumpAll"
+   sequence="100"
+  >
+  </alias>
+
+  <alias
+   match="objectsummary"
+   enabled="y"
+   script="objectSummary"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="dot *"
+   enabled="y"
+   script="displayOtable"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="exportobjects"
+   enabled="y"
+   script="exportOtable"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="exportobjects *"
+   enabled="y"
+   script="exportOtable"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="exportmobs"
+   enabled="y"
+   script="exportMtable"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="exportmobs *"
+   enabled="y"
+   script="exportMtable"
+   sequence="100"
+  >
+  </alias>
+
+
 
 
 </aliases>
@@ -163,6 +817,47 @@
 <script>
 <![CDATA[
 local wait = 0.8
+
+local mKey = ""
+local rKey = ""
+local oKey = ""
+local mt = {}
+local rt = {}
+local ot = {}
+local oaff = {}
+local illegalitems = {}
+
+-- Main execution
+function readobjPoints()
+   local f = io.open(GetInfo (67) .. "plugins\\" .. "objpointstable.txt",r)
+   if f == nil then Note("objpointstable.txt: File not found. Won't be able to check for legal item stats.") end
+   local op = {}
+   local i = 1
+   for line in f:lines () do
+      local entries = {}
+      line:gsub('([^,]+)', function(c)
+         table.insert(entries, c)
+      end)
+      op[i] = {}
+      op[i]["STotals"] = entries[1]
+      op[i]["SStats"]  = entries[2]
+      op[i]["SSaves"]  = entries[3]
+      op[i]["SHRDR"]   = entries[4]
+      op[i]["SHPMNMV"] = entries[5]
+      op[i]["SNegall"] = entries[6]
+      op[i]["DTotals"] = entries[7]
+      op[i]["DStats"]  = entries[8]
+      op[i]["DSaves"]  = entries[9]
+      op[i]["DHRDR"]   = entries[10]
+      op[i]["DHPMNMV"] = entries[11]
+      op[i]["DNegall"] = entries[12]
+      i = i + 1
+   end
+   f:close ()
+   return op
+end
+
+local objPoints = readobjPoints()
 
 function OnHelp()
    local help = [[
@@ -207,9 +902,8 @@ function rewriteMpdumpHeader(name,line,wildcards)
    Note("Dumping mobprog: "..mpkey)
 end
 
-
 function ggoNext()
-  local area = GetVariable("garea")
+   local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
     -- Figure out our current room
    ggoCurrent = GetVariable("ggoNext")
@@ -405,7 +1099,573 @@ function mpdumpAll(name, line, wildcards)
       delay = delay + wait
       DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
    end
+end
 
+-- Medit Capture Functions
+
+function startMedit(name, line, wildcards)
+   mKey = wildcards[1]
+   if mt[mKey] == nil then
+      mt[mKey] = {}
+   end
+end
+
+
+function meditA(name, line, wildcards)
+   mt[mKey]["Keywords"] = wildcards[1]
+end
+
+function meditB(name, line, wildcards)
+   mt[mKey]["Name"] = wildcards[1]
+end
+
+function meditD(name, line, wildcards)
+   mt[mKey]["RoomName"] = wildcards[1]
+end
+
+function meditF(name, line, wildcards)
+   mt[mKey]["Story"] = wildcards[1]
+end
+
+function meditHJ(name, line, wildcards)
+   mt[mKey]["Level"] = wildcards[1]
+   mt[mKey]["Alignment"] = wildcards[2]
+end
+
+function meditIK(name, line, wildcards)
+   mt[mKey]["Gold"] = wildcards[1]
+   mt[mKey]["Sex"] = wildcards[2]
+end
+
+function meditLM(name, line, wildcards)
+   mt[mKey]["Race"] = wildcards[1]
+   mt[mKey]["Position"] = wildcards[2]
+end
+
+function meditN(name, line, wildcards)
+   mt[mKey]["Guilds"] = wildcards[1]
+end
+
+function meditO(name, line, wildcards)
+   mt[mKey]["Subclass"] = wildcards[1]
+end
+
+function meditR(name, line, wildcards)
+   mt[mKey]["Flags"] = wildcards[1]
+   if string.sub(mt[mKey]["Flags"],-1) == ',' then
+      EnableTrigger("trg_meditR_add",true)
+   end
+end
+
+function meditRAdd(name, line, wildcards)
+   mt[mKey]["Flags"] = mt[mKey]["Flags"].." "..wildcards[1]
+   EnableTrigger("trg_meditR_add",false)
+end
+
+function meditS(name, line, wildcards)
+   mt[mKey]["Affects"] = wildcards[1]
+   if string.sub(mt[mKey]["Flags"],-1) == ',' then
+      EnableTrigger("trg_meditS_add",true)
+   end
+end
+
+function meditSAdd(name, line, wildcards)
+   mt[mKey]["Affects"] = mt[mKey]["Flags"].." "..wildcards[1]
+   EnableTrigger("trg_meditS_add",false)
+end
+
+function meditT(name, line, wildcards)
+   mt[mKey]["Immune"] = wildcards[1]
+end
+
+function meditW(name, line, wildcards)
+   mt[mKey]["Mobprogs"] = wildcards[1]
+end
+
+function meditX(name, line, wildcards)
+   mt[mKey]["Shop"] = wildcards[1]
+end
+
+function meditStatsA(name, line, wildcards)
+   mt[mKey]["Stat "..wildcards[1]] = wildcards[2]
+   mt[mKey]["Stat "..wildcards[3]] = wildcards[4]
+   mt[mKey]["Stat "..string.gsub(wildcards[5],"%s+","")] = wildcards[6]
+end
+
+function meditStatsBD(name, line, wildcards)
+   mt[mKey]["Stat Hitroll"] = wildcards[1]
+   mt[mKey]["Stat Saves"] = wildcards[2]
+end
+
+function meditStatsCE(name, line, wildcards)
+   mt[mKey]["Stat Damroll"] = wildcards[1]
+   mt[mKey]["Stat Extra Hits"] = wildcards[2]
+end
+
+function meditStatsF(name, line, wildcards)
+   mt[mKey]["DamType"] = wildcards[1]
+end
+
+function meditStatsG(name, line, wildcards)
+   mt[mKey]["Spellset"] = wildcards[1]
+end
+
+function meditStatsV(name, line, wildcards)
+   mt[mKey]["Move Verb"] = wildcards[1]
+end
+
+function meditStatsResists(name, line, wildcards)
+   mt[mKey]["Resists"] = wildcards[1]
+end
+
+function meditStatsIJK(name, line, wildcards)
+   mt[mKey]["Damage Range Max"] = wildcards[1]
+   mt[mKey]["Damage Range Avg"] = wildcards[2]
+   mt[mKey]["Damage Range Min"] = wildcards[3]
+end
+
+function meditStatsLMN(name, line, wildcards)
+   mt[mKey]["HP/Move Range Max"] = wildcards[1]
+   mt[mKey]["HP/Move Range Avg"] = wildcards[2]
+   mt[mKey]["HP/Move Range Min"] = wildcards[3]
+end
+
+function meditStatsO(name, line, wildcards)
+   mt[mKey]["HP/Move Range Bonus"] = wildcards[1]
+end
+
+function meditStatsPRS(name, line, wildcards)
+   mt[mKey]["Mana Range Max"] = wildcards[1]
+   mt[mKey]["Mana Range Avg"] = wildcards[2]
+   mt[mKey]["Mana Range Min"] = wildcards[3]
+
+end
+
+function meditStatsT(name, line, wildcards)
+   mt[mKey]["Mana Range Bonus"] = wildcards[1]
+end
+
+function meditDescStart(name, line, wildcards)
+   mt[mKey]["Desc"] = ""
+   EnableTrigger("trg_meditDescMiddle",true)
+   EnableTrigger("trg_meditDescEnd",true)
+end
+
+function meditDescMiddle(name, line, wildcards)
+   EnableTrigger("trg_meditDescStart",false)
+   if wildcards[1] ~= "==========================================================================" then
+      if mt[mKey]["Desc"] == "" then
+         mt[mKey]["Desc"] = wildcards[1]
+      else
+         mt[mKey]["Desc"] = mt[mKey]["Desc"].."\\n"..wildcards[1]
+      end
+   end
+end
+
+function meditDescEnd(name,line,wildcards)
+   EnableTrigger("trg_meditDescMiddle",false)
+end
+
+
+function meditEnd(name,line,wildcards)
+   EnableTriggerGroup("meditCaptures",false)
+   EnableTriggerGroup("meditStatCaptures",false)   
+   EnableTrigger("trg_meditDesc",false)
+end
+
+function meditDump(name,line,wildcards)
+   local n = wildcards[1]
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   EnableTriggerGroup("meditCaptures",true)
+   EnableTriggerGroup("meditStatCaptures",true)
+   EnableTrigger("trg_meditDesc",true)
+   Send("medit "..area.."-"..n)
+   Send("v")
+   Send("q")
+   Send("g")
+   Send(".q")
+   Send("Q")
+end
+
+-- oedit Capture Functions
+
+function tzero(t,k)
+   local v = t[k]
+   if v == nil then v = 0 end
+   return tonumber(v)
+end
+
+
+function oeditAffectValues(name,line,wildcards)
+   ot[oKey]["Affects"..wildcards[1]] = wildcards[2]..","..wildcards[3]..","..wildcards[4]
+   oaff[oKey][wildcards[3]] = wildcards[4]
+end
+
+function calcObjPoints(a)
+   -- Calc the points for the object based on affects
+   local stats = 0
+   local hrdr = 0
+   local hp = 0
+   local neg = 0
+   local saves = 0
+   local st = {"Strength","Intelligence","Wisdom","Dexterity","Constitution","Luck"}
+   for i,k in ipairs(st) do
+      local sval = tzero(a,k)
+      if sval < 0 then neg = neg - sval end
+      stats = stats + sval
+   end
+   local hd = {"Hit roll","Damage roll"}
+   for i,k in ipairs(hd) do
+      local rval = tzero(a,k)
+      if rval < 0 then neg = neg - (rval/2) end
+      hrdr = hrdr + (rval/2)
+   end
+   local hmm = {"Hit points","Mana","Moves"}
+   for i,k in ipairs(hmm) do
+      local hmmval = tzero(a,k)
+      if hmmval < 0 then neg = neg - (hmmval/10) end
+      hp = hp + (hmmval/10)
+   end
+   local total = hp + stats + hrdr
+   return total,stats,saves,hrdr,hp,neg
+end
+
+function SorD()
+   local rchar = "S"
+   local duals = {"finger","wrist","neck","ear"}
+   for i,v in ipairs(duals) do
+      if ot[oKey]["Wearable"] == v then rchar = "D" end
+   end
+   return rchar
+end
+
+
+function checkArmorPoints()
+   local legal = "true"
+   local quality = ""
+   local objLevel = tonumber(ot[oKey]["Level"])
+   local maxPoints = tonumber(objPoints[objLevel][SorD().."Totals"])
+   if tonumber(ot[oKey]["PointsTotal"]) > maxPoints then
+      Note("Warning: Object is over max points!"..ot[oKey]["PointsTotal"].." vs max:"..objPoints[objLevel][SorD().."Totals"])
+      quality = "Masterpiece"
+      legal = "false"
+      illegalitems[oKey] = "Over Max Points"
+   end
+   if tonumber(ot[oKey]["PointsTotal"]) == maxPoints then quality = "Maxxed" end
+   if tonumber(ot[oKey]["PointsTotal"]) < maxPoints then quality = "Average" end
+   if tonumber(ot[oKey]["PointsTotal"]) <= maxPoints/2 then quality = "Mediocre" end
+   if tonumber(ot[oKey]["PointsTotal"]) <= 0 then quality = "Bad" end
+   	
+   if tonumber(ot[oKey]["PointsStats"]) > tonumber(objPoints[objLevel][SorD().."Stats"]) then
+      Note("Warning: Object is over max stats! "..ot[oKey]["PointsStats"].." vs max:"..objPoints[objLevel][SorD().."Stats"])
+      illegalitems[oKey] = "Over Max Stats"
+      legal = "false"
+   end
+   if tonumber(ot[oKey]["PointsHRDR"]) > tonumber(objPoints[objLevel][SorD().."HRDR"]) then
+      Note("Warning: Object is over HR/DR limits! "..ot[oKey]["PointsHRDR"].." vs max: "..objPoints[objLevel][SorD().."HRDR"])
+      illegalitems[oKey] = "Over Max HR/DR"
+      legal = "false"
+   end
+   if tonumber(ot[oKey]["PointsHPMNMV"]) > tonumber(objPoints[objLevel][SorD().."HPMNMV"]) then
+      Note("Warning: Object is over max HP/Mana/Moves! "..ot[oKey]["PointsHPMNMV"].." vs max: "..objPoints[objLevel][SorD().."HPMNMV"])
+      illegalitems[oKey] = "Over Max HR/DR"
+      legal = "false"
+   end
+   if tonumber(ot[oKey]["PointsNegative"]) > tonumber(objPoints[objLevel][SorD().."Negall"]) then
+      Note("Warning: Object is over max negative points!")
+      illegalitems[oKey] = "Over Max Negative"
+      legal = "false"
+   end
+   return legal,quality
+end
+
+
+function startOedit(name, line, wildcards)
+   oKey = wildcards[1]
+   if ot[oKey] == nil then
+      ot[oKey] = {}
+      oaff[oKey] = {}
+   end
+end
+
+function oeditA(name, line, wildcards)
+   ot[oKey]["Keywords"] = wildcards[1]
+end
+
+function oeditB(name, line, wildcards)
+   ot[oKey]["Name"] = wildcards[1]
+end
+
+function oeditD(name, line, wildcards)
+   ot[oKey]["Room Name"] = wildcards[1]
+end
+
+function oeditF(name, line, wildcards)
+   ot[oKey]["Object Type"] = wildcards[1]
+end
+
+function oeditHI(name, line, wildcards)
+   ot[oKey]["Level"] = wildcards[1]
+   ot[oKey]["Value"] = wildcards[2]
+end
+
+function oeditJK(name, line, wildcards)
+   ot[oKey]["Weight"] = wildcards[1]
+   ot[oKey]["Size"] = wildcards[2]
+end
+
+function oeditL(name, line, wildcards)
+   ot[oKey]["Material"] = wildcards[1]
+end
+
+function oeditM(name, line, wildcards)
+   ot[oKey]["Flags"] = wildcards[1]
+   if string.sub(ot[oKey]["Flags"],-1) == ',' then
+      EnableTrigger("trg_oeditM_add",true)
+   end
+end
+
+function oeditMAdd(name, line, wildcards)
+   ot[oKey]["Flags"] = ot[oKey]["Flags"].." "..wildcards[1]
+   EnableTrigger("trg_oeditM_add",false)
+end
+
+function oeditN(name, line, wildcards)
+   ot[oKey]["Wearable"] = wildcards[1]
+end
+
+function oeditO(name, line, wildcards)
+   ot[oKey]["Descs Count"] = wildcards[1]
+end
+
+function oeditP(name, line, wildcards)
+   ot[oKey]["Affects Count"] = wildcards[1]
+   EnableTrigger("trg_oeditP",false)
+   if tonumber(wildcards[1]) > 0 then
+      Send("P")
+      Send("Q")
+   else
+      ot[oKey]["PointsTotal"],ot[oKey]["PointsStats"],ot[oKey]["PointsSaves"],ot[oKey]["PointsHRDR"],ot[oKey]["PointsHPMNMV"],ot[oKey]["PointsNegative"] = calcObjPoints(oaff[oKey])
+      if ot[oKey]["Object Type"] == "Armor" or ot[oKey]["Object Type"] == "Weapon" then
+         ot[oKey]["PointsLegal"],ot[oKey]["Quality"] = checkArmorPoints()
+      else
+         ot[oKey]["PointsLegal"] = "unknown"
+         ot[oKey]["Quality"] = "unknown"
+      end
+   end
+   if ot[oKey]["Object Type"] ~= "Weapon" then
+      Send("Q")
+   end
+end
+
+function oeditR(name,line,wildcards)
+   EnableTrigger("trg_oeditR",false)
+   Send("R")
+   Send("Q")
+   Send("Q")
+end
+
+function oeditS(name, line, wildcards)
+   ot[oKey]["Objprogs Count"] = wildcards[1]
+end
+
+function oeditWeaponA(name, line, wildcards)
+   ot[oKey]["Weapon Type"] = wildcards[1]
+end
+
+function oeditWeaponB(name, line, wildcards)
+   ot[oKey]["Damage Type"] = wildcards[1]
+end
+
+function oeditWeaponD(name, line, wildcards)
+   ot[oKey]["Avg Damage"] = wildcards[1]
+end
+
+function oeditWeaponF(name, line, wildcards)
+   ot[oKey]["Specials"] = wildcards[1]
+end
+
+function oeditWeaponG(name, line, wildcards)
+   ot[oKey]["Damage Verb"] = wildcards[1]
+end
+
+
+function oeditAffectStart()
+   EnableTrigger("trg_oeditAffectValues",true)
+end
+
+function oeditAffectEnd()
+   EnableTrigger("trg_oeditAffectValues",false)
+   ot[oKey]["PointsTotal"],ot[oKey]["PointsStats"],ot[oKey]["PointsSaves"],ot[oKey]["PointsHRDR"],ot[oKey]["PointsHPMNMV"],ot[oKey]["PointsNegative"] = calcObjPoints(oaff[oKey])
+   if ot[oKey]["Object Type"] == "Armor" or ot[oKey]["Object Type"] == "Weapon" then
+      ot[oKey]["PointsLegal"],ot[oKey]["Quality"] = checkArmorPoints()
+   else
+      ot[oKey]["PointsLegal"] = "unknown"
+      ot[oKey]["Quality"] = "unknown"
+   end
+end
+
+function oeditDump(name,line,wildcards)
+   local n = wildcards[1]
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   EnableTriggerGroup("oeditCaptures",true)
+   Send("oedit "..area.."-"..n)
+end
+
+
+-- Rest of the stuff
+
+
+
+function getTableKeys(tab)
+  local keyset = {}
+  for k,v in pairs(tab) do
+    keyset[#keyset + 1] = k
+  end
+  table.sort(keyset)
+  return keyset
+end
+
+
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
+
+function displayMtable()
+   Note("Data for "..mKey)
+   local keys = getTableKeys(mt[mKey])
+   for i,k in ipairs(keys) do
+      Note(k..": "..mt[mKey][k])
+   end
+end
+
+function displayOtable(name,line,wildcards)
+   local area = GetVariable("garea")
+   local key = area.."-"..wildcards[1]
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local attribs = getTableKeys(ot[key])
+   Note("-----------------------------------------------------------------------------")
+   Note("                   Dumping details for object "..key)
+   Note("-----------------------------------------------------------------------------")
+   for i,k in ipairs(attribs) do
+      Note(k..": "..ot[key][k])
+   end
+   Note("\n\n")
+end
+
+function getPort()
+   local port = GetInfo(1)
+   if port == "aardmud.net" then port = "test" end
+   if port == "aardmud.org" then port = "main" end
+   return port
+end
+
+function exportOtable(name,line,wildcards)
+   local parsable = false
+   if wildcards[1] == "parsable" then parsable = true end
+   exportData("object",ot,parsable)
+end
+
+function exportMtable(name,line,wildcards)
+   local parsable = false
+   if wildcards[1] == "parsable" then parsable = true end
+   exportData("mob",mt,parsable)
+end
+
+function exportData(type,t,parsable)
+   local area = GetVariable("garea")
+   Note("Exporting data for type: "..type..".  Parsable export: "..tostring(parsable))
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local ext = ".txt"
+   if parsable then ext = ".tsv" end
+   local f = io.output (area.."_"..type.."_"..getPort()..ext)
+   local keys = getTableKeys(t)
+   for i,key in ipairs(keys) do
+      local attribs = getTableKeys(t[key])
+      if not parsable then
+         f:write("-----------------------------------------------------------------------------\n")
+         f:write("                   Dumping details for "..type..": "..key.."\n")
+         f:write("-----------------------------------------------------------------------------\n")
+      end
+      for j,attrib in ipairs(attribs) do
+         if parsable then
+            f:write(key.."\t"..attrib.."\t"..t[key][attrib].."\n")
+         else
+            f:write(attrib..": "..t[key][attrib].."\n")
+         end
+      end
+      if not parsable then f:write("\n") end
+   end
+   f:close ()
+end
+
+function editDumpAll(name,line,wildcards)
+   local command = ""
+   if line:sub(1,1) == "m" then command = "meditdump " end
+   if line:sub(1,1) == "o" then command = "oeditdump " end
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local min = 0
+   local max = 0
+   if #wildcards == 1 then
+      max = tonumber(wildcards[1])
+   else
+      min = tonumber(wildcards[1])
+      max = tonumber(wildcards[2])
+   end
+   local delay = 1
+   for i = min,max do
+      DoAfterSpecial(delay,command..i,sendto.execute)
+      delay = delay + 1
+   end
+end
+
+
+function objectSummary()
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local oKeys = getTableKeys(ot)
+   local qualities = {Masterpiece=0,Maxxed=0,Average=0,Mediocre=0,Bad=0,unknown=0}
+   local legal = 0
+   local illegal = 0
+   local notchecked = 0
+   Note("Summary of known objects for zone: "..area)
+   Note("Total objects: "..#oKeys)
+   for i,oKey in ipairs(oKeys) do
+      if string.match(oKey,area) then
+         local q = ot[oKey]["Quality"]
+         qualities[q] = qualities[q] + 1
+         if ot[oKey]["PointsLegal"] == "true" then
+            legal = legal + 1
+         elseif ot[oKey]["PointsLegal"] == "false" then
+            illegal = illegal + 1
+         elseif ot[oKey]["PointsLegal"] == "unknown" then
+            notchecked = notchecked + 1
+         end
+      end
+   end
+   Note("Objects with legal values  : "..legal)
+   Note("Objects with illegal values: "..illegal)
+   Note("Items not checked          : "..notchecked.." ... (Types not checked for points yet)")
+   Note("Item quality summary: ")
+   for k,v in pairs(qualities) do
+      Note(string.format("%12s: %d",k,v))
+   end
+   Note("Items requiring review:")
+   for k,v in pairs(illegalitems) do
+      Note(string.format("%10s: %s",k,v))
+   end
 end
 
 ]]>
