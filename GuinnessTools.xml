@@ -1164,13 +1164,13 @@ end
 
 function meditS(name, line, wildcards)
    mt[mKey]["Affects"] = wildcards[1]
-   if string.sub(mt[mKey]["Flags"],-1) == ',' then
+   if string.sub(mt[mKey]["Affects"],-1) == ',' then
       EnableTrigger("trg_meditS_add",true)
    end
 end
 
 function meditSAdd(name, line, wildcards)
-   mt[mKey]["Affects"] = mt[mKey]["Flags"].." "..wildcards[1]
+   mt[mKey]["Affects"] = mt[mKey]["Affects"].." "..wildcards[1]
    EnableTrigger("trg_meditS_add",false)
 end
 
