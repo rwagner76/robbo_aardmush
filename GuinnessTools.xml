@@ -97,6 +97,16 @@
   >
   </trigger>
   <trigger
+   name="trg_meditF"
+   enabled="n"
+   match="G\) Description: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditG"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
    name="trg_meditHJ"
    enabled="n"
    match="H\) Level\s+:\s+(\d+)\s+J\) Alignment : (\d+)"
@@ -1127,6 +1137,15 @@ function meditF(name, line, wildcards)
    mt[mKey]["Story"] = wildcards[1]
 end
 
+function meditG(name, line, wildcards)
+   if wildcards[1] = "Description is set." then
+      Send("g")
+      Send(".q")
+   end
+   EnableTrigger("trg_meditG",false)
+   Send("Q")
+end
+
 function meditHJ(name, line, wildcards)
    mt[mKey]["Level"] = wildcards[1]
    mt[mKey]["Alignment"] = wildcards[2]
@@ -1283,9 +1302,6 @@ function meditDump(name,line,wildcards)
    Send("medit "..area.."-"..n)
    Send("v")
    Send("q")
-   Send("g")
-   Send(".q")
-   Send("Q")
 end
 
 -- oedit Capture Functions
