@@ -97,7 +97,7 @@
   >
   </trigger>
   <trigger
-   name="trg_meditF"
+   name="trg_meditG"
    enabled="n"
    match="G\) Description: (.+)"
    regexp="y"
