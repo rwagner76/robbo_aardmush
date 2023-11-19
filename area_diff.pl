@@ -27,12 +27,12 @@ foreach $line (@lines) {
    $test{$key}{$attrib} = $value;
 }
 
-@mainkeys = sort(keys(%main));
-@testkeys = sort(keys(%main));
-$lc = List::Compare->new(\@mainkeys,\@testkeys);
-@mainonly = $lc->get_unique;
-@testonly = $lc->get_complement;
-@inboth = $lc->get_intersection;
+my @mainkeys = sort(keys(%main));
+my @testkeys = sort(keys(%test));
+my $lc = List::Compare->new(\@mainkeys,\@testkeys);
+my @mainonly = $lc->get_unique;
+my @testonly = $lc->get_complement;
+my @inboth = $lc->get_intersection;
 foreach $key (@mainonly) {print "Warning: object $key only exists in main port list. Cannot compare $type.\n";}
 foreach $key (@testonly) {print "Warning: object $key only exists in test port list. Cannot compare $type.\n";}
 
