@@ -64,6 +64,7 @@ sub checkObjWeightandValue($key) {
    my %ot = %{$obj{$key}};
    my $level = $ot{"Level"};
    my $weight = $ot{"Weight"};
+   my $value = $ot{"Value"};
    my $overweight = 0;
    my $underweight = 0;
    my $minweight = 1;
@@ -166,6 +167,8 @@ sub checkObjWeightandValue($key) {
    if ($weight > $maxweight) {print "\tWarning: Item is overweight. Weight: $weight vs Max: $maxweight\n";}
    elsif ($weight < $minweight) {print "\tWarning: Item is underweight. Weight: $weight vs Min: $minweight\n";}
    else {print "\tWeight is OK.\n"}
+   if ($value > $maxvalue) {print "\tWarning: Item is over valued. Value: $value vs Max: $maxvalue\n";}}
+   else {print "\tValue is OK.\n"}
 }
 
 sub ceiling {
