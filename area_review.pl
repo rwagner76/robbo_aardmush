@@ -167,7 +167,7 @@ sub checkObjWeightandValue($key) {
    if ($weight > $maxweight) {print "\tWarning: Item is overweight. Weight: $weight vs Max: $maxweight\n";}
    elsif ($weight < $minweight) {print "\tWarning: Item is underweight. Weight: $weight vs Min: $minweight\n";}
    else {print "\tWeight is OK.\n"}
-   if ($value > $maxvalue) {print "\tWarning: Item is over valued. Value: $value vs Max: $maxvalue\n";}}
+   if ($value > $maxvalue) {print "\tWarning: Item is over valued. Value: $value vs Max: $maxvalue\n";}
    else {print "\tValue is OK.\n"}
 }
 
