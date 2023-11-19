@@ -1138,7 +1138,7 @@ function meditF(name, line, wildcards)
 end
 
 function meditG(name, line, wildcards)
-   if wildcards[1] = "Description is set." then
+   if wildcards[1] == "Description is set." then
       Send("g")
       Send(".q")
    end
