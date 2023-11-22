@@ -379,7 +379,6 @@
    regexp="y"
    sequence="100"
    script="editEnd"
-   group="editCaptures"
   >
   </trigger>
   <trigger
