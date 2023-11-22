@@ -1131,7 +1131,7 @@ function startMedit(name, line, wildcards)
 end
 
 function meditInGame(name,line,wildcards)
-   my[mKey]["In Game"] = wildcards[1]
+   mt[mKey]["In Game"] = wildcards[1]
 end
 
 function meditA(name, line, wildcards)
