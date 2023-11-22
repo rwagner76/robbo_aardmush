@@ -374,7 +374,7 @@
 
   <trigger
    name="trg_editEnd"
-   enabled="n"
+   enabled="y"
    match="You are back in the game"
    regexp="y"
    sequence="100"
