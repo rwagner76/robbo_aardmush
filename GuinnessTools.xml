@@ -57,6 +57,17 @@
   >
   </trigger>
   <trigger
+   name="trg_meditInGame"
+   enabled="n"
+   match="In Game:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditInGame"
+   group="meditCaptures"
+  >
+  </trigger>
+
+  <trigger
    name="trg_meditA"
    enabled="n"
    match="A\) Keywords\s+: (.+)"
@@ -1119,6 +1130,9 @@ function startMedit(name, line, wildcards)
    end
 end
 
+function meditInGame(name,line,wildcards)
+   my[mKey]["In Game"] = wildcards[1]
+end
 
 function meditA(name, line, wildcards)
    mt[mKey]["Keywords"] = wildcards[1]

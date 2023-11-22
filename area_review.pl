@@ -9,9 +9,6 @@ my $mobfile = $area."_mob_".$port.".tsv";
 
 my (%mob,%obj); #A couple big global hashes
 
-#Load lookup tables (dumped from 'buildstuff objpoints' and 'buildstuff mobpoints')
-my @mptable = loadMobPointsTable();
-
 #Added resist tracker by type for the end summary
 my %addedresists;
 my $objaddedresists = 0;
@@ -19,7 +16,13 @@ my $objaddedresists = 0;
 #Data on quality of objects
 my %objquality;
 my $objreqreview = 0;
+
+#Mob review/summary info
 my $mobreqreview = 0;
+my $mobtotalalign = 0; #Going to average the alignments.
+my %mobguilds; #Count how many mobs of each guild
+my $animalcount = 0;
+my %mobwatchflags; #Areaattack, Assistalign, Assistpcs, Assistself, Assistmobs, Assistrace. (should be used sparingly)
 
 open(FILE,"<$objfile") || die("Can't find file $objfile");
 @lines = <FILE>;
@@ -43,7 +46,6 @@ foreach $line (@lines) {
 
 my @objkeys = sort(keys(%obj));
 my @mobkeys = sort(keys(%mob));
-
 
 foreach $key (@objkeys) {
    my %a = %{$obj{$key}};
@@ -77,6 +79,16 @@ foreach $key (@objkeys) {
    print "--------------------------------------------------------------------------------\n\n";
 }
 
+# MOBS!
+
+foreach $key (@mobkeys) {
+   # Quick pass to calculate average alignment ahead of the individual mob review
+   my %a = %{$mob{$key}};
+   $mobtotalalign += $a{"Alignment"};
+}
+
+my $mobavgalignment = int($mobtotalalign/scalar(@mobkeys));
+
 foreach $key (@mobkeys) {
    my %a = %{$mob{$key}};
    $a{"NeedsReview"} = 0;
@@ -91,34 +103,144 @@ foreach $key (@mobkeys) {
       $a{"NeedsReview"} = 1;
    }
    my @desc = split(/\\n/,$a{"Desc"});
-   if (scalar(@desc < 4)) {
-      print "\tWarning: Less than 4 lines of text in the mob's description\n";
+   if (scalar(@desc < 3)) {
+      print "\tWarning: Less than 3 lines of text in the mob's description\n";
       $a{"NeedsReview"} = 1;
    }
    if ($a{"NeedsReview"} == 0) {print "\tDescriptions are OK.\n";}
+   if (($a{"Alignment"} > 1875) || ($a{"Alignment"} < -1875)) {
+      print "\tWarning: Mob alignment is set to an extreme value. Value: ".$a{"Alignment"}."\n";
+      $a{"NeedsReview"} = 1;
+   }
+   if (checkMobFlags($key)) {
+      $a{"NeedsReview"} = 1;
+   } else {
+      print "\tMob flags are OK.\n";
+   }
+   if (! defined $a{"Guilds"}) {
+      if ((! $a{"Flags"} =~ /undead/) && (! $a{"Flags"} =~ /animal/)) {
+         print "\tWarning: Mob does not have guild set OR flag set for undead/animal.\n";
+         $a{"NeedsReview"} = 1;
+      }
+   } elsif ($a{"Guilds"} =~ /,/) {
+      print "\tWarning: Mob has multiple guilds assigned.\n";
+      $a{"NeedsReview"} = 1;
+   } else {
+	    print "\tGuild is okay.\n";
+	    $mobguilds{$a{"Guilds"}} += 1;
+   }
+
+   if (checkMobPoints($key)) {
+      $a{"NeedsReview"} = 1;
+   } else {
+      print "\tMob points and gold are OK.\n";
+   }
+
+
    if ($a{"NeedsReview"}) {
       $mobreqreview += 1;
       print "Note: Mob should be reviewed!\n";
    }
+   
    print "--------------------------------------------------------------------------------\n\n";
 }
 
-
-
 print "Area summary:\n";
 print "--------------------------------------------------------------------------------\n";
+print "Total objects            : ".scalar(@objkeys)."\n";
 print "Object quality (by score):\n";
 my @qlist = ("Masterpiece","Average","Mediocre","Bad");
 foreach $q (@qlist) {
    printf("\t%11s: %4d\n",$q,$objquality{$q});
 }
+
+print "\nTotal mobs              : ".scalar(@mobkeys)."\n";
+print "Average mob alignment   : $mobavgalignment\n";
+print "Mob guild counts        :\n";
+foreach $g (keys(%mobguilds)) {
+   printf("\t%11s: %4d\n",$g,$mobguilds{$g});
+   if ($mobguilds{$g} > scalar(@mobkeys)/2) {print "\tWarning: More than 50% of mobs belong to the $g guild.\n";}
+}
+my $animalpct = int($animalcount/scalar(@mobkeys) * 100);
+print "Mob animal counts       : $animalcount ($animalpct\%)";
+if ($animalpct > 33) {print "Warning: Animal count is over 1/3 of mobs.\n"};
+
+if (scalar(keys(%mobwatchflags))) {
+   print "Flags to be used sparingly:\n";
+   foreach my $f (keys(%mobwatchflags)) {
+      fprint("\t%10s: %d",$f,$mobwatchflags{$f});
+   }
+}
+
+
 print "\nObjects requiring review: $objreqreview\n";
-print "\nMobs requiring review   : $mobreqreview\n";
+print "Mobs requiring review   : $mobreqreview\n";
+
 
 
 print "\nTotal objects with added (non-standard) resists: $objaddedresists\n";
 foreach my $resist (keys(%addedresists)) {
    if ($addedresists{$resist} > 1) {print "Warning: More than one object in the area has added resist of type $resist\n";}
+}
+
+sub checkMobFlags {
+   my ($key) = @_;
+   my %mt = %{$mob{$key}};
+   my $return = 0;
+   if (! $mt{"Flags"} =~ /confined/) {
+      print "\tWarning: Mob does not have the confined flag.";
+   }
+   
+   if ($a{"Flags"} =~ /animal/) {$animalcount++;}
+   
+   my @checkflags = ("areaattack","assistalign","assistpcs","assistself","assistmobs","assistrace");
+   foreach my $f (@checkflags) {
+      if ($a{"Flags"} =~ /$f/) {$mobwatchflags{$f} += 1;}
+   }
+   
+   # If possible, check for plurals and/or if nocorpse is needed. The last might be impossible.
+}
+
+sub checkMobPoints {
+   my ($key) = @_;
+   my %mt = %{$mob{$key}};
+   my $return = 0;
+   my ($hpmin,$hpavg,$hpmax,$hpadd,$dmmin,$dmavg,$dmmax,$dr,$hr,$gold) = getMobPoints($mt{"Level"});
+   if ($mt{"HP/Move Range Min"} < $hpmin) {
+      print "\tHP/Move minimum is below minimum for level: ".$mt{"HP/Move Range Min"}." vs level minimum $hpmin\n";
+      $return = 1;
+   }
+   if ($mt{"HP/Move Range Max"} > $hpmax) {
+      print "\tHP/Move maximum is above maximum for level: ".$mt{"HP/Move Range Max"}." vs level minimum $hpmax\n";
+      $return = 1;
+   }
+   if (($mt{"HP/Move Range Avg"} > ($hpavg * 1.25)) || ($mt{"HP/Move Range Avg"} < ($hpavg * .75))) {
+      print "\tHP/Move average is more than 25\% out of spec for level: ".$mt{"HP/Move Range Avg"}." vs level average $hpavg\n";
+      $return = 1;
+   }
+   if ($mt{"HP/Move Range Bonus"} > $hpadd) {
+      print "\tHP/Move range bonus is above maximum for level: ".$mt{"HP/Move Range Bonus"}." vs level bonus $hpadd\n";
+      $return = 1;
+   }
+
+   if ($mt{"Damage Range Min"} < $dmmin) {
+      print "\tDamage minimum is below minimum for level: ".$mt{"Damage Range Min"}." vs level minimum $dmmin\n";
+      $return = 1;
+   }
+   if ($mt{"Damage Range Max"} > $dmmax) {
+      print "\tDamage maximum is above maximum for level: ".$mt{"Damage Range Max"}." vs level minimum $dmmax\n";
+      $return = 1;
+   }
+   if (($mt{"Damage Range Avg"} > ($dmavg * 1.25)) || ($mt{"Damage Range Avg"} < ($dmavg * .75))) {
+      print "\tDamage average is more than 25\% out of spec for level: ".$mt{"Damage Range Avg"}." vs level average $dmavg\n";
+      $return = 1;
+   }
+
+
+   print "\tNote: Mana range table is unknown. Can't check.\n";
+   
+   
+   return $return;
 }
 
 
@@ -723,7 +845,7 @@ END_TABLE
    else { return splice(@points,1,6) }
 }
 
-sub loadMobPointsTable {
+sub getMobPoints {
    my $mptable = <<'END_TABLE';
 1 1 1 2 6 1 2 2 21 0 5
 2 1 1 2 15 1 2 2 22 1 5
@@ -977,8 +1099,12 @@ sub loadMobPointsTable {
 250 18306 30509 42713 9490 29 711 1392 270 280 11500
 END_TABLE
    #Level  Hp Min Hp Avg Hp Max Hp Add Dm Min Dm Avg Dm Max DR    HR    Gold
+   my ($level) = @_;
    my @table = split(/\n/,$mptable);
-   return @table;
+   my @match = grep(/^$level\ /,@table);
+   my @data = split(/\s/,$match[0]);
+   shift @data;
+   return @data;
 }
 
 sub getArmorResWeight {
