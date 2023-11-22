@@ -373,13 +373,13 @@
   </trigger>
 
   <trigger
-   name="trg_meditEnd"
+   name="trg_editEnd"
    enabled="n"
    match="You are back in the game"
    regexp="y"
    sequence="100"
-   script="meditEnd"
-   group="meditCaptures"
+   script="editEnd"
+   group="editCaptures"
   >
   </trigger>
   <trigger
@@ -1286,7 +1286,8 @@ function meditDescEnd(name,line,wildcards)
 end
 
 
-function meditEnd(name,line,wildcards)
+function editEnd(name,line,wildcards)
+   EnableTriggerGroup("oeditCaptures",false)
    EnableTriggerGroup("meditCaptures",false)
    EnableTriggerGroup("meditStatCaptures",false)   
    EnableTrigger("trg_meditDesc",false)
