@@ -19,6 +19,7 @@ my $objaddedresists = 0;
 #Data on quality of objects
 my %objquality;
 my $objreqreview = 0;
+my $mobreqreview = 0;
 
 open(FILE,"<$objfile") || die("Can't find file $objfile");
 @lines = <FILE>;
@@ -61,11 +62,11 @@ foreach $key (@objkeys) {
    }
 
    if (length(%a{"Name"} > 50)) {
-      print "\tWarning: Short name of object is longer than 50 characters (no color)";
+      print "\tWarning: Short name of object is longer than 50 characters\n";
       $a{"NeedsReview"} = 1;
    }
    if (length(%a{"Room Name"} > 80)) {
-      print "\tWarning: Room name of object is longer than 80 characters (no color)";
+      print "\tWarning: Room name of object is longer than 80 characters\n";
       $a{"NeedsReview"} = 1;
    }
    
@@ -76,6 +77,34 @@ foreach $key (@objkeys) {
    print "--------------------------------------------------------------------------------\n\n";
 }
 
+foreach $key (@mobkeys) {
+   my %a = %{$mob{$key}};
+   $a{"NeedsReview"} = 0;
+   print "Checking mob ".$key." (".$a{"Name"}.")\n";
+   print "--------------------------------------------------------------------------------\n";
+   if (length(%a{"Name"} > 50)) {
+      print "\tWarning: Short name of mob is longer than 50 characters (limit?)";
+      $a{"NeedsReview"} = 1;
+   }
+   if (length(%a{"Room Name"} > 80)) {
+      print "\tWarning: Room name of mob is longer than 80 characters\n";
+      $a{"NeedsReview"} = 1;
+   }
+   my @desc = split(/\\n/,$a{"Desc"});
+   if (scalar(@desc < 4)) {
+      print "\tWarning: Less than 4 lines of text in the mob's description\n";
+      $a{"NeedsReview"} = 1;
+   }
+   if ($a{"NeedsReview"} == 0) {print "\tDescriptions are OK.\n";}
+   if ($a{"NeedsReview"}) {
+      $mobreqreview += 1;
+      print "Note: Mob should be reviewed!\n";
+   }
+   print "--------------------------------------------------------------------------------\n\n";
+}
+
+
+
 print "Area summary:\n";
 print "--------------------------------------------------------------------------------\n";
 print "Object quality (by score):\n";
@@ -84,6 +113,7 @@ foreach $q (@qlist) {
    printf("\t%11s: %4d\n",$q,$objquality{$q});
 }
 print "\nObjects requiring review: $objreqreview\n";
+print "\nMobs requiring review   : $mobreqreview\n";
 
 
 print "\nTotal objects with added (non-standard) resists: $objaddedresists\n";
@@ -200,6 +230,7 @@ sub checkObjAffects {
    }
    return $ot{"NeedsReview"};
 }
+
 
 sub calcItemQuality {
    my ($totalpoints,$maxpoints) = @_;

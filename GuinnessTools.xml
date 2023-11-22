@@ -109,7 +109,7 @@
   <trigger
    name="trg_meditHJ"
    enabled="n"
-   match="H\) Level\s+:\s+(\d+)\s+J\) Alignment : (\d+)"
+   match="H\) Level\s+:\s+(\d+)\s+J\) Alignment : ([-]?\d+)"
    regexp="y"
    sequence="100"
    script="meditHJ"
