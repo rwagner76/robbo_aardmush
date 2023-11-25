@@ -924,6 +924,7 @@ function OnHelp()
 end
 
 function clearTempTimers()
+   Note("Clearing all temporary timers!")
    DeleteTemporaryTimers ()
 end
 
@@ -1024,6 +1025,7 @@ function rstatAll(name, line, wildcards)
 end
 
 function mstatAll(name, line, wildcards)
+   Note("Global timer option: "..GetGlobalOption("enable_timers"))
    if GetGlobalOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
