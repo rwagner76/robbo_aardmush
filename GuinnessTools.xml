@@ -988,7 +988,7 @@ end
 
 
 function rstatAll(name, line, wildcards)
-   if GetGlobalOption("enable_timers") == 0 then
+   if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
@@ -1025,8 +1025,8 @@ function rstatAll(name, line, wildcards)
 end
 
 function mstatAll(name, line, wildcards)
-   Note("Global timer option: "..GetGlobalOption("enable_timers"))
-   if GetGlobalOption("enable_timers") == 0 then
+   Note("Global timer option: "..GetOption("enable_timers"))
+   if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
@@ -1064,7 +1064,7 @@ function mstatAll(name, line, wildcards)
 end
 
 function ostatAll(name, line, wildcards)
-   if GetGlobalOption("enable_timers") == 0 then
+   if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
@@ -1104,7 +1104,7 @@ function ostatAll(name, line, wildcards)
 end
 
 function mpdumpAll(name, line, wildcards)
-   if GetGlobalOption("enable_timers") == 0 then
+   if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
@@ -1671,7 +1671,7 @@ function exportData(type,t,parsable)
 end
 
 function editDumpAll(name,line,wildcards)
-   if GetGlobalOption("enable_timers") == 0 then
+   if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
