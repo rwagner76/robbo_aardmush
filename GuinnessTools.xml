@@ -765,28 +765,28 @@
   >
   </alias>
   <alias
-   match="oeditdumpall *"
+   match="oeditall *"
    enabled="y"
    script="editDumpAll"
    sequence="101"
   >
   </alias>
   <alias
-   match="oeditdumpall * *"
+   match="oeditall * *"
    enabled="y"
    script="editDumpAll"
    sequence="100"
   >
   </alias>
   <alias
-   match="meditdumpall *"
+   match="meditall *"
    enabled="y"
    script="editDumpAll"
    sequence="101"
   >
   </alias>
   <alias
-   match="meditdumpall * *"
+   match="meditall * *"
    enabled="y"
    script="editDumpAll"
    sequence="100"
@@ -901,7 +901,7 @@ function OnHelp()
                                you're in. Starts at 'mgoto area-0'. (Guinness Go!)
  gmgo #                    --> Sets ggo to # and goes!
  gmgo reset                --> Sets ggo back to 0.
-
+ gcancal                   --> Deletes all temporary timers queued.
  mstatall # [#]            --> Dumps mstat for each mob in 'keyword' area,
                                counting from 0 to #.
  rstatall # [#]            --> Dumps rstat for each room in 'keyword' area,
@@ -911,13 +911,13 @@ function OnHelp()
                                before ostat.
  mpdumpall # [#]           --> Does mpdump of all programs 0 to N.
                                Uses rawcolor mode and noline.
- meditall # [#]            --> Similar to mstatall, dumps mob editor
-                               details.
- reditall # [#]            --> Similar to rstatall, dumps room editor
-                               details.
- oeditall # [#]            --> Similar to rstatall, dumps room editor
-                               details.
+ meditall # [#]            --> Collects mob editor details for later export.
+ oeditall # [#]            --> Collects object editor details for later export.
+ exportmobs [parsable]     --> Exports all mob data collected by meditall.
+ exportobjects [parsable]  --> Exports all object data collected by oeditall.
  toolbox help              --> Show this help file
+
+ Note: use 'parsable' option with exports to create files usable by area audit tools.
 ]]
 
   print(help)

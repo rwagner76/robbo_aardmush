@@ -74,24 +74,31 @@ Download GuinnessTools.xml and place into your MUSHClient Worlds\Plugins folder,
 ```
                       Test Port Toolbox Help
 =============================================================================
+ garea keyword             --> Set the area you're working in so you don't
+                               need to type keywords
  ggo                       --> Alias for rgoto that increments the room vnum
                                you're in. Starts at 'rgoto 0'. (Guinness Go!)
  ggo #                     --> Sets ggo to # and goes!
  ggo reset                 --> Sets ggo back to 0.
- mstatall keyword # [#]    --> Dumps mstat for each mob in 'keyword' area,
+ gmgo                      --> Alias for mgoto that increments the mob vnum
+                               you're in. Starts at 'mgoto area-0'. (Guinness Go!)
+ gmgo #                    --> Sets ggo to # and goes!
+ gmgo reset                --> Sets ggo back to 0.
+ gcancal                   --> Deletes all temporary timers queued.
+ mstatall # [#]            --> Dumps mstat for each mob in 'keyword' area,
                                counting from 0 to #.
- rstatall keyword # [#]    --> Dumps rstat for each room in 'keyword' area,
+ rstatall # [#]            --> Dumps rstat for each room in 'keyword' area,
                                counting from 0 to #.
- ostatall keyword # [#]    --> Dumps ostat for each room in 'keyword' area,
+ ostatall # [#]            --> Dumps ostat for each room in 'keyword' area,
                                counting from 0 to #. The object is loaded
                                before ostat.
- mpdumpall keyword # [#]   --> Does mpdump of all programs 0 to N.
+ mpdumpall # [#]           --> Does mpdump of all programs 0 to N.
                                Uses rawcolor mode and noline.
- meditall keyword # [#]    --> Similar to mstatall, dumps mob editor    (not implemented yet!)
-                               details.
- reditall keyword # [#]    --> Similar to rstatall, dumps room editor   (not implemented yet!)
-                               details.
- oeditall keyword # [#]    --> Similar to rstatall, dumps room editor   (not implemented yet!)
-                               details.                     
+ meditall # [#]            --> Collects mob editor details for later export.
+ oeditall # [#]            --> Collects object editor details for later export.
+ exportmobs [parsable]     --> Exports all mob data collected by meditall.
+ exportobjects [parsable]  --> Exports all object data collected by oeditall.
  toolbox help              --> Show this help file
+
+ Note: use 'parsable' option with exports to create files usable by area audit tools.
  ```
