@@ -644,6 +644,13 @@
   >
   </alias>
   <alias
+   match="gcancel"
+   enabled="y"
+   script="ClearTempTimers"
+   sequence="100"
+  >
+  </alias>
+  <alias
    match="ggo *"
    enabled="y"
    script="ggoParam"
@@ -916,6 +923,11 @@ function OnHelp()
   print(help)
 end
 
+function clearTempTimers()
+   DeleteTemporaryTimers ()
+end
+
+
 function rewriteMpdumpHeader(name,line,wildcards)
    local mpkey = wildcards[1]
    WriteLog("Dumping mobprog: "..mpkey)
@@ -975,6 +987,10 @@ end
 
 
 function rstatAll(name, line, wildcards)
+   if GetGlobalOption("enable_timers") == 0 then
+      Note("Warning: Timers are currently disabled. Cannot execute.")
+      return
+   end
    local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local min = 0
@@ -1008,6 +1024,10 @@ function rstatAll(name, line, wildcards)
 end
 
 function mstatAll(name, line, wildcards)
+   if GetGlobalOption("enable_timers") == 0 then
+      Note("Warning: Timers are currently disabled. Cannot execute.")
+      return
+   end
    local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local min = 0
@@ -1042,6 +1062,10 @@ function mstatAll(name, line, wildcards)
 end
 
 function ostatAll(name, line, wildcards)
+   if GetGlobalOption("enable_timers") == 0 then
+      Note("Warning: Timers are currently disabled. Cannot execute.")
+      return
+   end
    local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local min = 0
@@ -1078,6 +1102,10 @@ function ostatAll(name, line, wildcards)
 end
 
 function mpdumpAll(name, line, wildcards)
+   if GetGlobalOption("enable_timers") == 0 then
+      Note("Warning: Timers are currently disabled. Cannot execute.")
+      return
+   end
    -- Add some triggers to gag Flags, size, old vnum, etc and replace the Mobprog Id line.
    -- Single trigger matching on ^@Y would work, actually!
    local area = GetVariable("garea")
@@ -1641,6 +1669,10 @@ function exportData(type,t,parsable)
 end
 
 function editDumpAll(name,line,wildcards)
+   if GetGlobalOption("enable_timers") == 0 then
+      Note("Warning: Timers are currently disabled. Cannot execute.")
+      return
+   end
    local command = ""
    if line:sub(1,1) == "m" then command = "meditdump " end
    if line:sub(1,1) == "o" then command = "oeditdump " end

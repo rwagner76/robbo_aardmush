@@ -205,7 +205,7 @@ sub checkMobPoints {
    my ($key) = @_;
    my %mt = %{$mob{$key}};
    my $return = 0;
-   my ($hpmin,$hpavg,$hpmax,$hpadd,$dmmin,$dmavg,$dmmax,$dr,$hr,$gold) = getMobPoints($mt{"Level"});
+   my ($hpmin,$hpavg,$hpmax,$hpadd,$dmmin,$dmavg,$dmmax,$dr,$hr,$maxgold) = getMobPoints($mt{"Level"});
    if ($mt{"HP/Move Range Min"} < $hpmin) {
       print "\tHP/Move minimum is below minimum for level: ".$mt{"HP/Move Range Min"}." vs level minimum $hpmin\n";
       $return = 1;
@@ -223,6 +223,9 @@ sub checkMobPoints {
       $return = 1;
    }
 
+   #Don't have any documentation on the mana range
+   print "\tNote: Mana range table is unknown. Can't check.\n";
+   
    if ($mt{"Damage Range Min"} < $dmmin) {
       print "\tDamage minimum is below minimum for level: ".$mt{"Damage Range Min"}." vs level minimum $dmmin\n";
       $return = 1;
@@ -236,9 +239,20 @@ sub checkMobPoints {
       $return = 1;
    }
 
-
-   print "\tNote: Mana range table is unknown. Can't check.\n";
-   
+   my $adjgold = $maxgold;
+   if ($mt{"In Game"} > 1) {
+      #Adjust max gold per reset
+      my @iter = (1..($mt{"In Game"}-1));
+      for (@iter) {
+         $adjgold = int($adjgold * .9);
+      }
+      if ($adjgold < ($maxgold/2)) {$adjgold = int($maxgold/2);}
+   }
+   if ($mt{"Gold"} > $adjgold) {
+      print "\tGold on mob is over maximum: ".$mt{"Gold"}." vs maximum $adjgold (".$mt{"In Game"}." resets)\n";
+      print "\tNote: per Domain there is an exception for SH areas. Need to verify with Lasher.\n";
+      $return = 1;
+   }
    
    return $return;
 }
