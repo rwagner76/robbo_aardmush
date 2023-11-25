@@ -646,7 +646,7 @@
   <alias
    match="gcancel"
    enabled="y"
-   script="ClearTempTimers"
+   script="clearTempTimers"
    sequence="100"
   >
   </alias>
