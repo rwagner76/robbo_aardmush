@@ -314,15 +314,15 @@ sub checkObjAffects {
       else {print "\tTotal points : $totalpoints out of possible $maxpoints\n";}
       calcItemQuality($totalpoints,$maxpoints);
       
-      if ($statscore > (ceiling($totalpoints * .6))) {
+      if ($statscore > ($maxpoints * .6)) {
          print "\tWarning: More than 60% of max points have been allocated to stats!\n";
          $ot{"NeedsReview"} = 1;
       }
-      if ($hrdrscore > (ceiling($totalpoints * .6))) {
+      if ($hrdrscore > *$maxpoints * .6)) {
          print "\tWarning: More than 60% of max points have been allocated to HR/DR!\n";
          $ot{"NeedsReview"} = 1;
       }
-      if ($hpmnmvscore > (ceiling($totalpoints * .6))) {
+      if ($hpmnmvscore > ($maxpoints * .6)) {
          print "\tWarning: More than 60% of max points have been allocated to HP/Mana/Moves!\n";
          $ot{"NeedsReview"} = 1;
       }
@@ -460,6 +460,11 @@ sub checkObjWeightandValue {
       $maxweight = int($level/2);
       $minweight = int($level/20);
       $maxvalue = $level * 5;
+   }
+   if ($ot{"Object Type"} eq "Gold") {
+      $maxweight = 1;
+      $minweight = 1;
+      $maxvalue = $level * 100;
    }
    if ($ot{"Object Type"} eq "Key") {
       $maxweight = int($level/2);
