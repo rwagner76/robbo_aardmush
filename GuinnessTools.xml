@@ -1133,10 +1133,12 @@ function rstatStart(name,line,wildcards)
    EnableTrigger("trg_rstatMiddle",true)
    EnableTrigger("trg_rstatEnd",true)
    rstat[statKey] = {}
+   Note("Started capture of rstat!")
 end
 
 function rstatMiddle(name,line,wildcards)
    table.insert(rstat[statKey], line)
+   Note("Adding line to rstat!")
 end
 
 function rstatEnd(name,line,wildcards)
@@ -1144,6 +1146,7 @@ function rstatEnd(name,line,wildcards)
    table.insert(rstat[statKey], line)
    EnableTrigger("trg_rstatMiddle",false)
    EnableTrigger("trg_rstatEnd",false)
+   Note("Ended capture of rstat!")
    for i,l in ipairs(rstat[statKey]) do
       Note("Cap: "..l)
    end
