@@ -1144,6 +1144,7 @@ function rstatEnd(name,line,wildcards)
    table.insert(rstat[statKey], line)
    EnableTrigger("rstatMiddle",false)
    EnableTrigger("rstatEnd",false)
+   Note("Ended!")
    for i,l in ipairs(rstat[statKey]) do
       Note("Cap: "..l)
    end
