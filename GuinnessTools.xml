@@ -792,14 +792,6 @@
    sequence="100"
   >
   </alias>
-
-  <alias
-   match="objectsummary"
-   enabled="y"
-   script="objectSummary"
-   sequence="100"
-  >
-  </alias>
   <alias
    match="dot *"
    enabled="y"
