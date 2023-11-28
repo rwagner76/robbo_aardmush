@@ -318,7 +318,7 @@ sub checkObjAffects {
          print "\tWarning: More than 60% of max points have been allocated to stats!\n";
          $ot{"NeedsReview"} = 1;
       }
-      if ($hrdrscore > *$maxpoints * .6)) {
+      if ($hrdrscore > ($maxpoints * .6)) {
          print "\tWarning: More than 60% of max points have been allocated to HR/DR!\n";
          $ot{"NeedsReview"} = 1;
       }
@@ -461,10 +461,11 @@ sub checkObjWeightandValue {
       $minweight = int($level/20);
       $maxvalue = $level * 5;
    }
+   # Gold object type doesn't have defined weights or value maximums
    if ($ot{"Object Type"} eq "Gold") {
       $maxweight = 1;
       $minweight = 1;
-      $maxvalue = $level * 100;
+      $maxvalue = $level * 10000;
    }
    if ($ot{"Object Type"} eq "Key") {
       $maxweight = int($level/2);
@@ -530,6 +531,7 @@ sub checkObjWeightandValue {
 
 
    if ($minweight == 0) {$minweight = 1;}
+   if ($maxweight == 0) {$maxweight = 1;}
    my $return = 0;
    if ($weight > $maxweight) {
       print "\tWarning: Item is overweight. Weight: $weight vs Max: $maxweight\n";

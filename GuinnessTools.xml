@@ -855,36 +855,6 @@ local oaff = {}
 local illegalitems = {}
 
 -- Main execution
-function readobjPoints()
-   local f = io.open(GetInfo (67) .. "plugins\\" .. "objpointstable.txt",r)
-   if f == nil then Note("objpointstable.txt: File not found. Won't be able to check for legal item stats.") end
-   local op = {}
-   local i = 1
-   for line in f:lines () do
-      local entries = {}
-      line:gsub('([^,]+)', function(c)
-         table.insert(entries, c)
-      end)
-      op[i] = {}
-      op[i]["STotals"] = entries[1]
-      op[i]["SStats"]  = entries[2]
-      op[i]["SSaves"]  = entries[3]
-      op[i]["SHRDR"]   = entries[4]
-      op[i]["SHPMNMV"] = entries[5]
-      op[i]["SNegall"] = entries[6]
-      op[i]["DTotals"] = entries[7]
-      op[i]["DStats"]  = entries[8]
-      op[i]["DSaves"]  = entries[9]
-      op[i]["DHRDR"]   = entries[10]
-      op[i]["DHPMNMV"] = entries[11]
-      op[i]["DNegall"] = entries[12]
-      i = i + 1
-   end
-   f:close ()
-   return op
-end
-
-local objPoints = readobjPoints()
 
 function OnHelp()
    local help = [[
@@ -1362,84 +1332,6 @@ function oeditAffectValues(name,line,wildcards)
    oaff[oKey][wildcards[3]] = wildcards[4]
 end
 
-function calcObjPoints(a)
-   -- Calc the points for the object based on affects
-   local stats = 0
-   local hrdr = 0
-   local hp = 0
-   local neg = 0
-   local saves = 0
-   local st = {"Strength","Intelligence","Wisdom","Dexterity","Constitution","Luck"}
-   for i,k in ipairs(st) do
-      local sval = tzero(a,k)
-      if sval < 0 then neg = neg - sval end
-      stats = stats + sval
-   end
-   local hd = {"Hit roll","Damage roll"}
-   for i,k in ipairs(hd) do
-      local rval = tzero(a,k)
-      if rval < 0 then neg = neg - (rval/2) end
-      hrdr = hrdr + (rval/2)
-   end
-   local hmm = {"Hit points","Mana","Moves"}
-   for i,k in ipairs(hmm) do
-      local hmmval = tzero(a,k)
-      if hmmval < 0 then neg = neg - (hmmval/10) end
-      hp = hp + (hmmval/10)
-   end
-   local total = hp + stats + hrdr
-   return total,stats,saves,hrdr,hp,neg
-end
-
-function SorD()
-   local rchar = "S"
-   local duals = {"finger","wrist","neck","ear"}
-   for i,v in ipairs(duals) do
-      if ot[oKey]["Wearable"] == v then rchar = "D" end
-   end
-   return rchar
-end
-
-
-function checkArmorPoints()
-   local legal = "true"
-   local quality = ""
-   local objLevel = tonumber(ot[oKey]["Level"])
-   local maxPoints = tonumber(objPoints[objLevel][SorD().."Totals"])
-   if tonumber(ot[oKey]["PointsTotal"]) > maxPoints then
-      Note("Warning: Object is over max points!"..ot[oKey]["PointsTotal"].." vs max:"..objPoints[objLevel][SorD().."Totals"])
-      quality = "Masterpiece"
-      legal = "false"
-      illegalitems[oKey] = "Over Max Points"
-   end
-   if tonumber(ot[oKey]["PointsTotal"]) == maxPoints then quality = "Maxxed" end
-   if tonumber(ot[oKey]["PointsTotal"]) < maxPoints then quality = "Average" end
-   if tonumber(ot[oKey]["PointsTotal"]) <= maxPoints/2 then quality = "Mediocre" end
-   if tonumber(ot[oKey]["PointsTotal"]) <= 0 then quality = "Bad" end
-   	
-   if tonumber(ot[oKey]["PointsStats"]) > tonumber(objPoints[objLevel][SorD().."Stats"]) then
-      Note("Warning: Object is over max stats! "..ot[oKey]["PointsStats"].." vs max:"..objPoints[objLevel][SorD().."Stats"])
-      illegalitems[oKey] = "Over Max Stats"
-      legal = "false"
-   end
-   if tonumber(ot[oKey]["PointsHRDR"]) > tonumber(objPoints[objLevel][SorD().."HRDR"]) then
-      Note("Warning: Object is over HR/DR limits! "..ot[oKey]["PointsHRDR"].." vs max: "..objPoints[objLevel][SorD().."HRDR"])
-      illegalitems[oKey] = "Over Max HR/DR"
-      legal = "false"
-   end
-   if tonumber(ot[oKey]["PointsHPMNMV"]) > tonumber(objPoints[objLevel][SorD().."HPMNMV"]) then
-      Note("Warning: Object is over max HP/Mana/Moves! "..ot[oKey]["PointsHPMNMV"].." vs max: "..objPoints[objLevel][SorD().."HPMNMV"])
-      illegalitems[oKey] = "Over Max HR/DR"
-      legal = "false"
-   end
-   if tonumber(ot[oKey]["PointsNegative"]) > tonumber(objPoints[objLevel][SorD().."Negall"]) then
-      Note("Warning: Object is over max negative points!")
-      illegalitems[oKey] = "Over Max Negative"
-      legal = "false"
-   end
-   return legal,quality
-end
-
 
 function startOedit(name, line, wildcards)
    oKey = wildcards[1]
@@ -1505,14 +1397,6 @@ function oeditP(name, line, wildcards)
    if tonumber(wildcards[1]) > 0 then
       Send("P")
       Send("Q")
-   else
-      ot[oKey]["PointsTotal"],ot[oKey]["PointsStats"],ot[oKey]["PointsSaves"],ot[oKey]["PointsHRDR"],ot[oKey]["PointsHPMNMV"],ot[oKey]["PointsNegative"] = calcObjPoints(oaff[oKey])
-      if ot[oKey]["Object Type"] == "Armor" or ot[oKey]["Object Type"] == "Weapon" then
-         ot[oKey]["PointsLegal"],ot[oKey]["Quality"] = checkArmorPoints()
-      else
-         ot[oKey]["PointsLegal"] = "unknown"
-         ot[oKey]["Quality"] = "unknown"
-      end
    end
    if ot[oKey]["Object Type"] ~= "Weapon" then
       Send("Q")
@@ -1557,13 +1441,6 @@ end
 
 function oeditAffectEnd()
    EnableTrigger("trg_oeditAffectValues",false)
-   ot[oKey]["PointsTotal"],ot[oKey]["PointsStats"],ot[oKey]["PointsSaves"],ot[oKey]["PointsHRDR"],ot[oKey]["PointsHPMNMV"],ot[oKey]["PointsNegative"] = calcObjPoints(oaff[oKey])
-   if ot[oKey]["Object Type"] == "Armor" or ot[oKey]["Object Type"] == "Weapon" then
-      ot[oKey]["PointsLegal"],ot[oKey]["Quality"] = checkArmorPoints()
-   else
-      ot[oKey]["PointsLegal"] = "unknown"
-      ot[oKey]["Quality"] = "unknown"
-   end
 end
 
 function oeditDump(name,line,wildcards)
@@ -1696,41 +1573,6 @@ function editDumpAll(name,line,wildcards)
 end
 
 
-function objectSummary()
-   local area = GetVariable("garea")
-   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
-   local oKeys = getTableKeys(ot)
-   local qualities = {Masterpiece=0,Maxxed=0,Average=0,Mediocre=0,Bad=0,unknown=0}
-   local legal = 0
-   local illegal = 0
-   local notchecked = 0
-   Note("Summary of known objects for zone: "..area)
-   Note("Total objects: "..#oKeys)
-   for i,oKey in ipairs(oKeys) do
-      if string.match(oKey,area) then
-         local q = ot[oKey]["Quality"]
-         qualities[q] = qualities[q] + 1
-         if ot[oKey]["PointsLegal"] == "true" then
-            legal = legal + 1
-         elseif ot[oKey]["PointsLegal"] == "false" then
-            illegal = illegal + 1
-         elseif ot[oKey]["PointsLegal"] == "unknown" then
-            notchecked = notchecked + 1
-         end
-      end
-   end
-   Note("Objects with legal values  : "..legal)
-   Note("Objects with illegal values: "..illegal)
-   Note("Items not checked          : "..notchecked.." ... (Types not checked for points yet)")
-   Note("Item quality summary: ")
-   for k,v in pairs(qualities) do
-      Note(string.format("%12s: %d",k,v))
-   end
-   Note("Items requiring review:")
-   for k,v in pairs(illegalitems) do
-      Note(string.format("%10s: %s",k,v))
-   end
-end
 
 ]]>
 </script>
