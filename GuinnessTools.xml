@@ -1158,6 +1158,7 @@ function ostatCap(name,line,wildcards)
 end
 
 function rstatCap(name,line,wildcards)
+   Note("Enabling capture triggers...")
    statKey = wildcards[1]
    EnableTriggerGroup("startStatCaptures",true)
    Send("rstat "..statKey)
