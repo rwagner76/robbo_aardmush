@@ -1124,6 +1124,7 @@ function ostatStart(name,line,wildcards)
    EnableTrigger("ostatMiddle",true)
    EnableTrigger("ostatEnd",true)
    ostat[statKey] = {}
+   table.insert(ostat[statKey], line)
 end
 
 function ostatMiddle(name,line,wildcards)
@@ -1133,6 +1134,7 @@ end
 function ostatEnd(name,line,wildcards)
    EnableTrigger("ostatMiddle",false)
    EnableTrigger("ostatEnd",false)
+   table.insert(ostat[statKey], line)
 end
 
 function mstatStart(name,line,wildcards)
@@ -1140,6 +1142,7 @@ function mstatStart(name,line,wildcards)
    EnableTrigger("mstatMiddle",true)
    EnableTrigger("mstatEnd",true)
    mstat[statKey] = {}
+   table.insert(mstat[statKey], line)
 end
 
 function mstatMiddle(name,line,wildcards)
@@ -1149,6 +1152,7 @@ end
 function mstatEnd(name,line,wildcards)
    EnableTrigger("mstatMiddle",false)
    EnableTrigger("mstatEnd",false)
+   table.insert(mstat[statKey], line)
 end
 
 function rstatStart(name,line,wildcards)
@@ -1156,6 +1160,7 @@ function rstatStart(name,line,wildcards)
    EnableTrigger("trg_rstatMiddle",true)
    EnableTrigger("trg_rstatEnd",true)
    rstat[statKey] = {}
+   table.insert(rstat[statKey], line)
 end
 
 function rstatMiddle(name,line,wildcards)
@@ -1163,7 +1168,6 @@ function rstatMiddle(name,line,wildcards)
 end
 
 function rstatEnd(name,line,wildcards)
-   -- rstat end line should also be added to list
    table.insert(rstat[statKey], line)
    EnableTrigger("trg_rstatMiddle",false)
    EnableTrigger("trg_rstatEnd",false)
