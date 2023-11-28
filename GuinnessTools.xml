@@ -1083,7 +1083,6 @@ function statAll(name, line, wildcards)
    end
    local delay = 1
    for i = min,max do
-      EnableTriggerGroup("startStatCaptures",true)
       local key = area.."-"..tostring(i)
       if line:sub(1,1) == "o" then
          DoAfterSpecial(delay,"oload "..key,sendto.execute)
@@ -1154,16 +1153,19 @@ end
 
 function ostatCap(name,line,wildcards)
    statKey = wildcards[1]
+   EnableTriggerGroup("startStatCaptures",true)
    Send("ostat "..statKey)
 end
 
 function rstatCap(name,line,wildcards)
    statKey = wildcards[1]
+   EnableTriggerGroup("startStatCaptures",true)
    Send("rstat "..statKey)
 end
 
 function mstatCap(name,line,wildcards)
    statKey = wildcards[1]
+   EnableTriggerGroup("startStatCaptures",true)
    Send("mstat "..statKey)
 end
 
