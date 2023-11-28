@@ -106,3 +106,34 @@ or:  git clone this repository into your worlds\plugins folder
  Note: use 'parsable' option with exports to create files usable by area audit tools.
  Exported files will be saved to worlds\plugins\robbo_aardmush\exports
  ```
+ 
+ ## Area evaluation scripts
+ ### Setup/requirements:
+ Ensure Strawberry Perl is installed (https://strawberryperl.com/)
+ Once installed, install module List::Compare:
+ ```
+ perl -MCPAN -e'install List::Compare'
+ ```
+ 
+ ### Area Diff Usage:
+ From your exports directory, run:
+ ```
+ 
+ Ensure you have parsable object or mob dumps from an area on BOTH test and main ports.
+ 
+ Area diff:
+ perl ..\area_diff.pl zonename [object|mob]
+ ```
+ 
+ ### Area Review Usage:
+ From your exports directory, run:
+ ```
+ 
+ Ensure you have parsable object AND mob dumps from an area on test or main port.
+ 
+ Area review:
+ perl ..\area_review.pl zonename [test|main]
+ ```
+ 
+ If you have issues with filenames not containing test or main port in the name, this is determined by your world hostname/IP setting.
+ aardmud.net = test, aardmud.org = main.
