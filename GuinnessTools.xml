@@ -1129,9 +1129,9 @@ function mstatEnd(name,line,wildcards)
 end
 
 function rstatStart(name,line,wildcards)
-   EnableTrigger("rstatStart",false)
-   EnableTrigger("rstatMiddle",true)
-   EnableTrigger("rstatEnd",true)
+   EnableTrigger("trg_rstatStart",false)
+   EnableTrigger("trg_rstatMiddle",true)
+   EnableTrigger("trg_rstatEnd",true)
    rstat[statKey] = {}
 end
 
@@ -1142,9 +1142,8 @@ end
 function rstatEnd(name,line,wildcards)
    -- rstat end line should also be added to list
    table.insert(rstat[statKey], line)
-   EnableTrigger("rstatMiddle",false)
-   EnableTrigger("rstatEnd",false)
-   Note("Ended!")
+   EnableTrigger("trg_rstatMiddle",false)
+   EnableTrigger("trg_rstatEnd",false)
    for i,l in ipairs(rstat[statKey]) do
       Note("Cap: "..l)
    end
