@@ -1625,7 +1625,7 @@ function exportstat(name,line,wildcards)
       keys = getTableKeys(ostat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(ostat[key]) do
-            f:write(data)
+            f:write(data.."\n")
          end
       end
    end
@@ -1633,7 +1633,7 @@ function exportstat(name,line,wildcards)
       keys = getTableKeys(mstat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(mstat[key]) do
-            f:write(data)
+            f:write(data.."\n")
          end
       end
    end
@@ -1641,7 +1641,7 @@ function exportstat(name,line,wildcards)
       keys = getTableKeys(rstat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(rstat[key]) do
-            f:write(data)
+            f:write(data.."\n")
          end
       end
    end
