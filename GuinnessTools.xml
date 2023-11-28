@@ -948,7 +948,7 @@
   >
   </alias>
   <alias
-   match="exportostat"
+   match="exportrstat"
    enabled="y"
    script="exportstat"
    sequence="101"
