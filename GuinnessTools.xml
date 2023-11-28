@@ -1615,7 +1615,7 @@ end
 
 function exportstat(name,line,wildcards)
    local area = GetVariable("garea")
-   local type = string.sub(name,13,1)
+   local type = string.sub(name,7,1)
    Note("Type is: "..type.." Name is: "..name)
    type = type.."stat"
    Note("Exporting data for type: "..type..".")
