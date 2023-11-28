@@ -1138,7 +1138,7 @@ function rstatMiddle(name,line,wildcards)
    table.insert(rstat[statKey], line)
 end
 
-function rStatEnd(name,line,wildcards)
+function rstatEnd(name,line,wildcards)
    -- rstat end line should also be added to list
    table.insert(rstat[statKey], line)
    EnableTrigger("rstatMiddle",false)
