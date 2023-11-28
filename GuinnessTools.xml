@@ -1120,9 +1120,9 @@ function statAll(name, line, wildcards)
 end
 
 function ostatStart(name,line,wildcards)
-   EnableTrigger("ostatStart",false)
-   EnableTrigger("ostatMiddle",true)
-   EnableTrigger("ostatEnd",true)
+   EnableTrigger("trg_ostatStart",false)
+   EnableTrigger("trg_ostatMiddle",true)
+   EnableTrigger("trg_ostatEnd",true)
    ostat[statKey] = {}
    table.insert(ostat[statKey], line)
 end
@@ -1132,15 +1132,15 @@ function ostatMiddle(name,line,wildcards)
 end
 
 function ostatEnd(name,line,wildcards)
-   EnableTrigger("ostatMiddle",false)
-   EnableTrigger("ostatEnd",false)
+   EnableTrigger("trg_ostatMiddle",false)
+   EnableTrigger("trg_ostatEnd",false)
    table.insert(ostat[statKey], line)
 end
 
 function mstatStart(name,line,wildcards)
-   EnableTrigger("mstatStart",false)
-   EnableTrigger("mstatMiddle",true)
-   EnableTrigger("mstatEnd",true)
+   EnableTrigger("trg_mstatStart",false)
+   EnableTrigger("trg_mstatMiddle",true)
+   EnableTrigger("trg_mstatEnd",true)
    mstat[statKey] = {}
    table.insert(mstat[statKey], line)
 end
@@ -1150,8 +1150,8 @@ function mstatMiddle(name,line,wildcards)
 end
 
 function mstatEnd(name,line,wildcards)
-   EnableTrigger("mstatMiddle",false)
-   EnableTrigger("mstatEnd",false)
+   EnableTrigger("trg_mstatMiddle",false)
+   EnableTrigger("trg_mstatEnd",false)
    table.insert(mstat[statKey], line)
 end
 
@@ -1631,6 +1631,7 @@ function exportstat(name,line,wildcards)
          for j,data in ipairs(ostat[key]) do
             f:write(data.."\n")
          end
+         f:write("\n\n")
       end
    end
    if xtype == "mstat" then
@@ -1639,6 +1640,7 @@ function exportstat(name,line,wildcards)
          for j,data in ipairs(mstat[key]) do
             f:write(data.."\n")
          end
+         f:write("\n\n")
       end
    end
    if xtype == "rstat" then
@@ -1647,6 +1649,7 @@ function exportstat(name,line,wildcards)
          for j,data in ipairs(rstat[key]) do
             f:write(data.."\n")
          end
+         f:write("\n\n")
       end
    end
    f:close ()
