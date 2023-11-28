@@ -678,8 +678,8 @@
   <trigger
    name="trg_rstatStart"
    enabled="n"
-   match="^---------------------------------------------------------------------------$"
-   regexp="y"
+   match="---------------------------------------------------------------------------"
+   regexp="n"
    sequence="100"
    script="rstatStart"
    group="startStatCaptures"
