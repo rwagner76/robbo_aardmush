@@ -1615,6 +1615,7 @@ end
 
 function exportstat(name,line,wildcards)
    local area = GetVariable("garea")
+   Note(Name is: "..name)
    local xtype = string.sub(name,13,1)
    Note("Exporting data for type: "..xtype..".")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
