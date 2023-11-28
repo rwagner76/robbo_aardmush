@@ -1620,7 +1620,7 @@ function exportstat(name,line,wildcards)
    if type == "ostat" then
       keys = getTableKeys(ostat)
       for i,key in ipairs(keys) do
-         for j,data in ipairs(ostat[key])
+         for j,data in ipairs(ostat[key]) do
             f:write(data)
          end
       end
@@ -1628,7 +1628,7 @@ function exportstat(name,line,wildcards)
    if type == "mstat" then
       keys = getTableKeys(mstat)
       for i,key in ipairs(keys) do
-         for j,data in ipairs(mstat[key])
+         for j,data in ipairs(mstat[key]) do
             f:write(data)
          end
       end
@@ -1636,7 +1636,7 @@ function exportstat(name,line,wildcards)
    if type == "rstat" then
       keys = getTableKeys(rstat)
       for i,key in ipairs(keys) do
-         for j,data in ipairs(rstat[key])
+         for j,data in ipairs(rstat[key]) do
             f:write(data)
          end
       end
