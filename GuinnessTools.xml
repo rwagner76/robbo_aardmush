@@ -1132,7 +1132,7 @@ function rstatStart(name,line,wildcards)
    EnableTrigger("rstatStart",false)
    EnableTrigger("rstatMiddle",true)
    EnableTrigger("rstatEnd",true)
-   ostat[statKey] = {}
+   rstat[statKey] = {}
 end
 
 function rstatMiddle(name,line,wildcards)
