@@ -1615,7 +1615,7 @@ end
 
 function exportstat(name,line,wildcards)
    local area = GetVariable("garea")
-   local stype = string.sub(name,13,1).."stat"
+   local stype = string.sub(name,13,1)
    Note("Exporting data for type: "..stype..".")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..stype.."_"..getPort()..".txt")
