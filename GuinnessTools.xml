@@ -619,6 +619,91 @@
    group="oeditCaptures"
   >
   </trigger>
+  <trigger
+   name="trg_ostatStart"
+   enabled="n"
+   match="---------------------------------------------------------------------------"
+   regexp="n"
+   sequence="100"
+   script="ostatStart"
+   group="startStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_ostatMiddle"
+   enabled="n"
+   match="*"
+   regexp="n"
+   sequence="101"
+   script="ostatMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_ostatEnd"
+   enabled="n"
+   match="---------------------------------------------------------------------------"
+   regexp="n"
+   sequence="100"
+   script="ostatEnd"
+  >
+  </trigger>
+  <trigger
+   name="trg_mstatStart"
+   enabled="n"
+   match="^---------------------------------------------------------------$"
+   regexp="y"
+   sequence="100"
+   script="mstatStart"
+   group="startStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_mstatMiddle"
+   enabled="n"
+   match="*"
+   regexp="n"
+   sequence="101"
+   script="mstatMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_mstatEnd"
+   enabled="n"
+   match="^---------------------------------------------------------------------------$"
+   regexp="y"
+   sequence="100"
+   script="mstatEnd"
+  >
+  </trigger>
+  <trigger
+   name="trg_rstatStart"
+   enabled="n"
+   match="^---------------------------------------------------------------------------$"
+   regexp="y"
+   sequence="100"
+   script="rstatStart"
+   group="startStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_rstatMiddle"
+   enabled="n"
+   match="*"
+   regexp="n"
+   sequence="101"
+   script="rstatMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_rstatEnd"
+   enabled="n"
+   match="RoomProgs:"
+   regexp="n"
+   sequence="100"
+   script="rstatEnd"
+  >
+  </trigger>
+
 
 
   
@@ -675,42 +760,42 @@
   <alias
    match="mstatall * *"
    enabled="y"
-   script="mstatAll"
+   script="statAll"
    sequence="101"
   >
   </alias>
   <alias
    match="mstatall * * *"
    enabled="y"
-   script="mstatAll"
+   script="statAll"
    sequence="100"
   >
   </alias>
   <alias
    match="rstatall * *"
    enabled="y"
-   script="rstatAll"
+   script="statAll"
    sequence="101"
   >
   </alias>
   <alias
    match="rstatall * * *"
    enabled="y"
-   script="rstatAll"
+   script="statAll"
    sequence="100"
   >
   </alias>
   <alias
    match="ostatall * *"
    enabled="y"
-   script="ostatAll"
+   script="statAll"
    sequence="101"
   >
   </alias>
   <alias
    match="ostatall * * *"
    enabled="y"
-   script="ostatAll"
+   script="statAll"
    sequence="100"
   >
   </alias>
@@ -827,6 +912,29 @@
    sequence="100"
   >
   </alias>
+  <alias
+   match="ostatcap *"
+   enabled="y"
+   script="ostatCap"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="rstatcap *"
+   enabled="y"
+   script="rstatCap"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="mstatcap *"
+   enabled="y"
+   script="mstatCap"
+   sequence="100"
+  >
+  </alias>
+  
+
 
 
 
@@ -840,10 +948,14 @@ local wait = 0.8
 local mKey = ""
 local rKey = ""
 local oKey = ""
+local statKey = ""
 local mt = {}
 local rt = {}
 local ot = {}
 local oaff = {}
+local ostat = {}
+local mstat = {}
+local rstat = {}
 local illegalitems = {}
 
 -- Main execution
@@ -948,14 +1060,16 @@ function gmgoParam(name,line,wildcards)
    end
 end
 
-
-function rstatAll(name, line, wildcards)
+function statAll(name, line, wildcards)
    if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
    local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local command = line:sub(1,1).."statcap "
+   local ext = ".txt"
+   --local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..line:sub(1,1).."stat_"..type.."_"..getPort()..ext)
    local min = 0
    local max = 0
    if #wildcards == 1 then
@@ -964,153 +1078,86 @@ function rstatAll(name, line, wildcards)
       min = tonumber(wildcards[1])
       max = tonumber(wildcards[2])
    end
-   local delay = wait
-   local logfile = "rstat_"..area..".txt"
-   local logEnabled = false
-   if IsLogOpen() == true then
-      logEnabled = true
-      CloseLog()
-   end
-   OpenLog(logfile,false)
-   Send("prompt")
+   local delay = 1
    for i = min,max do
-      DoAfter(delay,"rstat "..area.."-"..i)
-      delay = delay + wait
-   end
-   DoAfter(delay,"prompt")
-   delay = delay + 3
-   DoAfterSpecial(delay,'CloseLog()',sendto.script)
-   if logEnabled == true then
-      delay = delay + wait
-      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
+      EnableTriggerGroup("startStatCaptures",true)
+      if line:sub(1,1) == "o" then
+         DoAfterSpecial(delay,"oload "..key,sendto.execute)
+         delay = delay + .1
+         DoAfterSpecial(delay,command..key.." world",sendto.execute)
+      else
+         DoAfterSpecial(delay,command..key,sendto.execute)
+      end
+      delay = delay + 1
    end
 end
 
-function mstatAll(name, line, wildcards)
-   Note("Global timer option: "..GetOption("enable_timers"))
-   if  GetOption("enable_timers") == 0 then
-      Note("Warning: Timers are currently disabled. Cannot execute.")
-      return
-   end
-   local area = GetVariable("garea")
-   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
-   local min = 0
-   local max = 0
-   if #wildcards == 1 then
-      max = tonumber(wildcards[1])
-   else
-      min = tonumber(wildcards[1])
-      max = tonumber(wildcards[2])
-   end
-   local delay = wait
-   local logfile = "mstat_"..area..".txt"
-   local logEnabled = false
-   if IsLogOpen() == true then
-      logEnabled = true
-      CloseLog()
-   end
-   OpenLog(logfile,false)
-   Send("prompt")
-   for i = min,max do
-      DoAfter(delay,"mstat "..area.."-"..i)
-      delay = delay + wait
-   end
-   DoAfter(delay,"prompt")
-   delay = delay + 3
-   DoAfterSpecial(delay,'CloseLog()',sendto.script)
-   if logEnabled == true then
-      delay = delay + wait
-      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
-   end
-
+function ostatStart(name,line,wildcards)
+   EnableTrigger("ostatStart",false)
+   EnableTrigger("ostatMiddle",true)
+   EnableTrigger("ostatEnd",true)
+   ostat[statKey] = {}
 end
 
-function ostatAll(name, line, wildcards)
-   if  GetOption("enable_timers") == 0 then
-      Note("Warning: Timers are currently disabled. Cannot execute.")
-      return
-   end
-   local area = GetVariable("garea")
-   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
-   local min = 0
-   local max = 0
-   if #wildcards == 1 then
-      max = tonumber(wildcards[1])
-   else
-      min = tonumber(wildcards[1])
-      max = tonumber(wildcards[2])
-   end
-   local delay = wait
-   local logfile = "ostat_"..area..".txt"
-   local logEnabled = false
-   if IsLogOpen() == true then
-      logEnabled = true
-      CloseLog()
-   end
-   OpenLog(logfile,false)
-   Send("prompt")
-   for i = min,max do
-      DoAfter(delay,"oload "..area.."-"..i)
-      delay = delay + wait
-      DoAfter(delay,"ostat "..area.."-"..i.." world")
-      delay = delay + wait
-   end
-   DoAfter(delay,"prompt")
-   delay = delay + 3
-   DoAfterSpecial(delay,'CloseLog()',sendto.script)
-   if logEnabled == true then
-      delay = delay + wait
-      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
-   end
-
+function oStatMiddle(name,line,wildcards)
+   table.insert(ostat[statKey], line)
 end
 
-function mpdumpAll(name, line, wildcards)
-   if  GetOption("enable_timers") == 0 then
-      Note("Warning: Timers are currently disabled. Cannot execute.")
-      return
-   end
-   -- Add some triggers to gag Flags, size, old vnum, etc and replace the Mobprog Id line.
-   -- Single trigger matching on ^@Y would work, actually!
-   local area = GetVariable("garea")
-   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
-   local min = 0
-   local max = 0
-   if #wildcards == 1 then
-      max = tonumber(wildcards[1])
-   else
-      min = tonumber(wildcards[1])
-      max = tonumber(wildcards[2])
-   end
-   local delay = wait
-   EnableTrigger("gagMpdumpHeaders",true)
-   EnableTrigger("allowMpdumpHeader",true)
-   local logfile = "mpdump_"..area..".txt"
-   local logEnabled = false
-   if IsLogOpen() == true then
-      logEnabled = true
-      CloseLog()
-   end
-   OpenLog(logfile,false)
+function oStatEnd(name,line,wildcards)
+   EnableTrigger("ostatMiddle",false)
+   EnableTrigger("ostatEnd",false)
+end
 
-   Send("rawcolor")
-   Send("prompt")
-   for i = min,max do
-      DoAfter(delay,"mpdump "..area.."-"..i.." noline")
-      delay = delay + wait
+function mstatStart(name,line,wildcards)
+   EnableTrigger("mstatStart",false)
+   EnableTrigger("mstatMiddle",true)
+   EnableTrigger("mstatEnd",true)
+   mstat[statKey] = {}
+end
+
+function mStatMiddle(name,line,wildcards)
+   table.insert(mstat[statKey], line)
+end
+
+function mStatEnd(name,line,wildcards)
+   EnableTrigger("mstatMiddle",false)
+   EnableTrigger("mstatEnd",false)
+end
+
+function rstatStart(name,line,wildcards)
+   EnableTrigger("rstatStart",false)
+   EnableTrigger("rstatMiddle",true)
+   EnableTrigger("rstatEnd",true)
+   ostat[statKey] = {}
+end
+
+function rStatMiddle(name,line,wildcards)
+   table.insert(rstat[statKey], line)
+end
+
+function rStatEnd(name,line,wildcards)
+   -- rstat end line should also be added to list
+   table.insert(rstat[statKey], line)
+   EnableTrigger("rstatMiddle",false)
+   EnableTrigger("rstatEnd",false)
+   for i,l in ipairs(rstat[statKey]) do
+      Note("Cap: "..l)
    end
-   DoAfter(delay,"rawcolor")
-   delay = delay + wait
-   DoAfter(delay,"prompt")
-   delay = delay + wait
-   DoAfterSpecial(delay,'EnableTrigger("gagMpdumpHeaders",false)',sendto.script)
-   DoAfterSpecial(delay,'EnableTrigger("allowMpdumpHeader",false)',sendto.script)
-   delay = delay + 3
-   DoAfterSpecial(delay,'CloseLog()',sendto.script)
-   if logEnabled == true then
-      delay = delay + wait
-      DoAfterSpecial(delay,'OpenLog("",true)',sendto.script)
-   end
+end
+
+function ostatCap(name,line,wildcards)
+   statKey = wildcards[1]
+   Send("ostat "..statKey)
+end
+
+function rstatCap(name,line,wildcards)
+   statKey = wildcards[1]
+   Send("rstat "..statKey)
+end
+
+function mstatCap(name,line,wildcards)
+   statKey = wildcards[1]
+   Send("mstat "..statKey)
 end
 
 -- Medit Capture Functions
@@ -1518,7 +1565,7 @@ function exportData(type,t,parsable)
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local ext = ".txt"
    if parsable then ext = ".tsv" end
-   local f = io.output (area.."_"..type.."_"..getPort()..ext)
+   local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..area.."_"..type.."_"..getPort()..ext)
    local keys = getTableKeys(t)
    for i,key in ipairs(keys) do
       local attribs = getTableKeys(t[key])
