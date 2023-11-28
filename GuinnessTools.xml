@@ -799,20 +799,20 @@
    sequence="100"
   >
   </alias>
-  <alias
-   match="mpdumpall *"
-   enabled="y"
-   script="mpdumpAll"
-   sequence="101"
-  >
-  </alias>
-  <alias
-   match="mpdumpall * *"
-   enabled="y"
-   script="mpdumpAll"
-   sequence="100"
-  >
-  </alias>
+--  <alias
+--   match="mpdumpall *"
+--   enabled="y"
+--   script="mpdumpAll"
+--   sequence="101"
+--  >
+--  </alias>
+--  <alias
+--   match="mpdumpall * *"
+--   enabled="y"
+--   script="mpdumpAll"
+--   sequence="100"
+--  >
+--  </alias>
   <alias
    match="mexport *"
    enabled="y"
@@ -1099,11 +1099,11 @@ function ostatStart(name,line,wildcards)
    ostat[statKey] = {}
 end
 
-function oStatMiddle(name,line,wildcards)
+function ostatMiddle(name,line,wildcards)
    table.insert(ostat[statKey], line)
 end
 
-function oStatEnd(name,line,wildcards)
+function ostatEnd(name,line,wildcards)
    EnableTrigger("ostatMiddle",false)
    EnableTrigger("ostatEnd",false)
 end
@@ -1115,11 +1115,11 @@ function mstatStart(name,line,wildcards)
    mstat[statKey] = {}
 end
 
-function mStatMiddle(name,line,wildcards)
+function mstatMiddle(name,line,wildcards)
    table.insert(mstat[statKey], line)
 end
 
-function mStatEnd(name,line,wildcards)
+function mstatEnd(name,line,wildcards)
    EnableTrigger("mstatMiddle",false)
    EnableTrigger("mstatEnd",false)
 end
@@ -1131,7 +1131,7 @@ function rstatStart(name,line,wildcards)
    ostat[statKey] = {}
 end
 
-function rStatMiddle(name,line,wildcards)
+function rstatMiddle(name,line,wildcards)
    table.insert(rstat[statKey], line)
 end
 
