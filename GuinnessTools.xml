@@ -799,20 +799,20 @@
    sequence="100"
   >
   </alias>
---  <alias
---   match="mpdumpall *"
---   enabled="y"
---   script="mpdumpAll"
---   sequence="101"
---  >
---  </alias>
---  <alias
---   match="mpdumpall * *"
---   enabled="y"
---   script="mpdumpAll"
---   sequence="100"
---  >
---  </alias>
+  <alias
+   match="mpdumpall *"
+   enabled="y"
+   script="mpdumpAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="mpdumpall * *"
+   enabled="y"
+   script="mpdumpAll"
+   sequence="100"
+  >
+  </alias>
   <alias
    match="mexport *"
    enabled="y"
@@ -1058,6 +1058,9 @@ function gmgoParam(name,line,wildcards)
       SetVariable("gmgoNext",p)
       gmgoNext()
    end
+end
+
+function mpdumpAll(name,line,wildcards)
 end
 
 function statAll(name, line, wildcards)
