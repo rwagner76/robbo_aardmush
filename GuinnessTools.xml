@@ -697,7 +697,7 @@
   <trigger
    name="trg_rstatEnd"
    enabled="n"
-   match="RoomProgs:"
+   match="RoomProgs: *"
    regexp="n"
    sequence="100"
    script="rstatEnd"
