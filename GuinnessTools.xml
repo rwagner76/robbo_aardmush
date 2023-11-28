@@ -1565,7 +1565,7 @@ function exportData(type,t,parsable)
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local ext = ".txt"
    if parsable then ext = ".tsv" end
-   local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..area.."_"..type.."_"..getPort()..ext)
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..type.."_"..getPort()..ext)
    local keys = getTableKeys(t)
    for i,key in ipairs(keys) do
       local attribs = getTableKeys(t[key])
