@@ -933,6 +933,27 @@
    sequence="100"
   >
   </alias>
+  <alias
+   match="exportmstat"
+   enabled="y"
+   script="exportstat"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="exportostat"
+   enabled="y"
+   script="exportstat"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="exportostat"
+   enabled="y"
+   script="exportstat"
+   sequence="101"
+  >
+  </alias>
   
 
 
@@ -1132,12 +1153,10 @@ function rstatStart(name,line,wildcards)
    EnableTrigger("trg_rstatMiddle",true)
    EnableTrigger("trg_rstatEnd",true)
    rstat[statKey] = {}
-   Note("Started capture of rstat!")
 end
 
 function rstatMiddle(name,line,wildcards)
    table.insert(rstat[statKey], line)
-   Note("Adding line to rstat!")
 end
 
 function rstatEnd(name,line,wildcards)
@@ -1145,10 +1164,6 @@ function rstatEnd(name,line,wildcards)
    table.insert(rstat[statKey], line)
    EnableTrigger("trg_rstatMiddle",false)
    EnableTrigger("trg_rstatEnd",false)
-   Note("Ended capture of rstat!")
-   for i,l in ipairs(rstat[statKey]) do
-      Note("Cap: "..l)
-   end
 end
 
 function ostatCap(name,line,wildcards)
@@ -1158,7 +1173,6 @@ function ostatCap(name,line,wildcards)
 end
 
 function rstatCap(name,line,wildcards)
-   Note("Enabling capture triggers...")
    statKey = wildcards[1]
    EnableTrigger("trg_rstatStart",true)
    Send("rstat "..statKey)
@@ -1166,7 +1180,7 @@ end
 
 function mstatCap(name,line,wildcards)
    statKey = wildcards[1]
-   EnableTriggerGroup("startStatCaptures",true)
+   EnableTrigger("trg_mstatStart",true)
    Send("mstat "..statKey)
 end
 
@@ -1595,6 +1609,42 @@ function exportData(type,t,parsable)
    end
    f:close ()
 end
+
+function exportstat(name,line,wildcards)
+   local area = GetVariable("garea")
+   local type = line:sub(7,1).."stat"
+   Note("Exporting data for type: "..type..".")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..type.."_"..getPort()..".txt")
+   local keys = {}
+   if type == "ostat" then
+      keys = getTableKeys(ostat)
+      for i,key in ipairs(keys) do
+         for j,data in ipairs(ostat[key])
+            f:write(data)
+         end
+      end
+   end
+   if type == "mstat" then
+      keys = getTableKeys(mstat)
+      for i,key in ipairs(keys) do
+         for j,data in ipairs(mstat[key])
+            f:write(data)
+         end
+      end
+   end
+   if type == "rstat" then
+      keys = getTableKeys(rstat)
+      for i,key in ipairs(keys) do
+         for j,data in ipairs(rstat[key])
+            f:write(data)
+         end
+      end
+   end
+   f:close ()
+end
+
+
 
 function editDumpAll(name,line,wildcards)
    if  GetOption("enable_timers") == 0 then
