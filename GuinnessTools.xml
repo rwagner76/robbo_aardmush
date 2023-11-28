@@ -1013,9 +1013,12 @@ function OnHelp()
  oeditall # [#]            --> Collects object editor details for later export.
  exportmobs [parsable]     --> Exports all mob data collected by meditall.
  exportobjects [parsable]  --> Exports all object data collected by oeditall.
+ exportmstat/ostat/rstat   --> Exports rstat/mstat/ostat data collected by statall
+                               commands.
  toolbox help              --> Show this help file
 
  Note: use 'parsable' option with exports to create files usable by area audit tools.
+ Exported files will be saved to worlds\plugins\robbo_aardmush\exports
 ]]
 
   print(help)

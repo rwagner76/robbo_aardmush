@@ -69,6 +69,7 @@ This has a variety of simple aliases and tools mostly for Guinness' use, but wou
 
 ### Installation
 Download GuinnessTools.xml and place into your MUSHClient Worlds\Plugins folder, then install the plugin. (make sure this is your test port instance!)
+or:  git clone this repository into your worlds\plugins folder
 
 ### Usage
 ```
@@ -98,7 +99,10 @@ Download GuinnessTools.xml and place into your MUSHClient Worlds\Plugins folder,
  oeditall # [#]            --> Collects object editor details for later export.
  exportmobs [parsable]     --> Exports all mob data collected by meditall.
  exportobjects [parsable]  --> Exports all object data collected by oeditall.
+ exportmstat/ostat/rstat   --> Exports rstat/mstat/ostat data collected by statall
+                               commands.
  toolbox help              --> Show this help file
 
  Note: use 'parsable' option with exports to create files usable by area audit tools.
+ Exported files will be saved to worlds\plugins\robbo_aardmush\exports
  ```
