@@ -1612,6 +1612,7 @@ end
 
 function exportstat(name,line,wildcards)
    local area = GetVariable("garea")
+   Note("Type: "..line:sub(7,1))
    local type = line:sub(7,1).."stat"
    Note("Exporting data for type: "..type..".")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
