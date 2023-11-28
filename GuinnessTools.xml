@@ -1084,6 +1084,7 @@ function statAll(name, line, wildcards)
    local delay = 1
    for i = min,max do
       EnableTriggerGroup("startStatCaptures",true)
+      local key = area.."-"..tostring(i)
       if line:sub(1,1) == "o" then
          DoAfterSpecial(delay,"oload "..key,sendto.execute)
          delay = delay + .1
