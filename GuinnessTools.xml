@@ -1615,12 +1615,12 @@ end
 
 function exportstat(name,line,wildcards)
    local area = GetVariable("garea")
-   local stype = string.sub(name,13,1)
-   Note("Exporting data for type: "..stype..".")
+   local xtype = string.sub(name,1,1)
+   Note("Exporting data for type: "..xtype..".")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
-   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..stype.."_"..getPort()..".txt")
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..xtype.."_"..getPort()..".txt")
    local keys = {}
-   if stype == "ostat" then
+   if xtype == "ostat" then
       keys = getTableKeys(ostat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(ostat[key]) do
@@ -1628,7 +1628,7 @@ function exportstat(name,line,wildcards)
          end
       end
    end
-   if stype == "mstat" then
+   if xtype == "mstat" then
       keys = getTableKeys(mstat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(mstat[key]) do
@@ -1636,7 +1636,7 @@ function exportstat(name,line,wildcards)
          end
       end
    end
-   if stype == "rstat" then
+   if xtype == "rstat" then
       keys = getTableKeys(rstat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(rstat[key]) do
