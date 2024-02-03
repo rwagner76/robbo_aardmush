@@ -697,12 +697,42 @@
   <trigger
    name="trg_rstatEnd"
    enabled="n"
-   match="RoomProgs: *"
-   regexp="n"
+   match="^-- END RSTAT --$"
+   regexp="y"
    sequence="100"
    script="rstatEnd"
   >
   </trigger>
+  <trigger
+   name="trg_mpDumpStart"
+   enabled="n"
+   match="Mobprog Id: *"
+   regexp="n"
+   sequence="100"
+   script="mpDumpStart"
+   group="mpDump"
+  >
+  </trigger>
+  <trigger
+   name="trg_mpDumpMiddle"
+   enabled="n"
+   match="*"
+   regexp="n"
+   sequence="101"
+   script="mpDumpMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_mpDumpEnd"
+   enabled="n"
+   match="-- end program --"
+   regexp="n"
+   sequence="100"
+   script="mpDumpEnd"
+  >
+  </trigger>
+
+
 
 
 
@@ -814,14 +844,6 @@
   >
   </alias>
   <alias
-   match="mexport *"
-   enabled="y"
-   script="OnHelp"
-   sequence="100"
-  >
-  </alias>
-
-  <alias
    match="toolbox help"
    enabled="y"
    script="OnHelp"
@@ -913,6 +935,30 @@
   >
   </alias>
   <alias
+   match="exportrstat"
+   enabled="y"
+   script="exportStat"
+   sequence="100"
+   name="rstatexport"
+  >
+  </alias>
+  <alias
+   match="exportmstat"
+   enabled="y"
+   script="exportStat"
+   sequence="100"
+   name="mstatexport"
+  >
+  </alias>
+  <alias
+   match="exportostat"
+   enabled="y"
+   script="exportStat"
+   sequence="100"
+   name="ostatexport"
+  >
+  </alias>
+  <alias
    match="ostatcap *"
    enabled="y"
    script="ostatCap"
@@ -934,34 +980,12 @@
   >
   </alias>
   <alias
-   match="exportmstat"
+   match="rstatshow *"
    enabled="y"
-   script="exportstat"
-   sequence="101"
-   name="alias_exportmstat"
+   script="rstatShow"
+   sequence="100"
   >
   </alias>
-  <alias
-   match="exportostat"
-   enabled="y"
-   script="exportstat"
-   sequence="101"
-   name="alias_exportostat"
-  >
-  </alias>
-  <alias
-   match="exportrstat"
-   enabled="y"
-   script="exportstat"
-   sequence="101"
-   name="alias_exportrstat"
-  >
-  </alias>
-  
-
-
-
-
 
 </aliases>
 
@@ -1088,6 +1112,31 @@ function gmgoParam(name,line,wildcards)
 end
 
 function mpdumpAll(name,line,wildcards)
+   if  GetOption("enable_timers") == 0 then
+      Note("Warning: Timers are currently disabled. Cannot execute.")
+      return
+   end
+   local area = GetVariable("garea")
+   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   local command = line:sub(1,1).."statcap "
+   local ext = ".txt"
+   --local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..line:sub(1,1).."mpdump_"..type.."_"..getPort()..ext)
+   local min = 0
+   local max = 0
+   if #wildcards == 1 then
+      max = tonumber(wildcards[1])
+   else
+      min = tonumber(wildcards[1])
+      max = tonumber(wildcards[2])
+   end
+   local delay = 1
+   for i = min,max do
+      local key = area.."-"..tostring(i)
+      DoAfterSpecial(delay,"mpdump noline "..key,sendto.execute)
+      DoAfterSpecial((delay+0.1),"echo -- end program --",sendto.execute)
+      delay = delay + 1
+   end
+
 end
 
 function statAll(name, line, wildcards)
@@ -1097,9 +1146,9 @@ function statAll(name, line, wildcards)
    end
    local area = GetVariable("garea")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
+   --local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..line:sub(1,1).."stat_"..type.."_"..getPort()..ext)
    local command = line:sub(1,1).."statcap "
    local ext = ".txt"
-   --local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..line:sub(1,1).."stat_"..type.."_"..getPort()..ext)
    local min = 0
    local max = 0
    if #wildcards == 1 then
@@ -1115,11 +1164,16 @@ function statAll(name, line, wildcards)
          DoAfterSpecial(delay,"oload "..key,sendto.execute)
          delay = delay + .1
          DoAfterSpecial(delay,command..key.." world",sendto.execute)
-      else
+      elseif line:sub(1,1) == "r" then
+         DoAfterSpecial(delay,command..key,sendto.execute)
+         delay = delay + .1
+         DoAfterSpecial(delay,"echo -- END RSTAT --",sendto.execute)
+      elseif line:sub(1,1) == "m" then
          DoAfterSpecial(delay,command..key,sendto.execute)
       end
       delay = delay + 1
    end
+   DoAfterSpecial(delay,"echo -- END ALL STAT COMMANDS --",sendto.execute)
 end
 
 function ostatStart(name,line,wildcards)
@@ -1174,6 +1228,32 @@ function rstatEnd(name,line,wildcards)
    table.insert(rstat[statKey], line)
    EnableTrigger("trg_rstatMiddle",false)
    EnableTrigger("trg_rstatEnd",false)
+end
+
+function rstatShow(name,line,wildcards)
+   local key=wildcards[1]
+   local t = rstat[key]
+   for i,v in ipairs(t) do
+      Note(v)
+   end
+end
+
+function mpDumpStart(name,line,wildcards)
+   EnableTrigger("trg_mpDumpStart",false)
+   EnableTrigger("trg_mpDumpMiddle",true)
+   EnableTrigger("trg_mpDumpEnd",true)
+   mpdump[programKey] = {}
+   table.insert(mpdump[programKey], line)
+end
+
+function mpDumpMiddle(name,line,wildcards)
+   table.insert(mpdump[programKey], line)
+end
+
+function mpDumpEnd(name,line,wildcards)
+   table.insert(mpdump[programKey], line)
+   EnableTrigger("trg_mpDumpMiddle",false)
+   EnableTrigger("trg_mpDumpEnd",false)
 end
 
 function ostatCap(name,line,wildcards)
@@ -1620,15 +1700,14 @@ function exportData(type,t,parsable)
    f:close ()
 end
 
-function exportstat(name,line,wildcards)
+function exportStat(name,line,wildcards)
    local area = GetVariable("garea")
-   Note("Name is: "..name)
-   local xtype = string.sub(name,13,17)
-   Note("Exporting data for type: "..xtype..".")
+   local xtype = string.sub(name,1,1)
+   Note("Exporting "..xtype.."stat data..")
    if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
-   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..xtype.."_"..getPort()..".txt")
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..xtype.."stat_"..getPort()..".txt")
    local keys = {}
-   if xtype == "ostat" then
+   if xtype == "o" then
       keys = getTableKeys(ostat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(ostat[key]) do
@@ -1637,7 +1716,7 @@ function exportstat(name,line,wildcards)
          f:write("\n\n")
       end
    end
-   if xtype == "mstat" then
+   if xtype == "m" then
       keys = getTableKeys(mstat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(mstat[key]) do
@@ -1646,7 +1725,7 @@ function exportstat(name,line,wildcards)
          f:write("\n\n")
       end
    end
-   if xtype == "rstat" then
+   if xtype == "r" then
       keys = getTableKeys(rstat)
       for i,key in ipairs(keys) do
          for j,data in ipairs(rstat[key]) do
