@@ -257,8 +257,7 @@ sub checkMobPoints {
       if ($adjgold < ($maxgold/2)) {$adjgold = int($maxgold/2);}
    }
    if ($mt{"Gold"} > $adjgold) {
-      print "\tGold on mob is over maximum: ".$mt{"Gold"}." vs maximum $adjgold (".$mt{"In Game"}." resets)\n";
-      print "\tNote: per Domain there is an exception for SH areas. Need to verify with Lasher.\n";
+      print "\tGold on mob is over maximum: ".$mt{"Gold"}." vs maximum $adjgold for (".$mt{"In Game"}."mob resets)\n";
       $return = 1;
    }
    
