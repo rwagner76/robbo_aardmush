@@ -94,17 +94,14 @@ foreach $key (@mobkeys) {
    $a{"NeedsReview"} = 0;
    print "Checking mob ".$key." (".$a{"Name"}.")\n";
    print "--------------------------------------------------------------------------------\n";
-   print "Length of Name: ".length($a{"Name"})."\n";
    if (length($a{"Name"}) > 50) {
       print "\tWarning: Short name of mob is longer than 50 characters: ".length($a{"Name"})."\n";
       $a{"NeedsReview"} = 1;
    }
-   print "Length of RoomName: ".length($a{"RoomName"})."\n";
    if (length($a{"RoomName"}) > 80) {
       print "\tWarning: Room name of mob is longer than 80 characters: ".length($a{"RoomName"})."\n";
       $a{"NeedsReview"} = 1;
    }
-   print "Length of Story: ".length($a{"Story"})."\n";
    if (length($a{"Story"}) > 80) {
       print "\tWarning: Story of mob is longer than 80 characters: ".length($a{"Story"})."\n";
       $a{"NeedsReview"} = 1;
