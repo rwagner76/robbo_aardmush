@@ -63,12 +63,12 @@ foreach $key (@objkeys) {
       if (checkWeaponDice($key)) {$a{"NeedsReview"} = 1;};
    }
 
-   if (length($a{"Name"} > 50)) {
-      print "\tWarning: Short name of object is longer than 50 characters\n";
+   if (length($a{"Name"}) > 50) {
+      print "\tWarning: Short name of object is longer than 50 characters: ".length($a{"Name"})."\n";
       $a{"NeedsReview"} = 1;
    }
-   if (length($a{"Room Name"} > 80)) {
-      print "\tWarning: Room name of object is longer than 80 characters\n";
+   if (length($a{"Room Name"}) > 80) {
+      print "\tWarning: Room name of object is longer than 80 characters: ".length($a{"Room Name"})."\n";
       $a{"NeedsReview"} = 1;
    }
    
@@ -94,16 +94,19 @@ foreach $key (@mobkeys) {
    $a{"NeedsReview"} = 0;
    print "Checking mob ".$key." (".$a{"Name"}.")\n";
    print "--------------------------------------------------------------------------------\n";
-   if (length($a{"Name"} > 50)) {
-      print "\tWarning: Short name of mob is longer than 50 characters (limit?)";
+   print "Length of Name: ".length($a{"Name"})."\n";
+   if (length($a{"Name"}) > 50) {
+      print "\tWarning: Short name of mob is longer than 50 characters: ".length($a{"Name"})."\n";
       $a{"NeedsReview"} = 1;
    }
-   if (length($a{"RoomName"} > 80)) {
-      print "\tWarning: Room name of mob is longer than 80 characters\n";
+   print "Length of RoomName: ".length($a{"RoomName"})."\n";
+   if (length($a{"RoomName"}) > 80) {
+      print "\tWarning: Room name of mob is longer than 80 characters: ".length($a{"RoomName"})."\n";
       $a{"NeedsReview"} = 1;
    }
-   if (length($a{"Story"} > 80)) {
-      print "\tWarning: Story of mob is longer than 80 characters\n";
+   print "Length of Story: ".length($a{"Story"})."\n";
+   if (length($a{"Story"}) > 80) {
+      print "\tWarning: Story of mob is longer than 80 characters: ".length($a{"Story"})."\n";
       $a{"NeedsReview"} = 1;
    }
 
@@ -338,6 +341,7 @@ sub checkObjAffects {
       
       my $resistsokay = 1;
       my $hasaddedresists = 0;
+      my $addedresists = 0;
       foreach my $resist (keys(%resists)) {
          my ($maxallphys,$maxallmag) = getArmorResWeight($ot{"Level"},"resists");
          my $val = $resists{$resist};
@@ -346,7 +350,6 @@ sub checkObjAffects {
             $resistsokay = 0;
          }
          $val =~ s/\+//;
-         my $addedresists = 0;
          if ($resist eq "Allphysical") {
             if ($val > $maxallphys) { 
                print "\tWarning: Resist AllPhysical is over max: $val vs maximum $maxallphys\n";
@@ -369,7 +372,7 @@ sub checkObjAffects {
          }
       }
       if ($hasaddedresists) {$objaddedresists += 1;}
-      if ($addedresists != 0) {"\tWarning: Extra resists do not have a +/- balancing to 0.";}
+      if ($addedresists != 0) {print "\tWarning: Extra resists do not have a +/- balancing to 0.";}
       if ($resistsokay) {print "\tObject resists are OK.\n";} else {$ot{"NeedsReview"} = 1;}
    }
    return $ot{"NeedsReview"};
