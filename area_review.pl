@@ -103,7 +103,7 @@ foreach $key (@mobkeys) {
       $a{"NeedsReview"} = 1;
    }
    if (length($a{"Story"} > 80)) {
-      print "\tWarning: Room name of mob is longer than 80 characters\n";
+      print "\tWarning: Story of mob is longer than 80 characters\n";
       $a{"NeedsReview"} = 1;
    }
 
@@ -135,7 +135,7 @@ foreach $key (@mobkeys) {
 	    $mobguilds{$a{"Guilds"}} += 1;
    }
 
-   if ($a{"Shop"} =~ "Mob is a shopkeeper")
+   if ($a{"Shop"} =~ "Mob is a shopkeeper") {
       print "\tNote: Mob is a shopkeeper. Stats/etc may not mattter.\n";
    }
    if (checkMobPoints($key)) {
