@@ -52,7 +52,8 @@ foreach $key (@objkeys) {
    $a{"NeedsReview"} = 0;
    print "Checking object ".$key." (".$a{"Name"}.")\n";
    print "--------------------------------------------------------------------------------\n";
-   print "\tItem Type: ".$a{"Object Type"}."\n";
+   if ($a{"Object Type"} eq "None") {print "\tItem type is not set. Other checks may be invalid.";}
+   #print "\tItem Type: ".$a{"Object Type"}."\n";
    my @attributes = sort(keys(%a));
    my @affects = grep(/^Affects\d+/,@attributes);
    if (scalar(@affects) && defined($a{"Wearable"})) {
@@ -95,43 +96,65 @@ foreach $key (@mobkeys) {
    print "Checking mob ".$key." (".$a{"Name"}.")\n";
    print "--------------------------------------------------------------------------------\n";
    if (length($a{"Name"}) > 50) {
-      print "\tWarning: Short name of mob is longer than 50 characters: ".length($a{"Name"})."\n";
+      print "\tShort name of mob is longer than 50 characters: ".length($a{"Name"})."\n";
       $a{"NeedsReview"} = 1;
    }
    if (length($a{"RoomName"}) > 80) {
-      print "\tWarning: Room name of mob is longer than 80 characters: ".length($a{"RoomName"})."\n";
+      print "\tRoom name of mob is longer than 80 characters: ".length($a{"RoomName"})."\n";
       $a{"NeedsReview"} = 1;
    }
    if (length($a{"Story"}) > 80) {
-      print "\tWarning: Story of mob is longer than 80 characters: ".length($a{"Story"})."\n";
+      print "\tStory of mob is longer than 80 characters: ".length($a{"Story"})."\n";
       $a{"NeedsReview"} = 1;
+   }
+
+   if ($a{"Race"} eq "school monst") {
+      print "\tMob race is set to 'school monster'. This is forbidden.\n";
+      $a{"NeedsReview"} = 1;
+   }
+   if ($a{"Race"} eq "cguard") {
+      print "\tMob race is set to 'cguard'. This is not allowed for areas.\n";
+      $a{"NeedsReview"} = 1;
+   }
+   if ($a{"Race"} eq "fido") {
+      print "\tMob race is set to 'fido'. This is not allowed for areas.\n";
+      $a{"NeedsReview"} = 1;
+   }
+   if ($a{"Race"} eq "generic") {
+      print "\tMob race is set to 'generic'. This is not allowed for areas.\n";
+      $a{"NeedsReview"} = 1;
+   }
+
+   if ($a{"Race"} eq "unique") {
+      print "\tNote: Mob race is set to 'unique'. This requires head builder to set stats properly.\n";
+      $a{"NeedsReview"} = 1;   
    }
 
    my @desc = split(/\\n/,$a{"Desc"});
    if (scalar(@desc < 3)) {
-      print "\tWarning: Less than 3 lines of text in the mob's description\n";
+      print "\tLess than 3 lines of text in the mob's long description\n";
       $a{"NeedsReview"} = 1;
    }
-   if ($a{"NeedsReview"} == 0) {print "\tDescriptions are OK.\n";}
+   #if ($a{"NeedsReview"} == 0) {print "\tDescriptions are OK.\n";}
    if (($a{"Alignment"} > 1875) || ($a{"Alignment"} < -1875)) {
-      print "\tWarning: Mob alignment is set to an extreme value. Value: ".$a{"Alignment"}."\n";
+      print "\tMob alignment is set to an extreme value. Value: ".$a{"Alignment"}."\n";
       $a{"NeedsReview"} = 1;
    }
    if (checkMobFlags($key)) {
       $a{"NeedsReview"} = 1;
    } else {
-      print "\tMob flags are OK.\n";
+      #print "\tMob flags are OK.\n";
    }
    if (! defined $a{"Guilds"}) {
       if ((! $a{"Flags"} =~ /undead/) && (! $a{"Flags"} =~ /animal/)) {
-         print "\tWarning: Mob does not have guild set OR flag set for undead/animal.\n";
+         print "\tMob does not have guild set OR flag set for undead/animal.\n";
          $a{"NeedsReview"} = 1;
       }
    } elsif ($a{"Guilds"} =~ /,/) {
-      print "\tWarning: Mob has multiple guilds assigned.\n";
+      print "\tMob has multiple guilds assigned.\n";
       $a{"NeedsReview"} = 1;
    } else {
-	    print "\tGuild is okay.\n";
+	    #print "\tGuild is okay.\n";
 	    $mobguilds{$a{"Guilds"}} += 1;
    }
 
@@ -141,7 +164,7 @@ foreach $key (@mobkeys) {
    if (checkMobPoints($key)) {
       $a{"NeedsReview"} = 1;
    } else {
-      print "\tMob points and gold are OK.\n";
+      #print "\tMob points and gold are OK.\n";
    }
 
 
@@ -232,7 +255,7 @@ sub checkMobPoints {
    }
 
    #Don't have any documentation on the mana range
-   print "\tNote: Mana range table is unknown. Can't check.\n";
+   #print "\tNote: Mana range table is unknown. Can't check.\n";
    
    if ($mt{"Damage Range Min"} < $dmmin) {
       print "\tDamage minimum is below minimum for level: ".$mt{"Damage Range Min"}." vs level minimum $dmmin\n";
@@ -257,7 +280,7 @@ sub checkMobPoints {
       if ($adjgold < ($maxgold/2)) {$adjgold = int($maxgold/2);}
    }
    if ($mt{"Gold"} > $adjgold) {
-      print "\tGold on mob is over maximum: ".$mt{"Gold"}." vs maximum $adjgold for (".$mt{"In Game"}."mob resets)\n";
+      print "\tGold on mob is over maximum: ".$mt{"Gold"}." vs maximum $adjgold for (".$mt{"In Game"}." mob resets)\n";
       $return = 1;
    }
    
@@ -295,42 +318,47 @@ sub checkObjAffects {
    if (exists $ot{"Wearable"}) {
       my ($maxpoints,$maxstat,$maxsaves,$maxhrdr,$maxhpmnmv,$maxneg) = getObjMaxPoints($key);
       if (($statscore) && ($statscore > $maxstat)) {
-         print "\tWarning: Over max points from stats : $statscore out of possible $maxstat\n";
+         print "\tOver max points from stats : $statscore out of possible $maxstat\n";
          $ot{"NeedsReview"} = 1;
-      } elsif ($statscore) {print "\tPoints from stats : $statscore out of possible $maxstat\n";}
+      } elsif ($statscore) {#print "\tPoints from stats : $statscore out of possible $maxstat\n";
+      }
       if (($hrdrscore) && ($hrdrscore > $maxhrdr)) {
-         print "\tWarning: Over max points from HR/DR : $hrdrscore out of possible $maxhrdr\n";
+         print "\tOver max points from HR/DR : $hrdrscore out of possible $maxhrdr\n";
          $ot{"NeedsReview"} = 1;
-      } elsif ($hrdrscore) {print "\tPoints from HR/DR : $hrdrscore out of possible $maxhrdr\n";}
+      } elsif ($hrdrscore) {#print "\tPoints from HR/DR : $hrdrscore out of possible $maxhrdr\n";
+      }
       if (($hpmnmvscore) && ($hpmnmvscore > $maxhpmnmv)) {
-         print "\tWarning: Over max points from HP/Mana/Moves : $hpmnmvscore out of possible $maxhpmnmv\n";
+         print "\tOver max points from HP/Mana/Moves : $hpmnmvscore out of possible $maxhpmnmv\n";
          $ot{"NeedsReview"} = 1;
-      } elsif ($hpmnmvscore) {print "\tPoints from HP/Mana/Moves : $hpmnmvscore out of possible $maxhpmnmv\n";}
+      } elsif ($hpmnmvscore) {#print "\tPoints from HP/Mana/Moves : $hpmnmvscore out of possible $maxhpmnmv\n";
+      }
       if (($negpoints) && ($negpoints > $maxneg)) {
-         print "\tWarning: Over max negative points : $negpoints out of possible $maxneg\n";
+         print "\tOver max negative points : $negpoints out of possible $maxneg\n";
          $ot{"NeedsReview"} = 1;
       }
-      elsif ($negpoints) {print "\tNegative points : $negpoints out of possible $maxneg\n";}
+      elsif ($negpoints) {#print "\tNegative points : $negpoints out of possible $maxneg\n";
+      	}
       
 
       my $totalpoints = $statscore + $hrdrscore + $hpmnmvscore;
       if ($totalpoints > $maxpoints) {
-         print "\tWarning: Over max total points : $totalpoints out of possible $maxpoints\n";
+         print "\tOver max total points : $totalpoints out of possible $maxpoints\n";
          $ot{"NeedsReview"} = 1;
       }
-      else {print "\tTotal points : $totalpoints out of possible $maxpoints\n";}
+      else {#print "\tTotal points : $totalpoints out of possible $maxpoints\n";
+      	}
       calcItemQuality($totalpoints,$maxpoints);
       
       if ($statscore > ($maxpoints * .6)) {
-         print "\tWarning: More than 60% of max points have been allocated to stats!\n";
+         print "\tMore than 60% of max points have been allocated to stats!\n";
          $ot{"NeedsReview"} = 1;
       }
       if ($hrdrscore > ($maxpoints * .6)) {
-         print "\tWarning: More than 60% of max points have been allocated to HR/DR!\n";
+         print "\tMore than 60% of max points have been allocated to HR/DR!\n";
          $ot{"NeedsReview"} = 1;
       }
       if ($hpmnmvscore > ($maxpoints * .6)) {
-         print "\tWarning: More than 60% of max points have been allocated to HP/Mana/Moves!\n";
+         print "\tMore than 60% of max points have been allocated to HP/Mana/Moves!\n";
          $ot{"NeedsReview"} = 1;
       }
 
@@ -342,22 +370,22 @@ sub checkObjAffects {
          my ($maxallphys,$maxallmag) = getArmorResWeight($ot{"Level"},"resists");
          my $val = $resists{$resist};
          if ($ot{"Object Type"} ne "Armor") {
-            print "\tWarning: Resist $resist of $val has been added to non-armor object.\n";
+            print "\tResist $resist of $val has been added to non-armor object.\n";
             $resistsokay = 0;
          }
          $val =~ s/\+//;
          if ($resist eq "Allphysical") {
             if ($val > $maxallphys) { 
-               print "\tWarning: Resist AllPhysical is over max: $val vs maximum $maxallphys\n";
+               print "\tResist AllPhysical is over max: $val vs maximum $maxallphys\n";
                $resistsokay = 0;
             }
          } elsif ($resist eq "Allmagic") {
             if ($val > $maxallmag) {
-               print "\tWarning: Resist AllMagic is over max: $val vs maximum $maxallphys\n";
+               print "\tResist AllMagic is over max: $val vs maximum $maxallphys\n";
                $resistsokay = 0;
             }
          } else {
-            print "\tWarning: Non-standard resist $resist of $val has been added to this object.\n";
+            print "\tNon-standard resist $resist of $val has been added to this object.\n";
             $resistsokay = 0;
             $addedresists += $val;
             $hasaddedresists = 1;
@@ -368,8 +396,9 @@ sub checkObjAffects {
          }
       }
       if ($hasaddedresists) {$objaddedresists += 1;}
-      if ($addedresists != 0) {print "\tWarning: Extra resists do not have a +/- balancing to 0.";}
-      if ($resistsokay) {print "\tObject resists are OK.\n";} else {$ot{"NeedsReview"} = 1;}
+      if ($addedresists != 0) {print "\tExtra resists do not have a +/- balancing to 0.";}
+      if ($resistsokay) {#print "\tObject resists are OK.\n";} else {$ot{"NeedsReview"} = 1;
+      	}
    }
    return $ot{"NeedsReview"};
 }
@@ -379,16 +408,16 @@ sub calcItemQuality {
    my ($totalpoints,$maxpoints) = @_;
    if ($totalpoints > $maxpoints) {
       $objquality{"Masterpiece"} += 1;
-      print "\tCalculated Object Quality: Masterpiece\n";
+      #print "\tCalculated Object Quality: Masterpiece\n";
    } elsif ($totalpoints > ($maxpoints/2)) {
       $objquality{"Average"} += 1;
-      print "\tCalculated Object Quality: Average\n";   
+      #print "\tCalculated Object Quality: Average\n";   
    } elsif ($totalpoints > 0) {
       $objquality{"Mediocre"} += 1;
-      print "\tCalculated Object Quality: Mediocre\n";   
+      #print "\tCalculated Object Quality: Mediocre\n";   
    } elsif ($totalpoints <= 0) {
       $objquality{"Bad"} += 1;
-      print "\tCalculated Object Quality: Bad\n";   
+      #print "\tCalculated Object Quality: Bad\n";   
    }
 }
 
@@ -401,11 +430,11 @@ sub isDual {
    my @duallocs = ("neck","ear","wrist","finger");
    foreach $dualloc (@duallocs) {
       if (grep( /$dualloc/, @wearable)) {
-         print "\tItem is a dual location wearable: @wearable\n";
+         #print "\tItem is a dual location wearable: @wearable\n";
          return 1;
       }
    }
-   print "\tItem is a single location wearable: @wearable\n";
+   #print "\tItem is a single location wearable: @wearable\n";
    return 0;
 }
 
@@ -416,11 +445,11 @@ sub checkWeaponDice {
    my $level = $ot{"Level"};
    my ($min,$max,$avg) = getWeaponwdice($level);
    if ($ot{"Avg Damage"} > $avg) {
-      print "\tWarning: Average damage is higher than table values. Item average: ".$ot{"Avg Damage"}.". Avg for level: ".$avg."\n";
+      print "\tAverage damage is higher than table values. Item average: ".$ot{"Avg Damage"}.". Avg for level: ".$avg."\n";
       return 1;
    }
    else {
-      print "\tWeapon average damage is in spec.\n";
+      #print "\tWeapon average damage is in spec.\n";
       return 0;
    }
 
@@ -548,12 +577,14 @@ sub checkObjWeightandValue {
       print "\tWarning: Item is underweight. Weight: $weight vs Min: $minweight\n";
       $return = 1;
    }
-   else {print "\tWeight is OK.\n"}
+   else {#print "\tWeight is OK.\n";
+   	}
    if ($value > $maxvalue) {
       print "\tWarning: Item is over valued. Value: $value vs Max: $maxvalue\n";
       $return = 1;
    }
-   else {print "\tValue is OK.\n"}
+   else {#print "\tValue is OK.\n";
+   	}
    return $return;
 }
 
