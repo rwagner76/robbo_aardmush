@@ -63,11 +63,11 @@ foreach $key (@objkeys) {
       if (checkWeaponDice($key)) {$a{"NeedsReview"} = 1;};
    }
 
-   if (length(%a{"Name"} > 50)) {
+   if (length($a{"Name"} > 50)) {
       print "\tWarning: Short name of object is longer than 50 characters\n";
       $a{"NeedsReview"} = 1;
    }
-   if (length(%a{"Room Name"} > 80)) {
+   if (length($a{"Room Name"} > 80)) {
       print "\tWarning: Room name of object is longer than 80 characters\n";
       $a{"NeedsReview"} = 1;
    }
@@ -94,14 +94,19 @@ foreach $key (@mobkeys) {
    $a{"NeedsReview"} = 0;
    print "Checking mob ".$key." (".$a{"Name"}.")\n";
    print "--------------------------------------------------------------------------------\n";
-   if (length(%a{"Name"} > 50)) {
+   if (length($a{"Name"} > 50)) {
       print "\tWarning: Short name of mob is longer than 50 characters (limit?)";
       $a{"NeedsReview"} = 1;
    }
-   if (length(%a{"Room Name"} > 80)) {
+   if (length($a{"RoomName"} > 80)) {
       print "\tWarning: Room name of mob is longer than 80 characters\n";
       $a{"NeedsReview"} = 1;
    }
+   if (length($a{"Story"} > 80)) {
+      print "\tWarning: Room name of mob is longer than 80 characters\n";
+      $a{"NeedsReview"} = 1;
+   }
+
    my @desc = split(/\\n/,$a{"Desc"});
    if (scalar(@desc < 3)) {
       print "\tWarning: Less than 3 lines of text in the mob's description\n";
@@ -130,6 +135,9 @@ foreach $key (@mobkeys) {
 	    $mobguilds{$a{"Guilds"}} += 1;
    }
 
+   if ($a{"Shop"} =~ "Mob is a shopkeeper")
+      print "\tNote: Mob is a shopkeeper. Stats/etc may not mattter.\n";
+   }
    if (checkMobPoints($key)) {
       $a{"NeedsReview"} = 1;
    } else {
