@@ -1,0 +1,132 @@
+<aliases>
+  <alias
+   match="^(?P<action>ggo|gmgo)\s?(?P<param>\w*)$"
+   regexp="y"
+   enabled="y"
+   script="ggoNext"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="gcancel"
+   enabled="y"
+   script="cancelAction"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="^(?P<type>[mor])list$"
+   enabled="y"
+   script="xlistExecute"
+   sequence="101"
+   regexp="y"
+  >
+  </alias>
+  <alias
+   match="^(?P<type>[mor])statall\s?(?P<param>\w*?)$"
+   enabled="y"
+   regexp="y"
+   script="statAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="mpdumpall *"
+   enabled="y"
+   script="mpdumpAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="mpdumpall * *"
+   enabled="y"
+   script="mpdumpAll"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="toolbox help"
+   enabled="y"
+   script="OnHelp"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="^(?P<type>[mor])editall"
+   regexp="y"
+   enabled="y"
+   script="editAll"
+   sequence="101"
+  >
+  </alias>
+  <alias
+   match="^(?P<type>[mor]edit)cap (?P<key>.+)"
+   enabled="y"
+   regexp="y"
+   script="editCap"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="(?P<type>[mor]stat)cap (?P<key>.+)"
+   enabled="y"
+   regexp="y"
+   script="statCapStart"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="(?P<type>[mor]stat)str (?P<key>.+)"
+   enabled="y"
+   regexp="y"
+   script="statCapStringsStart"
+   sequence="100"
+  >
+  </alias>
+
+  <alias
+   match="^d(?P<type>[mor])t (?P<keynum>\d+)"
+   enabled="y"
+   regexp="y"
+   script="displayEditTable"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="serialize * *"
+   enabled="y"
+   script="printSerialize"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="areareport *"
+   enabled="y"
+   script="exceptionReport"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="initmobpoints"
+   enabled="y"
+   script="initMobPoints"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="initobjpoints"
+   enabled="y"
+   script="initObjPoints"
+   sequence="100"
+  >
+  </alias>
+  <alias
+   match="initwdice"
+   enabled="y"
+   script="initWDice"
+   sequence="100"
+  >
+  </alias>
+
+
+</aliases>

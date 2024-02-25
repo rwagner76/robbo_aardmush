@@ -1,0 +1,1102 @@
+<triggers>
+  <trigger
+   name="trg_startCapture"
+   enabled="n"
+   match="^-- START CAPTURE --$"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script="captureStart"
+  >
+  </trigger>
+  <trigger
+   name="trg_endStatCapture"
+   enabled="y"
+   match="^-- END CAPTURE --$"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script="captureEnd"
+   group="tgrp_endCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_endEditCapture"
+   enabled="n"
+   match="You are back in the game."
+   regexp="y"
+   omit_from_output="n"
+   omit_from_log="n"
+   sequence="100"
+   script="captureEnd"
+   group="tgrp_endCaptures"
+  >
+  </trigger>
+  
+  <trigger
+   name="trg_captureLoopEnd"
+   enabled="y"
+   match="^-- END ALL CAPTURE COMMANDS --$"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script="captureLoopEnd"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_captureXstatLines"
+   enabled="n"
+   match="(.+)"
+   regexp="y"
+   sequence="101"
+   script="captureStatLines"
+  >
+  </trigger>
+
+  <trigger
+   name="gagMpdumpHeaders"
+   enabled="n"
+   match="^@Y"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="101"
+  >
+  </trigger>
+  <trigger
+   name="allowMpdumpHeader"
+   enabled="n"
+   match="^@YMobprog Id@w: (.+)"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script="rewriteMpdumpHeader"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditInGame"
+   enabled="n"
+   match="UID:\s\d+\s+In Game:\s(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditInGame"
+   group="meditCaptures"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_meditA"
+   enabled="n"
+   match="A\) Keywords\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditA"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditB"
+   enabled="n"
+   match="B\) Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditB"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditD"
+   enabled="n"
+   match="D\) Room Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditD"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditF"
+   enabled="n"
+   match="F\) Story\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditF"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditG"
+   enabled="n"
+   match="G\) Description: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditG"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditHJ"
+   enabled="n"
+   match="H\) Level\s+:\s+(\d+)\s+J\) Alignment : ([-]?\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditHJ"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditIK"
+   enabled="n"
+   match="I\) Gold\s+:\s+(\d+)\s+K\) Sex\s+: (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditIK"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditLM"
+   enabled="n"
+   match="L\) Race\s+: ([\w\s\-]*?)\s+M\) Position  : (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditLM"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditN"
+   enabled="n"
+   match="N\) Guilds     : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditN"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditO"
+   enabled="n"
+   match="O\) Subclass   : (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditO"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditR"
+   enabled="n"
+   match="R\) Flags   : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditR"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditR_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditRAdd"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditS"
+   enabled="n"
+   match="S\) Affects : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditS"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditS_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditSAdd"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditT"
+   enabled="n"
+   match="T\) Immune  : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditT"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditW"
+   enabled="n"
+   match="W\) Mobprogs: (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditW"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditX"
+   enabled="n"
+   match="X\) Shop    : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditX"
+   group="meditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsA"
+   enabled="n"
+   match=": (Str|Dex):\s+([-]?\d+)\s+(Int|Con):\s+([-]?\d+)\s+(Wis|Luck)\s?:\s+([-]?\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsA"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsBD"
+   enabled="n"
+   match="B\) Hitroll\s+:\s+(\d+)\s+D\) Saves\s+:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsBD"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsCE"
+   enabled="n"
+   match="C\) Damroll\s+:\s+(\d+)\s+E\) Extra Hits :\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsCE"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsF"
+   enabled="n"
+   match="F\) Dam Type   : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsF"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsG"
+   enabled="n"
+   match="G\) Spellset   : (\w+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsG"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsV"
+   enabled="n"
+   match="V\) Move Verb  : (.*?)\s+\[(.+)\]"
+   regexp="y"
+   sequence="100"
+   script="meditStatsV"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsResists"
+   enabled="n"
+   match="Resists    : (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsResists"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsIJK"
+   enabled="n"
+   match="Damage Range   I\) Max  :\s+(\d+),  J\) Avg:\s+(\d+),  K\) Min:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsIJK"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsLMN"
+   enabled="n"
+   match="Hp/Move Range  L\) Max  :\s+(\d+),  M\) Avg:\s+(\d+),  N\) Min:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsLMN"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsO"
+   enabled="n"
+   match="O\) Bonus:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsO"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsPRS"
+   enabled="n"
+   match="Mana Range     P\) Max  :\s+(\d+),  R\) Avg:\s+(\d+),  S\) Min:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsPRS"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditStatsT"
+   enabled="n"
+   match="T\) Bonus:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="meditStatsT"
+   group="meditStatCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditDesc"
+   enabled="n"
+   match="Begin editing. .q on a new line to quit, .a to abort, .h for help*"
+   regexp="n"
+   sequence="100"
+   script="meditDescStart"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditDescMiddle"
+   enabled="n"
+   match="(.+)"
+   regexp="y"
+   sequence="101"
+   script="meditDescMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_meditDescEnd"
+   enabled="n"
+   match="\> Saved"
+   regexp="y"
+   sequence="100"
+   script="meditDescEnd"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditA"
+   enabled="n"
+   match="A\) Keywords\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditB"
+   enabled="n"
+   match="B\) Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditD"
+   enabled="n"
+   match="D\) Room Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditD"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditF"
+   enabled="n"
+   match="F\) Object Type: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditF"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditHI"
+   enabled="n"
+   match="H\) Level\s+:\s+(\d+)\s+I\) Value\s+ : (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditHI"
+   group="oeditCaptures"
+  >
+  </trigger>  
+  <trigger
+   name="trg_oeditJK"
+   enabled="n"
+   match="J\) Weight\s+:\s+(\d+)\s+K\) Size\s+:\s+ (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditJK"
+   group="oeditCaptures"
+  >
+  </trigger>  
+  <trigger
+   name="trg_oeditL"
+   enabled="n"
+   match="L\) Material\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditL"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditM"
+   enabled="n"
+   match="M\) Flags\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditM"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditM_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditMAdd"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditN"
+   enabled="n"
+   match="N\) Wearable\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditN"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditO"
+   enabled="n"
+   match="\*O\) Descs\s+: (\d+) .+\."
+   regexp="y"
+   sequence="100"
+   script="oeditO"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditP"
+   enabled="n"
+   match="\*P\) Affects\s+: (\d+) .+\."
+   regexp="y"
+   sequence="100"
+   script="oeditP"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditR"
+   enabled="n"
+   match="\*R\) (.+) Menu"
+   regexp="y"
+   sequence="100"
+   script="oeditR"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditS"
+   enabled="n"
+   match="\*S\) Objprogs\s+: (\d+) (.+)\."
+   regexp="y"
+   sequence="100"
+   script="oeditS"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditAffectStart"
+   enabled="n"
+   match="Object Affect Editor"
+   regexp="y"
+   sequence="100"
+   script="oeditAffectStart"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditAffectValues"
+   enabled="n"
+   match="\d+\) (Stat|Resist|Skill)\s+: (.+?)\s+: ([\+|-]?\d+)"
+   regexp="y"
+   sequence="101"
+   script="oeditAffectValues"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditAffectFlag"
+   enabled="n"
+   match="\d+\) Flag\s+: (.+?)\."
+   regexp="y"
+   sequence="101"
+   script="oeditAffectFlag"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_oeditAffectEnd"
+   enabled="n"
+   match="Select affect"
+   regexp="y"
+   sequence="100"
+   script="oeditAffectEnd"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponA"
+   enabled="n"
+   match="A\) Weapon Type\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponB"
+   enabled="n"
+   match="B\) Damage Type\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponD"
+   enabled="n"
+   match="D\) Avg Damage\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponD"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponF"
+   enabled="n"
+   match="F\) Specials\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponF"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditWeaponG"
+   enabled="n"
+   match="G\) Damage Verb\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditWeaponG"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodA"
+   enabled="n"
+   match="A\) Food Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodB"
+   enabled="n"
+   match="B\) Food Size\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodC"
+   enabled="n"
+   match="C\) Drink Size\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodC"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodD"
+   enabled="n"
+   match="D\) Proof\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodD"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodE"
+   enabled="n"
+   match="E\) Total Size : (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodE"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodF"
+   enabled="n"
+   match="F\) Start Size : (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodF"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditFoodG"
+   enabled="n"
+   match="G\) Flags\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditFoodG"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditMagicA"
+   enabled="n"
+   match="A\) Spell Level: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditMagicA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditMagicB"
+   enabled="n"
+   match="B\) Uses\s+: (\d+)$"
+   regexp="y"
+   sequence="100"
+   script="oeditMagicB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditMagicSpells"
+   enabled="n"
+   match="\d+\) Spell\d+\s+: (.+)$"
+   regexp="y"
+   sequence="100"
+   script="oeditMagicSpells"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditContainerA"
+   enabled="n"
+   match="A\) Capacity\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditContainersA"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditContainerB"
+   enabled="n"
+   match="A\) Max Item\s+: (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditContainersB"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditContainerC"
+   enabled="n"
+   match="C\) Multiplier : (\d+)"
+   regexp="y"
+   sequence="100"
+   script="oeditContainersC"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditContainerD"
+   enabled="n"
+   match="D\) Key Object : (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditContainersD"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditContainerE"
+   enabled="n"
+   match="E\) Flags\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="oeditContainersE"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_captureListKeys"
+   enabled="n"
+   match="^ (\w+\-\d+).+$"
+   regexp="y"
+   sequence="100"
+   script="addListKey"
+  >
+  </trigger>
+  <trigger
+   name="trg_endListKeys"
+   enabled="n"
+   match="^\[\s+?\d+\s+?\].+"
+   regexp="y"
+   sequence="100"
+   script="endListkeys"
+  >
+  </trigger>
+  <trigger
+   name="trg_mobpoints"
+   enabled="n"
+   match="^\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)$"
+   regexp="y"
+   sequence="100"
+   script="captureMobPoints"
+  >
+  </trigger>
+  <trigger
+   name="trg_endmobpoints"
+   enabled="y"
+   match="-- END MOBPOINTS --"
+   regexp="n"
+   sequence="100"
+   script="endMobPoints"
+  >
+  </trigger>
+  <trigger
+   name="trg_objpoints"
+   enabled="n"
+   match="^\s+(\d+)\s+(\d+\.\d)\s+(\d+)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+)\s+(\d+\.\d)\s+(\d+)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+)$"
+   regexp="y"
+   sequence="100"
+   script="captureObjPoints"
+  >
+  </trigger>
+  <trigger
+   name="trg_endobjpoints"
+   enabled="y"
+   match="-- END OBJPOINTS --"
+   regexp="n"
+   sequence="100"
+   script="endObjPoints"
+  >
+  </trigger>
+  <trigger
+   name="trg_wdice1"
+   enabled="n"
+   match="^\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s*?$"
+   regexp="y"
+   sequence="100"
+   script="captureWDice"
+  >
+  </trigger>
+  <trigger
+   name="trg_wdice2"
+   enabled="n"
+   match="^\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s*?$"
+   regexp="y"
+   sequence="100"
+   script="captureWDice"
+  >
+  </trigger>
+  <trigger
+   name="trg_endwdice"
+   enabled="y"
+   match="-- END WDICE --"
+   regexp="n"
+   sequence="100"
+   script="endWDice"
+  >
+  </trigger>
+  <trigger
+   name="trg_rawKeywords"
+   enabled="n"
+   match="^Keywords:\s(.+)$"
+   regexp="y"
+   sequence="100"
+   script="captureRawKeywords"
+   group="tgrp_statStrings"
+  >
+  </trigger>
+  <trigger
+   name="trg_rawName"
+   enabled="n"
+   match="^Name\s+:\s(.+)$"
+   regexp="y"
+   sequence="100"
+   script="captureRawName"
+   group="tgrp_statStrings"
+  >
+  </trigger>
+  <trigger
+   name="trg_rawRoomName"
+   enabled="n"
+   match="^RoomName:\s(.+)$"
+   regexp="y"
+   sequence="100"
+   script="captureRawRoomName"
+   group="tgrp_statStrings"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_reditA"
+   enabled="n"
+   match="A\) Name\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="reditA"
+   group="reditCaptures"
+  >
+  </trigger>
+  B) Description: (first 3 lines)
+  <trigger
+   name="trg_reditB"
+   enabled="n"
+   match="B\) Description: \(first 3 lines\)"
+   regexp="y"
+   sequence="100"
+   script="reditB"
+   group="reditCaptures"
+  >
+  </trigger>
+  
+  <trigger
+   name="trg_reditC"
+   enabled="n"
+   match="C\) Sector\s+: (.+)\sSector Flags : (.+)"
+   regexp="y"
+   sequence="100"
+   script="reditC"
+   group="reditCaptures"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_reditDF"
+   enabled="n"
+   match="D\) Heal Rate\s+: (\-?\d+)\s+F\) Min Level\s+:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="reditDF"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditEG"
+   enabled="n"
+   match="E\) Mana Rate\s+: (\-?\d+)\s+G\) Max Level\s+:\s+(\d+)"
+   regexp="y"
+   sequence="100"
+   script="reditEG"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditJT"
+   enabled="n"
+   match="J\) Brightness :\s+(\d+)\s+T\) Color\s+:\s+(.+)"
+   regexp="y"
+   sequence="100"
+   script="reditJT"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditKU"
+   enabled="n"
+   match="K\) Maxchars\s+:\s+(\d+)\s+U\) GMCP Color :\s+(.+)"
+   regexp="y"
+   sequence="100"
+   script="reditKU"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditM"
+   enabled="n"
+   match="M\) Flags\s+: (.+)"
+   regexp="y"
+   sequence="100"
+   script="reditM"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditN"
+   enabled="n"
+   match="N\) Resets\s+: (\d+).+"
+   regexp="y"
+   sequence="100"
+   script="reditN"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditExitCounts"
+   enabled="n"
+   match=": (\d+) (.+)exits?\."
+   regexp="y"
+   sequence="100"
+   script="reditExitCounts"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditR"
+   enabled="n"
+   match="R\) Descs\s+: (\d+) descriptions?\."
+   regexp="y"
+   sequence="100"
+   script="reditR"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditS"
+   enabled="n"
+   match="S\) Roomprogs\s+: (\d+).+"
+   regexp="y"
+   sequence="100"
+   script="reditS"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditSave"
+   enabled="n"
+   match="Save changes\? \(Y\/N\/B\)"
+   regexp="y"
+   sequence="100"
+   script="reditSave"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditDesc"
+   enabled="n"
+   match="Begin editing. .q on a new line to quit, .a to abort, .h for help*"
+   regexp="n"
+   sequence="100"
+   script="reditDescStart"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditDescMiddle"
+   enabled="n"
+   match="(.+)"
+   regexp="y"
+   sequence="101"
+   script="reditDescMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditDescEnd"
+   enabled="n"
+   match="\> Saved"
+   regexp="y"
+   sequence="100"
+   script="reditDescEnd"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditTopResets"
+   enabled="n"
+   match="(\d+) : Load (\w+) '.+' \((\w+\-\d+)\) in room\.(?:\s+Max )?(\d+)?(?: \/ )?(\d+)?"
+   regexp="y"
+   sequence="100"
+   script="reditTopResets"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditSubResetEquip"
+   enabled="n"
+   match="\+ (Equip) item '.+' \((\w+\-\d+)\) to (\w+) position\. (?:Chance )(\d+)(?: in )(\d+)\."
+   regexp="y"
+   sequence="100"
+   script="reditSubReset"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditSubResetEquipAlways"
+   enabled="n"
+   match="\+ (Equip) item '.+' \((\w+\-\d+)\) to (\w+) position\."
+   regexp="y"
+   sequence="100"
+   script="reditSubReset"
+   group="reditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_reditSubResetGive"
+   enabled="n"
+   match="\+ (Give) item '.+' \((\w+\-\d+)\) to mob."
+   regexp="y"
+   sequence="100"
+   script="reditSubReset"
+   group="reditCaptures"
+  >
+  </trigger>
+
+
+
+  
+</triggers>
