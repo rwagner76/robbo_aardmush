@@ -58,27 +58,6 @@
   </trigger>
 
   <trigger
-   name="gagMpdumpHeaders"
-   enabled="n"
-   match="^@Y"
-   regexp="y"
-   omit_from_output="y"
-   omit_from_log="y"
-   sequence="101"
-  >
-  </trigger>
-  <trigger
-   name="allowMpdumpHeader"
-   enabled="n"
-   match="^@YMobprog Id@w: (.+)"
-   regexp="y"
-   omit_from_output="y"
-   omit_from_log="y"
-   sequence="100"
-   script="rewriteMpdumpHeader"
-  >
-  </trigger>
-  <trigger
    name="trg_meditInGame"
    enabled="n"
    match="UID:\s\d+\s+In Game:\s(\d+)"

@@ -25,11 +25,15 @@ function checkMobExceptions(keys,db)
       local rstt = querytoTable(db,string.format("SELECT key AS room,num,gamemax from resets WHERE loadkey='%s' and type='mob' ORDER BY key;",key))
       local ptable = querytoTable(db,string.format("SELECT * from mobpoints where level='%s';",mobt[1].level))
       -- Checks
+      if mobt[1].shop == "yes" then
+         table.insert(mobex,"\tNote: mob is a shopkeeper")
+      end
       tableConcat(mobex,checkMobStrings(mobt[1],rawt[1]))
       tableConcat(mobex,checkMobRace(mobt[1]))
       tableConcat(mobex,checkMobFlags(mobt[1]))
       tableConcat(mobex,checkKeywords(mobt[1]))
       tableConcat(mobex,checkMobResets(key,rstt))
+      if #ptable == 0 then DebugNote("Couldn't get points table for level "..mobt[1].level.." for mob "..key) end
       tableConcat(mobex,checkMobGold(key,mobt[1],ptable[1]))
       tableConcat(mobex,checkMobGuild(mobt[1]))
 
@@ -50,18 +54,23 @@ function checkObjExceptions(keys,db)
       local objex = {}
       local objt = querytoTable(db,string.format("SELECT * from objects where key='%s';",key))
       local oaff = querytoTable(db,string.format("SELECT * from oaffects where key='%s';",key))
+      local mres = querytoTable(db,string.format("SELECT * from maxresists where level='%s';",objt[1].level))
       local rawt = querytoTable(db,string.format("SELECT name,roomname FROM rawstrings WHERE key='%s' AND type='object';",key))
       --DebugNote("Checking object "..key)
       -- Checks
       tableConcat(objex,checkObjStrings(objt[1],rawt[1]))
       tableConcat(objex,checkKeywords(objt[1]))
-      tableConcat(objex,checkObjWeightVal(objt[1],key,toolboxdb))
-      tableConcat(objex,checkWearable(objt[1]))
+      if objt[1].type ~= "None" and objt[1].type ~= "Fountain" then
+         tableConcat(objex,checkObjWeightVal(objt[1],key,toolboxdb))
+         tableConcat(objex,checkWearable(objt[1]))
+      else
+         table.insert(objex,"\tObject does not have a type set.")
+      end
       if objt.type == 'Weapon' then
          local wdata = querytoTable(db,string.format("SELECT * from weapons where key='%s';",key))
          tableConcat(objex,checkWDice(objt[1],wdata[1]))
       end
-      tableConcat(objex,checkObjResists(objt[1],oaff))
+      tableConcat(objex,checkObjResists(objt[1],oaff,mres[1]))
       local points = calcObjPoints(objt[1],oaff)
       if objt[1].type == "Armor" or objt[1].type == "Light" or objt[1].type == "Weapon" then
          --DebugNote("Calculated points for "..key..": "..points['total'])
@@ -244,21 +253,25 @@ end
 
 function checkMobGold(key,mobt,ptable)
    local ex = {}
-      if mobt.gold == nil then
-         table.insert(ex,"\tMob gold is unknown/blank!")
-      else
-         if perMobGmx[key] == nil then perMobGmx[key] = 0 end
-         local multiplier = 1
-         if perMobGmx[key] > 1 then
-            multiplier = 1 - (perMobGmx[key] - 1) / 10
-            if multiplier < 0.5 then multiplier = 0.5 end
-            --DebugNote('Mob '..key..' has '..perMobGmx[key]..' total resets. Adjusting gold to '..multiplier..' of maximum: '..maxgold)
-         end
-         local maxgold = multiplier * ptable.gold
-         if mobt.gold > maxgold then
-            table.insert(ex,"\tMob has "..perMobGmx[key].." possible resets. Gold "..mobt.gold.." is higher than max allowed: "..maxgold.." (multiplier "..multiplier..")")
-         end
+   if ptable == nil then
+      --DebugNote("ptable for mob ".. key .." is null.")
+      return ex
+   end
+   if mobt.gold == nil then
+      table.insert(ex,"\tMob gold is unknown/blank!")
+   else
+      if perMobGmx[key] == nil then perMobGmx[key] = 0 end
+      local multiplier = 1
+      if perMobGmx[key] > 1 then
+         multiplier = 1 - (perMobGmx[key] - 1) / 10
+         if multiplier < 0.5 then multiplier = 0.5 end
+         --DebugNote('Mob '..key..' has '..perMobGmx[key]..' total resets. Adjusting gold to '..multiplier..' of maximum: '..maxgold)
       end
+      local maxgold = multiplier * ptable.gold
+      if mobt.gold > maxgold then
+         table.insert(ex,"\tMob has "..perMobGmx[key].." possible resets. Gold "..mobt.gold.." is higher than max allowed: "..maxgold.." (multiplier "..multiplier..")")
+      end
+   end
    return ex
 end
 
@@ -360,6 +373,15 @@ function objMaxInGame(key,db)
    return max
 end
 
+function objCountinShop(key,db)
+   local max = 0
+   local mobsWithItem = querytoTable(db,string.format("select DISTINCT resets.gamemax from resets LEFT JOIN subresets ON resets.key = subresets.key AND resets.num = subresets.parent WHERE subresets.type='give' and subresets.loadkey like '%s' ORDER BY resets.gamemax;",key))
+   for i,r in pairs(mobsWithItem) do
+      max = max + r.gamemax
+   end
+   return max
+end
+
 function checkObjWeightVal(objt,key,db)
    local ex = {}
    local minw,maxw,maxv = objcost(objt.level,objt.type)
@@ -373,6 +395,11 @@ function checkObjWeightVal(objt,key,db)
       table.insert(ex,"\tObject value is unknown/blank!")
    else
       local maxload = objMaxInGame(key,db)
+      local maxshop = objCountinShop(key,db)
+      if debug_mode == "on" then
+         table.insert(ex,"Total possible object resets (equip): "..maxload)
+         table.insert(ex,"Total possible object resets (shop) : "..maxshop)
+      end
       local multiplier = 1
       if maxload > 1 then
          multiplier = 1 - (maxload - 1) / 10
@@ -497,6 +524,7 @@ function checkObjPoints(objt,ptable,points)
       table.insert(ex,"\tObject negative points ("..points.negall..") is over maximum allowed ("..negall..").")
    end
    
+   --DebugNote('Total points: '..points.total..'/'..tpnts..' max.')
    if points.total > tpnts or points.stats > stats or points.hrdr > hrdr or points.hpmnmv > hp then objQuality['Masterpiece'] = objQuality['Masterpiece'] + 1
       elseif points.total == tpnts then objQuality['Max'] = objQuality['Max'] + 1
       elseif points.total > tpnts/2 then objQuality['Good'] = objQuality['Good'] + 1
@@ -506,16 +534,39 @@ function checkObjPoints(objt,ptable,points)
    return ex
 end
 
-function checkObjResists(objt,oaff)
+function checkObjResists(objt,oaff,mres)
    local ex = {}
    if oaff == nil then return ex end
    if #oaff == 0 then return ex end
    local rcounter = 0
    for i,a in ipairs(oaff) do
-      if a.type == 'resist' then
+      if a.type == 'resist' and a.affects ~= "allmagic" and a.affects ~= "allphysical" then
          rcounter = rcounter + a.adjust
+      elseif a.type == 'resist' and a.affects == "allmagic" and objt.type ~= "Armor" then
+         table.insert(ex,"\tObject is not of type armor and has added allmagic resists.")
+      elseif a.type == 'resist' and a.affects == "allphysical" and objt.type ~= "Armor" then
+         table.insert(ex,"\tObject is not of type armor and has added allphysical resists.")
+      end
+      if a.type == 'resist' and a.affects == "allmagic" then
+         if mres == nil then
+            table.insert(ex,"\tFailed to get object max resists allmagic for level "..objt.level)
+         else
+            if a.adjust > mres.allmagic then
+               table.insert(ex,"\tObject has higher than the allowed allmagic resist type. ("..a.adjust.." vs max "..mres.allmagic..")")
+            end
+         end
+      end
+      if a.type == 'resist' and a.affects == "allphysical" then
+         if mres == nil then
+            table.insert(ex,"\tFailed to get object max resists allphysical for level "..objt.level)
+         else
+            if a.adjust > mres.allphys then
+               table.insert(ex,"\tObject has higher than the allowed allphysical resist type. ("..a.adjust.." vs max "..mres.allphysical..")")
+            end
+         end
       end
    end
+   
    if rcounter > 0 then
       table.insert(ex,"\tObject has added positive resists with not enough negative resists to match. This is normally not allowed.")
    end

@@ -28,7 +28,7 @@ local objpoints = {}
 local wdice = {}
 
 -- Check and prep database
-local dbfile = GetInfo(60).."robbo_aardmush\\db\\areadata.db"
+local dbfile = GetInfo(60).."robbo_aardmush\\db\\"..getPort().."areadata.db"
 local schema_version = 1
 
 toolboxdb = sqlite3.open(dbfile)
@@ -92,12 +92,6 @@ function printSerialize(name,line,wildcards)
       Note(serialize.save_simple(rt[key]))
    end
    
-end
-
-function rewriteMpdumpHeader(name,line,wildcards)
-   local mpkey = wildcards[1]
-   WriteLog("Dumping mobprog: "..mpkey)
-   Note("Dumping mobprog: "..mpkey)
 end
 
 function ggoNext(name,line,wildcards)
@@ -479,7 +473,13 @@ function exportxEditToFile(type)
    for i,key in ipairs(xlist[executingAction]) do
       local attribs = getTableKeys(t[key])
       for j,attrib in ipairs(attribs) do
-         f:write(key.."\t"..attrib.."\t"..t[key][attrib].."\n")
+         if type(t[key][attrib]) ~= 'table' then
+            f:write(key.."\t"..attrib.."\t"..t[key][attrib].."\n")
+         else
+            for x,y in pairs(t[key][attrib]) do
+               f:write(key.."\t"..attrib.."_"..x.."\t"..t[key][attrib][x].."\n")
+            end
+         end
       end
    end
    f:close ()
