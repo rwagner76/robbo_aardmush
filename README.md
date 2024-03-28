@@ -1,6 +1,31 @@
 # robbo_aardmush
 Robbo's Aardwolf Plugins for MUSHclient
 
+## Imm_Restring
+This is a plugin only for imms, as it won't do anything for regular players.  It's used to restring items as well as create new trivia portals.
+
+### Installation
+Download imm_restring.xml as well as lua/restring_scripts.lua and place into your MUSHClient Worlds\Plugins folder, (ensuring that restring_scripts is placed in a lua subdirectory) then install the plugin.  Alternatively, just git checkout this repository to your worlds\plugins folder.
+
+### Usage
+```
+----------------------------------------------------------------------------
+ To start a new restring, type 'restring <keyword>' for item in your
+ inventory.
+
+ To start a new trivia portal, type 'tportal <zone>'.
+
+ Additional help will be displayed once you type these commands.
+ 
+ The plugin will validate strings, color code termination, legal zones, and
+ provide convenience aliases for pcharge to check balances and charge
+ players.
+----------------------------------------------------------------------------
+```
+
+
+
+
 ## EnchantRobbot (ebot)
 Robbo's Enchantbot is a script to improve the quality of life for Enchanters on Aardwolf. Its primary functions are:
 - Enchant an item from a shopkeeper one at a time, but use some logic to determine if the item should be kept or tossed.
