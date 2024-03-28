@@ -188,6 +188,10 @@ function restringCommand(name,line,wildcards)
    end
 end
 
+function checkKeywords(kw,short,long)
+
+end
+
 function tportalCommand(name,line,wildcards)
    local s = wildcards[1]
    if s == "help" then pluginHelp() return end
