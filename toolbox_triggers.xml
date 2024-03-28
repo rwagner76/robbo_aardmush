@@ -2,7 +2,7 @@
   <trigger
    name="trg_startCapture"
    enabled="n"
-   match="^-- START CAPTURE --$"
+   match="^(You echo )?-- START CAPTURE --"
    regexp="y"
    omit_from_output="y"
    omit_from_log="y"
@@ -13,7 +13,7 @@
   <trigger
    name="trg_endStatCapture"
    enabled="y"
-   match="^-- END CAPTURE --$"
+   match="^(You echo )?-- END CAPTURE --"
    regexp="y"
    omit_from_output="y"
    omit_from_log="y"
@@ -38,7 +38,7 @@
   <trigger
    name="trg_captureLoopEnd"
    enabled="y"
-   match="^-- END ALL CAPTURE COMMANDS --$"
+   match="^(You echo )?-- END ALL CAPTURE COMMANDS --"
    regexp="y"
    omit_from_output="y"
    omit_from_log="y"
@@ -216,6 +216,17 @@
    group="meditCaptures"
   >
   </trigger>
+  <trigger
+   name="trg_meditT_add"
+   enabled="n"
+   match="^              (.+)"
+   regexp="y"
+   sequence="100"
+   script="meditTAdd"
+  >
+  </trigger>
+
+
   <trigger
    name="trg_meditW"
    enabled="n"
@@ -780,69 +791,6 @@
   >
   </trigger>
   <trigger
-   name="trg_mobpoints"
-   enabled="n"
-   match="^\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)\s+(\d+)$"
-   regexp="y"
-   sequence="100"
-   script="captureMobPoints"
-  >
-  </trigger>
-  <trigger
-   name="trg_endmobpoints"
-   enabled="y"
-   match="-- END MOBPOINTS --"
-   regexp="n"
-   sequence="100"
-   script="endMobPoints"
-  >
-  </trigger>
-  <trigger
-   name="trg_objpoints"
-   enabled="n"
-   match="^\s+(\d+)\s+(\d+\.\d)\s+(\d+)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+)\s+(\d+\.\d)\s+(\d+)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+\.\d)\s+(\d+)$"
-   regexp="y"
-   sequence="100"
-   script="captureObjPoints"
-  >
-  </trigger>
-  <trigger
-   name="trg_endobjpoints"
-   enabled="y"
-   match="-- END OBJPOINTS --"
-   regexp="n"
-   sequence="100"
-   script="endObjPoints"
-  >
-  </trigger>
-  <trigger
-   name="trg_wdice1"
-   enabled="n"
-   match="^\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s*?$"
-   regexp="y"
-   sequence="100"
-   script="captureWDice"
-  >
-  </trigger>
-  <trigger
-   name="trg_wdice2"
-   enabled="n"
-   match="^\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s+\|\s+(\d+)\s*?$"
-   regexp="y"
-   sequence="100"
-   script="captureWDice"
-  >
-  </trigger>
-  <trigger
-   name="trg_endwdice"
-   enabled="y"
-   match="-- END WDICE --"
-   regexp="n"
-   sequence="100"
-   script="endWDice"
-  >
-  </trigger>
-  <trigger
    name="trg_rawKeywords"
    enabled="n"
    match="^Keywords:\s(.+)$"
@@ -909,7 +857,7 @@
   <trigger
    name="trg_reditDF"
    enabled="n"
-   match="D\) Heal Rate\s+: (\-?\d+)\s+F\) Min Level\s+:\s+(\d+)"
+   match="D\) Heal Rate\s+:\s+(\-?\d+)\s+F\) Min Level\s+:\s+(\d+)"
    regexp="y"
    sequence="100"
    script="reditDF"
@@ -1074,7 +1022,46 @@
    group="reditCaptures"
   >
   </trigger>
-
+  <trigger
+   name="trg_mpdumpStart"
+   enabled="n"
+   match="^Mobprog Id: (?P<key>\w+\-\d+)"
+   regexp="y"
+   sequence="100"
+   script="mpDumpStart"
+  >
+  </trigger>
+  <trigger
+   name="trg_mpDumpMiddle"
+   enabled="n"
+   match="(.+)"
+   regexp="y"
+   sequence="101"
+   script="mpDumpMiddle"
+  >
+  </trigger>
+  <trigger
+   name="trg_mpDumpEnd"
+   enabled="y"
+   match="^(You echo )?-- end program --"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script="mpDumpEnd"
+  >
+  </trigger>
+  <trigger
+   name="trg_mpDumpAllEnd"
+   enabled="y"
+   match="^(You echo )?-- end all program dumps --"
+   regexp="y"
+   omit_from_output="y"
+   omit_from_log="y"
+   sequence="100"
+   script="mpDumpAllEnd"
+  >
+  </trigger>
 
 
   

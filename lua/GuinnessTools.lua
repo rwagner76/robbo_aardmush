@@ -11,6 +11,8 @@ ot = {}
 raws = {}
 oaff = {}
 goidx = {}
+mpdump = {}
+mpdumpKey = ''
 
 -- For area reports
 totalmobresets = 0
@@ -127,80 +129,12 @@ function cancelAction(name,line,wildcards)
    clearTempTimers()
 end
 
-function initMobPoints(name,line,wildcards)
-   mobpoints = {}
-   EnableTrigger("trg_mobpoints",true)
-   Send("buildstuff mobpoints")
-   Send("echo -- END MOBPOINTS --")
-end
-
-function initWDice(name,line,wildcards)
-   wdice = {}
-   EnableTrigger("trg_wdice1",true)
-   EnableTrigger("trg_wdice2",true)
-   local helpwin = IsPluginInstalled("a1965272c8ca966b76f36fa3")
-   if helpwin then
-      EnablePlugin("a1965272c8ca966b76f36fa3",false)
-   end
-   Send("help wdice")
-   if helpwin then
-      DoAfterSpecial(1,'EnablePlugin("a1965272c8ca966b76f36fa3",true)',sendto.script)
-      DoAfterSpecial(1.1,'echo -- END WDICE --',sendto.execute)
-   end
-end
-
-function captureWDice(name,line,wildcards)
-   local query = string.format("INSERT OR REPLACE INTO wdice(level,min,max,avg) VALUES(%s,%s,%s,%s);",wildcards[1],wildcards[2],wildcards[3],wildcards[4])
-   table.insert(wdice,query)
-   if #wildcards == 8 then
-      query = string.format("INSERT OR REPLACE INTO wdice(level,min,max,avg) VALUES(%s,%s,%s,%s);",wildcards[5],wildcards[6],wildcards[7],wildcards[8])
-      table.insert(wdice,query)
-   end
-end
-
-function endWDice()
-   DebugNote("Saving weapon dice...")
-   EnableTrigger("trg_wdice1",false)
-   EnableTrigger("trg_wdice2",false)
-   execute_in_transaction(toolboxdb,wdice)
-end
-
-
-function captureMobPoints(name,line,wildcards)
-   local query = string.format("INSERT OR REPLACE INTO mobpoints(level,hpmin,hpavg,hpmax,hpadd,dmmin,dmavg,dmmax,dr,hr,gold) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",wildcards[1],wildcards[2],wildcards[3],wildcards[4],wildcards[5],wildcards[6],wildcards[7],wildcards[8],wildcards[9],wildcards[10],wildcards[11])
-   table.insert(mobpoints,query)
-end
-
-function endMobPoints()
-   EnableTrigger("trg_mobpoints",false)
-   execute_in_transaction(toolboxdb,mobpoints)
-end
-
-function initObjPoints(name,line,wildcards)
-   objpoints = {}
-   EnableTrigger("trg_objpoints",true)
-   Send("buildstuff objpoints")
-   Send("echo -- END OBJPOINTS --")
-end
-
-function captureObjPoints(name,line,wildcards)
-   local query = string.format("INSERT OR REPLACE INTO objpoints(level,spnts,sstat,ssvs,shrdr,shp,snegall,dpnts,dstat,dsvs,dhrdr,dhp,dnegall) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s);",wildcards[1],wildcards[2],wildcards[3],wildcards[4],wildcards[5],wildcards[6],wildcards[7],wildcards[8],wildcards[9],wildcards[10],wildcards[11],wildcards[12],wildcards[13])
-   table.insert(objpoints,query)
-end
-
-function endObjPoints()
-   EnableTrigger("trg_objpoints",true)
-   execute_in_transaction(toolboxdb,objpoints)
-end
-
-
 function mpdumpAll(name,line,wildcards)
    if  GetOption("enable_timers") == 0 then
       Note("Warning: Timers are currently disabled. Cannot execute.")
       return
    end
    local area = getGMCPZone()
-   if area == nil then Note("Set your area keyword with 'garea keyword' first!") return end
    local command = line:sub(1,1).."statcap "
    local ext = ".txt"
    --local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..line:sub(1,1).."mpdump_"..type.."_"..getPort()..ext)
@@ -215,10 +149,30 @@ function mpdumpAll(name,line,wildcards)
    local delay = 1
    for i = min,max do
       local key = area.."-"..tostring(i)
-      DoAfterSpecial(delay,"mpdump noline "..key,sendto.execute)
-      DoAfterSpecial((delay+0.1),"echo -- end program --",sendto.execute)
+      DoAfterSpecial(delay,"mpdumpcap "..key,sendto.execute)
+      DoAfterSpecial((delay+0.2),mudEcho("-- end program --"),sendto.world)
       delay = delay + 1
    end
+   DoAfterSpecial(delay,mudEcho("-- end all program dumps --"),sendto.world)
+end
+
+function mpDumpCap(name,line,wildcards)
+   local key = wildcards['key']
+   EnableTrigger("trg_mpdumpStart",true)
+   Send("mpdump noline "..key)
+end
+
+function mpDumpAllEnd(name,line,wildcards)
+   local area = getGMCPZone()
+   local t = {}
+   Note("Exporting mpdumps to an export file. You can use this for comparison later if needed.")
+   local ext = ".txt"
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_mpdump_"..getPort()..ext)
+   local keys = sortKeys(getTableKeys(mpdump))
+   for i,key in ipairs(keys) do
+      writeArraytoFile(mpdump[key],f)
+   end
+   f:close ()
 end
 
 -- Xlist and control loops for captures
@@ -262,18 +216,18 @@ function captureLoop(kt)
       command = type .."statcap "
    end
    for i,key in ipairs(kt) do
-      DoAfterSpecial(delay,"echo -- START CAPTURE --",sendto.execute)
+      DoAfterSpecial(delay,mudEcho("-- START CAPTURE --"),sendto.world)
       delay = delay + .1
       DoAfterSpecial(delay,command..key,sendto.execute)
       if string.sub(executingAction,2,8) ~= 'editAll' then
          -- Edit commands have secondary triggers, will trigger on return to game.
          delay = delay + .1
-         DoAfterSpecial(delay,"echo -- END CAPTURE --",sendto.execute)
+         DoAfterSpecial(delay,mudEcho("-- END CAPTURE --"),sendto.world)
       end
       delay = delay + interval
    end
    delay = delay + 1
-   DoAfterSpecial(delay,"echo -- END ALL CAPTURE COMMANDS --",sendto.execute)
+   DoAfterSpecial(delay,mudEcho("-- END ALL CAPTURE COMMANDS --"),sendto.world)
 end
 
 function captureStart(name,line,wildcards)
@@ -329,6 +283,10 @@ function captureLoopEnd(name, line, wildcards)
       exportXstatToFile()
    end
    if string.sub(executingAction,2,8) == 'editAll' then
+      if executingAction == "oeditAll" then
+         Send("purge")
+         Send("reset")
+      end
       exportxEditToFile()
    end
 end
@@ -451,7 +409,9 @@ end
 function exportXstatToFile()
    Note("Saving "..executingAction)
    local area = getGMCPZone()
-   local outfile = "worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..executingAction.."_"..getPort()..".txt"
+   --local datestamp = os.date("%Y%m%d_%H%M")
+   local ext = ".txt"
+   local outfile = "worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..executingAction.."_"..getPort()..ext
    DebugNote("Toolbox: Opening file "..outfile)  
    local f = io.output (outfile)
    for x,key in ipairs(xlist[executingAction]) do
@@ -460,27 +420,34 @@ function exportXstatToFile()
    f:close ()
 end
 
-function exportxEditToFile(type)
-   local type = string.sub(executingAction,1,1)
+function exportxEditToFile()
+   local etype = string.sub(executingAction,1,1)
    local area = getGMCPZone()
    local t = {}
-   if type == "m" then t = mt end
-   if type == "o" then t = ot end
-   if type == "r" then t = rt end
-   Note("Exporting data for type: "..type.." to an export file. You can use this for comparison later if needed.")
+   if etype == "m" then t = mt end
+   if etype == "o" then t = ot end
+   if etype == "r" then t = rt end
+   Note("Exporting data for type: "..etype.." to an export file. You can use this for comparison later if needed.")
+   --local datestamp = os.date("%Y%m%d_%H%M")
    local ext = ".tsv"
-   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..type.."editData_"..getPort()..ext)
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_"..etype.."editData_"..getPort()..ext)
    for i,key in ipairs(xlist[executingAction]) do
-      local attribs = getTableKeys(t[key])
-      for j,attrib in ipairs(attribs) do
-         if type(t[key][attrib]) ~= 'table' then
-            f:write(key.."\t"..attrib.."\t"..t[key][attrib].."\n")
-         else
-            for x,y in pairs(t[key][attrib]) do
-               f:write(key.."\t"..attrib.."_"..x.."\t"..t[key][attrib][x].."\n")
-            end
-         end
-      end
+      deepPrint(key,f,t[key])
    end
    f:close ()
+end
+
+function deepPrint (key,f,e,prefix)
+   if prefix == nil then prefix = '' end
+   if type(e) == 'table' then
+      for k,v in pairs(e) do
+         if prefix == '' then
+            deepPrint(key,f,v,k)
+         else
+            deepPrint(key,f,v,prefix.."_"..k)
+         end
+      end
+   else
+      f:write(key.."\t"..prefix.."\t"..e.."\n")
+   end
 end

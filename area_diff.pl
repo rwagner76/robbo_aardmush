@@ -4,8 +4,8 @@ if ($#ARGV != 1) {showUsage();}
 my $area = $ARGV[0];
 my $type = $ARGV[1];
 
-$mainfile = $area."_".$type."_main.tsv";
-$testfile = $area."_".$type."_test.tsv";
+$mainfile = $area."_".$type."Data_main.tsv";
+$testfile = $area."_".$type."Data_test.tsv";
 
 open(FILE,"<$mainfile") || die("Can't find file $mainfile");
 @lines = <FILE>;
@@ -68,7 +68,7 @@ foreach $key (@inboth) {
 sub showUsage() {
 	 print "Usage:\n";
 	 print "perl area_diff.pl <area> <type>\n\n";
-	 print "Types would be: object or mob.\n";
+	 print "Types would be: redit, medit, or oedit\n";
 	
 	
 }

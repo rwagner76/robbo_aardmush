@@ -25,6 +25,17 @@ function tableConcat(t1,t2)
    end
 end
 
+function string.join(a,delim)
+   if delim == nil then delim = ',' end
+   local len = #a
+   if len == 0 then return "" end
+   local string = list[1]
+   for i = 2, len do
+      string = string .. delim .. a[i]
+   end
+   return string
+end
+
 function round(x)
   if x == nil then return end
   return x>=0 and math.floor(x+0.5) or math.ceil(x-0.5)
@@ -171,6 +182,24 @@ function getGMCPZone()
    local current_zone
    res, current_zone = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","room.info.zone")
    return current_zone
+end
+
+function getGMCPPlayerLevel()
+   local res
+   local level
+   res, level = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.level")
+   return tonumber(level)
+end
+
+function mudEcho(s)
+   local cmd = 'echo'
+   if (getGMCPPlayerLevel() > 204 and getPort() == 'test') or (getGMCPPlayerLevel() > 203 and getPort() == 'main') then
+      local res, pname = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.base.name")
+      cmd = 'echo '..pname
+   end
+   cmd = cmd.." "..s
+   --DebugNote(cmd)
+   return cmd
 end
 
 function getPort()

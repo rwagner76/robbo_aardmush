@@ -1,22 +1,22 @@
 -- mpdump Captures
 function mpDumpStart(name,line,wildcards)
+   mpdumpKey = wildcards['key']
+   DebugNote("Capturing program: "..mpdumpKey)
    EnableTrigger("trg_mpDumpStart",false)
    EnableTrigger("trg_mpDumpMiddle",true)
    EnableTrigger("trg_mpDumpEnd",true)
-   mpdump[progracurKey] = {}
-   table.insert(mpdump[progracurKey], line)
+   mpdump[mpdumpKey] = {}
+   table.insert(mpdump[mpdumpKey], line)
 end
 
 function mpDumpMiddle(name,line,wildcards)
-   table.insert(mpdump[progracurKey], line)
+   table.insert(mpdump[mpdumpKey], line)
 end
 
 function mpDumpEnd(name,line,wildcards)
-   table.insert(mpdump[progracurKey], line)
    EnableTrigger("trg_mpDumpMiddle",false)
    EnableTrigger("trg_mpDumpEnd",false)
 end
-
 
 -- xedit Captures
 function meditInGame(name,line,wildcards)
@@ -96,7 +96,16 @@ end
 
 function meditT(name, line, wildcards)
    mt[curKey]['immune'] = wildcards[1]
+   if string.sub(mt[curKey]['immune'],-1) == ',' then
+      EnableTrigger("trg_meditT_add",true)
+   end
 end
+
+function meditTAdd(name, line, wildcards)
+   mt[curKey]['immune'] = mt[curKey]['immune'].." "..wildcards[1]
+   EnableTrigger("trg_meditT_add",false)
+end
+
 
 function meditW(name, line, wildcards)
    i,j = string.find(wildcards[1],' ')

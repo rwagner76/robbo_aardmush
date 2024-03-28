@@ -60,13 +60,17 @@ function checkObjExceptions(keys,db)
       -- Checks
       tableConcat(objex,checkObjStrings(objt[1],rawt[1]))
       tableConcat(objex,checkKeywords(objt[1]))
-      if objt[1].type ~= "None" and objt[1].type ~= "Fountain" then
+      if objt[1].type ~= "None" and objt[1].type ~= "Fountain" and objt[1].type ~= "Raw material" then
          tableConcat(objex,checkObjWeightVal(objt[1],key,toolboxdb))
          tableConcat(objex,checkWearable(objt[1]))
       else
          table.insert(objex,"\tObject does not have a type set.")
       end
-      if objt.type == 'Weapon' then
+      if objt[1].type == 'Raw material' then
+         table.insert(objex,"\tNote: Object is of type 'Raw material', this requires Lasher's approval.")
+      end
+      
+      if objt[1].type == 'Weapon' then
          local wdata = querytoTable(db,string.format("SELECT * from weapons where key='%s';",key))
          tableConcat(objex,checkWDice(objt[1],wdata[1]))
       end
@@ -234,7 +238,7 @@ function checkMobRace(mobt)
    if mobt.race == nil then
       table.insert(ex,"\tMob race is blank.")
    elseif table.contains(badraces,mobt.race) then
-      table.insert(ex,"\tMob race "..mob.race.." is not allowed for areas.")
+      table.insert(ex,"\tMob race "..mobt.race.." is not allowed for areas.")
    elseif mobt.race == 'unique' then
       table.insert(ex,"\tWarning: Mob race unique requires head builder to set stats.")
    end
@@ -385,6 +389,9 @@ end
 function checkObjWeightVal(objt,key,db)
    local ex = {}
    local minw,maxw,maxv = objcost(objt.level,objt.type)
+   if maxw < 1 then maxw = 1 end
+   if minw < 1 then minw = 1 end
+   
    if objt.weight == nil then
       table.insert(ex,"\tObject weight is unknown/blank!")
    else
@@ -397,8 +404,8 @@ function checkObjWeightVal(objt,key,db)
       local maxload = objMaxInGame(key,db)
       local maxshop = objCountinShop(key,db)
       if debug_mode == "on" then
-         table.insert(ex,"Total possible object resets (equip): "..maxload)
-         table.insert(ex,"Total possible object resets (shop) : "..maxshop)
+         --table.insert(ex,"Total possible object resets (equip): "..maxload)
+         --table.insert(ex,"Total possible object resets (shop) : "..maxshop)
       end
       local multiplier = 1
       if maxload > 1 then
@@ -459,6 +466,10 @@ end
 function checkWDice(objt,wdata)
    local ex = {}
    local wdice = querytoTable(toolboxdb,string.format("SELECT avg from wdice where level='%s';",objt.level))
+   if wdice[1] == nil then
+      table.insert(ex,"\tObject is weapon, but wdice for this object is not defined. Level is "..objt.level)
+      return ex
+   end
    if wdata.avgdam == nil then
        table.insert(ex,"\tObject is weapon, but average damage is unknown/blank!")
    elseif wdata.avgdam > wdice[1].avg then
@@ -561,7 +572,7 @@ function checkObjResists(objt,oaff,mres)
             table.insert(ex,"\tFailed to get object max resists allphysical for level "..objt.level)
          else
             if a.adjust > mres.allphys then
-               table.insert(ex,"\tObject has higher than the allowed allphysical resist type. ("..a.adjust.." vs max "..mres.allphysical..")")
+               table.insert(ex,"\tObject has higher than the allowed allphysical resist type. ("..a.adjust.." vs max "..mres.allphys..")")
             end
          end
       end

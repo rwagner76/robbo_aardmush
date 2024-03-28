@@ -93,6 +93,14 @@
   >
   </alias>
   <alias
+   match="^mpdumpcap (?P<key>.+)"
+   enabled="y"
+   regexp="y"
+   script="mpDumpCap"
+   sequence="100"
+  >
+  </alias>
+  <alias
    match="serialize * *"
    enabled="y"
    script="printSerialize"
@@ -106,27 +114,4 @@
    sequence="100"
   >
   </alias>
-  <alias
-   match="initmobpoints"
-   enabled="y"
-   script="initMobPoints"
-   sequence="100"
-  >
-  </alias>
-  <alias
-   match="initobjpoints"
-   enabled="y"
-   script="initObjPoints"
-   sequence="100"
-  >
-  </alias>
-  <alias
-   match="initwdice"
-   enabled="y"
-   script="initWDice"
-   sequence="100"
-  >
-  </alias>
-
-
 </aliases>
