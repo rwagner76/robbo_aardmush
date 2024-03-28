@@ -19,7 +19,8 @@ Download imm_restring.xml as well as lua/restring_scripts.lua and place into you
  
  The plugin will validate strings, color code termination, legal zones, and
  provide convenience aliases for pcharge to check balances and charge
- players.
+ players. It also will automatically grab the first room for portal
+ destinations.
 ----------------------------------------------------------------------------
 ```
 
