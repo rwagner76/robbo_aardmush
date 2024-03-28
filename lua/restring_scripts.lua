@@ -77,6 +77,8 @@ function setShort(name,line,wildcards)
       Note("Short description cleared.")
       return
    end
+   if string.len(s) > 100 then Note("Error: String with color codes must be 100 characters or less.") return end
+   
    local last = ''
       for m in string.gmatch(s,'@%g') do
       last = m
