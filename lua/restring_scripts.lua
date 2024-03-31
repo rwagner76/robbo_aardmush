@@ -192,10 +192,6 @@ function restringCommand(name,line,wildcards)
    end
 end
 
-function checkKeywords(kw,short,long)
-
-end
-
 function tportalCommand(name,line,wildcards)
    local s = wildcards[1]
    if s == "help" then pluginHelp() return end
@@ -223,7 +219,7 @@ function tportalCommand(name,line,wildcards)
          local kw = GetVariable("restring_Keywords").." "..GetVariable("restring_AddKeywords")
          local owner = GetVariable("restring_Owner")
          local firstroom = GetVariable("tportal_Dest")
-         if kw == "" or short == "" or long == "" or owner == "" or firstroom == "" then Note("You must set all the required fields. Use 'tportal check' to verify your work!") return end
+         if GetVariable("restring_AddKeywords") == "" or short == "" or long == "" or owner == "" or firstroom == "" then Note("You must set all the required fields. Use 'tportal check' to verify your work!") return end
          Send("oload badtrip-9")
          Send("ostring 'trivia portal' short "..'"'..short..'"')
          Send("ostring 'trivia portal' long "..'"'..long..'"')
