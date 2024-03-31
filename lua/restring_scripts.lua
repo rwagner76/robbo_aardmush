@@ -1,3 +1,7 @@
+function firstToUpper(str)
+    return (str:gsub("^%l", string.upper))
+end
+
 function captureKeywords(name,line,wildcards)
    local s = wildcards[1]
    SetVariable("restring_Keywords",s)
@@ -124,7 +128,7 @@ function setKeywords(name,line,wildcards)
 end
 
 function setOwner(name,line,wildcards)
-   local s = wildcards[1]
+   local s = firstToUpper(wildcards[1])
    SetVariable("restring_Owner",s)
    Note("Owner for the trivia portal will be: "..s)
 end
