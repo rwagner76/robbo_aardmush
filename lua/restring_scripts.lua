@@ -2,6 +2,17 @@ function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
 end
 
+function split (inputstr, sep)
+   if sep == nil then
+      sep = "%s"
+   end
+   local t={}
+   for str in string.gmatch(inputstr, "([^"..sep.."]+)") do
+      table.insert(t, str)
+   end
+   return t
+end
+
 function captureKeywords(name,line,wildcards)
    local s = wildcards[1]
    SetVariable("restring_Keywords",s)
@@ -213,7 +224,7 @@ end
 
 function tportalCommand(name,line,wildcards)
    local s = wildcards[1]
-   local arguments = string.split(s," ")
+   local arguments = split(s," ")
    if arguments > 2 then Note("Error: tportal only expects 1 argument. Type 'tportal help' for help.") end
    if s == "owner" then Note("Error: tportal owner isn't a valid command.") return end
    if s == "keywords" then Note("Error: tportal keywords isn't a valid command.") return end
