@@ -17,7 +17,7 @@ end
 
 function capture_firstroom(name,line,wildcards)
    local rid = wildcards[1]
-   EnableTrigger("capture_firstroom",false)
+   EnableTrigger("trg_FirstRoom",false)
    SetVariable("tportal_Dest",rid)
    DoAfterSpecial(.5,'tportalHelp()',sendto.script)
 end
@@ -286,7 +286,7 @@ function tportalCommand(name,line,wildcards)
          if s == v then Note("That is an illegal zone for a trivia portal. Check helpfiles for more information!") return end
       end
       SetVariable("tportal_Zone",s)
-      EnableTrigger("capture_firstroom",true)
+      EnableTrigger("trg_FirstRoom",true)
       Send("zstat "..s)
    end
 end
