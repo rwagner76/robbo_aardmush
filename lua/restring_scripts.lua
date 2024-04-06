@@ -216,10 +216,10 @@ function tportalCommand(name,line,wildcards)
    if string.sub(s,1,6) == "charge" and string.len(s) > 6 then Note("Error: tportal charge should have no other arguments.") return end
    if string.sub(s,1,5) == "check" and string.len(s) > 5 then Note("Error: tportal check should have no other arguments.") return end
    if string.sub(s,1,7) == "balance" and string.len(s) > 7 then Note("Error: tportal balance should have no other arguments.") return end
-   if string.sub(s,1,6) == "owner" then Note("Error: tportal owner isn't a valid command.") return end
-   if string.sub(s,1,6) == "keywords" then Note("Error: tportal keywords isn't a valid command.") return end
-   if string.sub(s,1,6) == "short" then Note("Error: tportal short isn't a valid command.") return end
-   if string.sub(s,1,6) == "long" then Note("Error: tportal short isn't a valid command.") return end
+   if string.sub(s,1,5) == "owner" then Note("Error: tportal owner isn't a valid command.") return end
+   if string.sub(s,1,8) == "keywords" then Note("Error: tportal keywords isn't a valid command.") return end
+   if string.sub(s,1,5) == "short" then Note("Error: tportal short isn't a valid command.") return end
+   if string.sub(s,1,4) == "long" then Note("Error: tportal short isn't a valid command.") return end
    if s == "help" then pluginHelp() return end
    if s == "check" then
       local addkw = GetVariable("restring_AddKeywords")
