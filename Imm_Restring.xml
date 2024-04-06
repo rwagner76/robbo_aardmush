@@ -33,6 +33,7 @@
   >
   </trigger>
   <trigger
+   enabled="no"
    match="^Keywords\s+: (.+)$"
    name="trg_restringKeywords"
    regexp="y"
