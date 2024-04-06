@@ -225,7 +225,7 @@ end
 function tportalCommand(name,line,wildcards)
    local s = wildcards[1]
    local arguments = split(s," ")
-   if arguments > 2 then Note("Error: tportal only expects 1 argument. Type 'tportal help' for help.") end
+   if #arguments > 2 then Note("Error: tportal only expects 1 argument. Type 'tportal help' for help.") end
    if s == "owner" then Note("Error: tportal owner isn't a valid command.") return end
    if s == "keywords" then Note("Error: tportal keywords isn't a valid command.") return end
    if s == "short" then Note("Error: tportal short isn't a valid command.") return end
