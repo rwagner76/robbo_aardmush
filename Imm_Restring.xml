@@ -33,7 +33,7 @@
   >
   </trigger>
   <trigger
-   enabled="no"
+   enabled="n"
    match="^Keywords\s+: (.+)$"
    name="trg_restringKeywords"
    regexp="y"
@@ -43,6 +43,7 @@
   >
   </trigger>
   <trigger
+   enabled="n"
    match=".+&gt; Short: (.+)"
    name="trg_checkShort"
    regexp="y"
@@ -52,7 +53,7 @@
   >
   </trigger>
   <trigger
-   enabled="y"
+   enabled="n"
    match="Id             : *"
    name="trg_restringID"
    send_to="12"
