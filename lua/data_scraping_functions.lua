@@ -470,7 +470,7 @@ function reditS(name,line,wildcards)
    Send("")
 end
 
-function reditSave(name,line,wildcards)
+function editSave(name,line,wildcards)
    Send("N")
    Send("")
 end

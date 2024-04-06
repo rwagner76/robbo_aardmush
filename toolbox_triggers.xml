@@ -247,6 +247,18 @@
    group="meditCaptures"
   >
   </trigger>
+
+  <trigger
+   name="trg_meditSave"
+   enabled="n"
+   match="Save changes\? \(Y\/N\/B\)"
+   regexp="y"
+   sequence="100"
+   script="editSave"
+   group="meditCaptures"
+  >
+  </trigger>
+
   <trigger
    name="trg_meditStatsA"
    enabled="n"
@@ -530,6 +542,16 @@
    regexp="y"
    sequence="100"
    script="oeditS"
+   group="oeditCaptures"
+  >
+  </trigger>
+  <trigger
+   name="trg_oeditSave"
+   enabled="n"
+   match="Save changes\? \(Y\/N\/B\)"
+   regexp="y"
+   sequence="100"
+   script="editSave"
    group="oeditCaptures"
   >
   </trigger>
@@ -950,7 +972,7 @@
    match="Save changes\? \(Y\/N\/B\)"
    regexp="y"
    sequence="100"
-   script="reditSave"
+   script="editSave"
    group="reditCaptures"
   >
   </trigger>
