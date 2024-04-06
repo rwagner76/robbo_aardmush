@@ -60,8 +60,8 @@
   >
   </trigger>
   <trigger
-   enabled="y"
-   match="I\) First room\s+: (.+) \(.+\)"
+   enabled="n"
+   match="I\) First room\s+: (.+?) \(.+\)"
    regexp="y"
    name="trg_FirstRoom"
    send_to="12"

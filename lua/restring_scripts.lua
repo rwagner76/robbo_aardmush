@@ -17,6 +17,7 @@ end
 
 function capture_firstroom(name,line,wildcards)
    local rid = wildcards[1]
+   EnableTrigger("capture_firstroom",false)
    SetVariable("tportal_Dest",rid)
    DoAfterSpecial(.5,'tportalHelp()',sendto.script)
 end
@@ -76,6 +77,11 @@ end
 
 function setShort(name,line,wildcards)
    local s = wildcards[1]
+   -- Ensure we're not editing or writing notes.
+   local state
+   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
+   if state == "5" or state == "6" then Send(line) return end
+
    if s == "clear" then
       SetVariable("restring_Short","")
       Note("Short description cleared.")
@@ -96,6 +102,10 @@ end
 
 function setLong(name,line,wildcards)
    local s = wildcards[1]
+   -- Ensure we're not editing or writing notes.
+   local state
+   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
+   if state == "5" or state == "6" then Send(line) return end
    if s == "clear" then
       SetVariable("restring_Long","")
       Note("Long description cleared.")
@@ -114,6 +124,11 @@ end
 
 function setKeywords(name,line,wildcards)
    local s = wildcards[1]
+   local res
+   -- Ensure we're not editing or writing notes.
+   local state
+   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
+   if state == "5" or state == "6" then Send(line) return end
    if s == "clear" then
       SetVariable("restring_AddKeywords","")
       Note("Extra keywords cleared.")
@@ -129,6 +144,10 @@ end
 
 function setOwner(name,line,wildcards)
    local s = firstToUpper(wildcards[1])
+   -- Ensure we're not editing or writing notes.
+   local state
+   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
+   if state == "5" or state == "6" then Send(line) return end
    SetVariable("restring_Owner",s)
    Note("Owner for the trivia portal will be: "..s)
 end
@@ -194,6 +213,9 @@ end
 
 function tportalCommand(name,line,wildcards)
    local s = wildcards[1]
+   if string.sub(s,1,6) == "charge" and string.len(s) > 6 then Note("Error: tportal charge should have no other arguments.") return end
+   if string.sub(s,1,5) == "check" and string.len(s) > 5 then Note("Error: tportal check should have no other arguments.") return end
+   if string.sub(s,1,7) == "balance" and string.len(s) > 7 then Note("Error: tportal balance should have no other arguments.") return end
    if s == "help" then pluginHelp() return end
    if s == "check" then
       local addkw = GetVariable("restring_AddKeywords")
@@ -264,7 +286,7 @@ function tportalCommand(name,line,wildcards)
          if s == v then Note("That is an illegal zone for a trivia portal. Check helpfiles for more information!") return end
       end
       SetVariable("tportal_Zone",s)
-      EnableTrigger("trg_FirstRoom",true)
+      EnableTrigger("capture_firstroom",true)
       Send("zstat "..s)
    end
 end
