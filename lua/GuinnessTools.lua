@@ -289,7 +289,7 @@ function captureLoopEnd(name, line, wildcards)
       Send("purge")
       Send("reset")
    end
-   excutingAction = "none"
+   executingAction = "none"
 end
 
 function captureStatLines(name,line,wildcards)
