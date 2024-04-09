@@ -57,6 +57,7 @@
   >
   </trigger>
 
+
   <trigger
    name="trg_meditInGame"
    enabled="n"
@@ -842,6 +843,26 @@
    sequence="100"
    script="captureRawRoomName"
    group="tgrp_statStrings"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_notake"
+   enabled="n"
+   match="WARNING: .+ is notake. Placed in room."
+   regexp="y"
+   sequence="100"
+   script="watchNotake"
+  >
+  </trigger>
+
+  <trigger
+   name="trg_notakeID"
+   enabled="n"
+   match="1 \* .+ \(.+\) loaded - (\d+)\."
+   regexp="y"
+   sequence="100"
+   script="setNotakeTimer"
   >
   </trigger>
 

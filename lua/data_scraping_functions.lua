@@ -525,3 +525,18 @@ function reditSubReset(name,line,wildcards)
    
    table.insert(rt[curKey]['subresets'],t)
 end
+
+function watchNotake(name,line,wildcards)
+   DebugNote("Spotted notake item!")
+   EnableTrigger("trg_notakeID",true)
+   EnableTrigger("trg_notake",false)
+end
+
+function setNotakeTimer(name,line,wildcards)
+   local id = wildcards[1]
+   DebugNote("Setting timer on notake item "..id)
+   EnableTrigger("trg_notakeID",false)
+   Send("oset "..id.." timer 5")
+end
+
+   

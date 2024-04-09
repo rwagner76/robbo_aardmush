@@ -235,8 +235,10 @@ function captureStart(name,line,wildcards)
    EnableTriggerGroup("tgrp_endCaptures",true)
    if string.sub(executingAction,2,8) == 'statCap' then
       EnableTrigger("trg_captureXstatLines",true)
+      EnableTrigger("trg_notake",true)
    elseif string.sub(executingAction,2,8) == 'statStr' then
       EnableTriggerGroup("tgrp_statStrings",true)
+      EnableTrigger("trg_notake",true)
    elseif executingAction == 'oeditAll' then
       EnableTriggerGroup("oeditCaptures",true)
    elseif executingAction == 'meditAll' then
@@ -260,6 +262,7 @@ function captureEnd(name,line,wildcards)
    EnableTriggerGroup("oeditCaptures",false)
    EnableTriggerGroup("reditCaptures",false)
    EnableTriggerGroup("tgrp_statStrings",false)
+   EnableTrigger("trg_notake",false)
    if string.sub(executingAction,2,8) == 'statStr' then
       writeRawstoDB(curKey,raws[curKey],toolboxdb,executingAction)
    end
@@ -286,8 +289,8 @@ function captureLoopEnd(name, line, wildcards)
       exportxEditToFile()
    end
    if executingAction == "ostatCap" or executingAction == "ostatStr" then
-      Send("purge")
-      Send("reset")
+      --Send("purge")
+      --Send("reset")
    end
    executingAction = "none"
 end

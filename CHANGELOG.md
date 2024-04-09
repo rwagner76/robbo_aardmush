@@ -1,7 +1,8 @@
 #### Changelog
 
 ##### 2024-04-09
-- For ostat tasks, purge items in room properly. (Had this in the wrong loop previous)
+###### Fixes for Testport Toolbox
+- Removed purge at the end of the ostat runs. Instead, watches for notake items to be loaded, then sets a 5 second timer on them.
 - Ensure executing action is cleared so jobs don't run a second time.
 
 ##### 2024-04-06
