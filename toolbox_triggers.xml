@@ -801,6 +801,7 @@
    regexp="y"
    sequence="100"
    script="addListKey"
+   group="xlistkeys"
   >
   </trigger>
   <trigger
@@ -810,6 +811,7 @@
    regexp="y"
    sequence="100"
    script="endListkeys"
+   group="xlistkeys"
   >
   </trigger>
   <trigger

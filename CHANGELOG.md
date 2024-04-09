@@ -2,6 +2,7 @@
 
 ##### 2024-04-09
 - For ostat tasks, purge items in room properly. (Had this in the wrong loop previous)
+- Ensure executing action is cleared so jobs don't run a second time.
 
 ##### 2024-04-06
 ###### Fixes for Testport Toolbox

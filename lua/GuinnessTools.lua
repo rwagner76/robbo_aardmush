@@ -178,10 +178,10 @@ end
 -- Xlist and control loops for captures
 function xlistExecute(name, line, wildcards)
    local type=wildcards['type']
+   DebugNote("Executing Action is set to: "..executingAction)
    if executingAction ~= "none" then
       xlist[executingAction] = {}
-      EnableTrigger("trg_captureListKeys",true)
-      EnableTrigger("trg_endListKeys",true)
+      EnableTriggerGroup("xlistkeys",true)
    end
    Send(type.."list")
 end
@@ -193,14 +193,14 @@ end
 
 function endListkeys(name, line, wildcards)
    local area = getGMCPZone()
-   EnableTrigger("trg_captureListKeys",false)
-   EnableTrigger("trg_endListKeys",false)
    DebugNote("Toolbox: Captured "..table.getn(xlist[executingAction]).." keys for action: "..executingAction)
 
    if executingAction == "ggo" then Execute("ggo")
    elseif executingAction == "gmgo" then Execute("gmgo")
    else captureLoop(xlist[executingAction])
    end
+
+   EnableTriggerGroup("xlistkeys",false)
 end
 
 function captureLoop(kt)
@@ -289,6 +289,7 @@ function captureLoopEnd(name, line, wildcards)
       Send("purge")
       Send("reset")
    end
+   excutingAction = "none"
 end
 
 function captureStatLines(name,line,wildcards)
