@@ -1,4 +1,8 @@
 #### Changelog
+
+##### 2024-04-09
+- For ostat tasks, purge items in room properly. (Had this in the wrong loop previous)
+
 ##### 2024-04-06
 ###### Fixes for Testport Toolbox
 - Ensure that any save changes prompts for objects/mobs automatically respond no. Previously only happened for rooms.

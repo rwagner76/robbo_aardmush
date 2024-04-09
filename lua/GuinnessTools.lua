@@ -283,11 +283,11 @@ function captureLoopEnd(name, line, wildcards)
       exportXstatToFile()
    end
    if string.sub(executingAction,2,8) == 'editAll' then
-      if executingAction == "oeditAll" then
-         Send("purge")
-         Send("reset")
-      end
       exportxEditToFile()
+   end
+   if executingAction == "ostatCap" or executingAction == "ostatStr" then
+      Send("purge")
+      Send("reset")
    end
 end
 
