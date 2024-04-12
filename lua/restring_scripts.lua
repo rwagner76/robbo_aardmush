@@ -134,6 +134,7 @@ function setLong(name,line,wildcards)
 end
 
 function setKeywords(name,line,wildcards)
+   -- To Do: add check that there are not more than 3 added keywords.
    local s = wildcards[1]
    local res
    -- Ensure we're not editing or writing notes.
@@ -145,6 +146,7 @@ function setKeywords(name,line,wildcards)
       Note("Extra keywords cleared.")
       return
    end
+   if select(2,s:gsub("%S+","")) > 3 then Note("Error: You cannot have more than 3 additional keywords") return end
    if string.find(s,"'") then Note("Error: keywords cannot contain quotes.") return end
    if string.find(s,'"') then Note("Error: keywords cannot contain quotes.") return end
    if string.find(s,'@') then Note("Error: keywords cannot contain color codes.") return end
