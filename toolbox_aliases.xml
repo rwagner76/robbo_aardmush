@@ -114,4 +114,12 @@
    sequence="100"
   >
   </alias>
+  <alias
+   match="exportstrings"
+   enabled="y"
+   script="exportStringsToFile"
+   sequence="100"
+  >
+  </alias>
+  
 </aliases>

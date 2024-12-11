@@ -29,7 +29,7 @@ function string.join(a,delim)
    if delim == nil then delim = ',' end
    local len = #a
    if len == 0 then return "" end
-   local string = list[1]
+   local string = a[1]
    for i = 2, len do
       string = string .. delim .. a[i]
    end

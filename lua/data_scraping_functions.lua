@@ -1,7 +1,7 @@
 -- mpdump Captures
 function mpDumpStart(name,line,wildcards)
    mpdumpKey = wildcards['key']
-   DebugNote("Capturing program: "..mpdumpKey)
+   Note("Capturing program: "..mpdumpKey)
    EnableTrigger("trg_mpDumpStart",false)
    EnableTrigger("trg_mpDumpMiddle",true)
    EnableTrigger("trg_mpDumpEnd",true)
@@ -14,8 +14,10 @@ function mpDumpMiddle(name,line,wildcards)
 end
 
 function mpDumpEnd(name,line,wildcards)
+   Note("Caught the end of a program!")
    EnableTrigger("trg_mpDumpMiddle",false)
    EnableTrigger("trg_mpDumpEnd",false)
+   Execute("sendgmcp config Rawcolors off")
 end
 
 -- xedit Captures

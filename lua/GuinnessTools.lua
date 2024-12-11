@@ -135,7 +135,6 @@ function mpdumpAll(name,line,wildcards)
       return
    end
    local area = getGMCPZone()
-   local command = line:sub(1,1).."statcap "
    local ext = ".txt"
    --local f = io.output ('worlds\plugins\robbo_aardmush\exports\'..line:sub(1,1).."mpdump_"..type.."_"..getPort()..ext)
    local min = 0
@@ -159,15 +158,16 @@ end
 function mpDumpCap(name,line,wildcards)
    local key = wildcards['key']
    EnableTrigger("trg_mpdumpStart",true)
+   Execute(mudEcho("-- Starting dump of program "..key.." --"))
+   Execute("sendgmcp config Rawcolors on")
    Send("mpdump noline "..key)
 end
 
 function mpDumpAllEnd(name,line,wildcards)
    local area = getGMCPZone()
    local t = {}
-   Note("Exporting mpdumps to an export file. You can use this for comparison later if needed.")
-   local ext = ".txt"
-   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_mpdump_"..getPort()..ext)
+   local f = io.output ("worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_mpdump_"..getPort()..".aardlua")
+   Note("Exporting mpdumps to an file: worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_mpdump_"..getPort()..".aardlua")
    local keys = sortKeys(getTableKeys(mpdump))
    for i,key in ipairs(keys) do
       writeArraytoFile(mpdump[key],f)
@@ -440,6 +440,54 @@ function exportxEditToFile()
    end
    f:close ()
 end
+
+function exportStringsToFile()
+   Note("Saving "..executingAction)
+   local area = getGMCPZone()
+   if zarg ~= nil then area = zarg end
+   --local datestamp = os.date("%Y%m%d_%H%M")
+   local ext = ".txt"
+   local outfile = "worlds\\plugins\\robbo_aardmush\\exports\\"..area.."_strings_"..getPort()..ext
+   DebugNote("Toolbox: Opening file "..outfile)  
+   local f = io.output (outfile)
+   local roomt = querytoTable(toolboxdb,string.format("SELECT key,name,desc from rooms where zone='%s';",area))
+   local roomkeys = getTableKeys(roomt)
+   f:write("            ----  Rooms  ----\n")
+   for key,t in ipairs(roomt) do
+      f:write("Key: ".. key.."\n")
+      local desc = string.gsub(roomt[key].desc,"\\n","\n")
+      f:write("Name: "..roomt[key].name.."\n")
+      f:write("Description:\n")
+      f:write(desc.."\n")
+      f:write("\n")
+   end
+   local mobt = querytoTable(toolboxdb,string.format("SELECT key,keywords,name,roomname,story,desc from mobs where zone='%s';",area))
+   f:write("            ----  Mobs  ----\n")
+   for key,t in ipairs(mobt) do
+      f:write("Key: ".. key.."\n")
+      f:write("Name      : "..mobt[key].name.."\n")
+      f:write("Keywords  : "..mobt[key].keywords.."\n")
+      if mobt[key].roomname ~= nil then f:write("Room Name : "..mobt[key].roomname.."\n") end
+      if mobt[key].story ~= nil then f:write("Story     : "..mobt[key].story.."\n") end
+      f:write("Description:\n")
+      if mobt[key].desc ~= nil then
+         local desc = string.gsub(mobt[key].desc,"\\n","\n")
+         f:write(desc.."\n")
+      end
+      f:write("\n")
+   end
+   local objt = querytoTable(toolboxdb,string.format("SELECT key,keywords,name,roomname from objects where zone='%s';",area))
+   local roomkeys = getTableKeys(objt)
+   f:write("            ----  Objects  ----\n")
+   for key,t in ipairs(objt) do
+      f:write("Key: ".. key.."\n")
+      f:write("Name      : "..objt[key].name.."\n")
+      f:write("Room Name : "..objt[key].roomname.."\n")
+      f:write("\n")
+   end
+   f:close ()
+end
+
 
 function deepPrint (key,f,e,prefix)
    if prefix == nil then prefix = '' end

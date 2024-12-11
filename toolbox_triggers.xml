@@ -1070,7 +1070,7 @@
   <trigger
    name="trg_mpdumpStart"
    enabled="n"
-   match="^Mobprog Id: (?P<key>\w+\-\d+)"
+   match="^(You echo )?-- Starting dump of program (?P<key>\w+\-\d+) .+"
    regexp="y"
    sequence="100"
    script="mpDumpStart"
@@ -1088,7 +1088,7 @@
   <trigger
    name="trg_mpDumpEnd"
    enabled="y"
-   match="^(You echo )?-- end program --"
+   match="^(You echo )?-- end program --.+"
    regexp="y"
    omit_from_output="y"
    omit_from_log="y"

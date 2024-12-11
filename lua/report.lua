@@ -389,8 +389,13 @@ end
 function checkObjWeightVal(objt,key,db)
    local ex = {}
    local minw,maxw,maxv = objcost(objt.level,objt.type)
+   if maxw == nil then
+      table.insert(ex,"\tObject allowed max weight is nil. Skipping!")
+      return ex
+   end
    if maxw < 1 then maxw = 1 end
    if minw < 1 then minw = 1 end
+   
    
    if objt.weight == nil then
       table.insert(ex,"\tObject weight is unknown/blank!")

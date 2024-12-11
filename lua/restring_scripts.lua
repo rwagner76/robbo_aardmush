@@ -127,6 +127,7 @@ function setLong(name,line,wildcards)
       last = m
    end
    if last ~= '' and last ~= '@w' then Note("Error: String contains color codes, but does not end with @w.") return end
+   if string.len(s) > 80 then Note("Error: Room/Long description can only be 80 chars, including color codes.") return end
    SetVariable("restring_Long",s)
    Note("Long description for restring set to: "..s)
    EnableTrigger("trg_checkLong",true)
