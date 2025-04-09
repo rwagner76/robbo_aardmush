@@ -95,7 +95,7 @@
   >
   </alias>
   <alias
-   match="^keywords (.+)$"
+   match="^kw (.+)$"
    enabled="y"
    regexp="y"
    send_to="12"

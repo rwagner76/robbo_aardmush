@@ -56,7 +56,7 @@ function checkObjExceptions(keys,db)
       local oaff = querytoTable(db,string.format("SELECT * from oaffects where key='%s';",key))
       local mres = querytoTable(db,string.format("SELECT * from maxresists where level='%s';",objt[1].level))
       local rawt = querytoTable(db,string.format("SELECT name,roomname FROM rawstrings WHERE key='%s' AND type='object';",key))
-      --DebugNote("Checking object "..key)
+      DebugNote("Checking object "..key)
       -- Checks
       tableConcat(objex,checkObjStrings(objt[1],rawt[1]))
       tableConcat(objex,checkKeywords(objt[1]))
@@ -74,6 +74,11 @@ function checkObjExceptions(keys,db)
          local wdata = querytoTable(db,string.format("SELECT * from weapons where key='%s';",key))
          tableConcat(objex,checkWDice(objt[1],wdata[1]))
       end
+      if objt[1].type == 'Container' then
+     	local cdata = querytoTable(db,string.format("SELECT * from containers where key='%s'",key))
+      	tableConcat(objex,checkContainer(objt[1],cdata[1]))
+      end
+
       tableConcat(objex,checkObjResists(objt[1],oaff,mres[1]))
       local points = calcObjPoints(objt[1],oaff)
       if objt[1].type == "Armor" or objt[1].type == "Light" or objt[1].type == "Weapon" then
@@ -84,6 +89,11 @@ function checkObjExceptions(keys,db)
       if objt[1].type ~= "Armor" and objt[1].type ~= "Light" and objt[1].type ~= "Weapon" and points.total ~= 0 then
          table.insert(objex,"\tObject is not armor, light, or weapon and has stat affects assigned.")
       end
+      if objt[1].type == "Staff" or objt[1].type == "Wand" or objt[1].type == "Potion" or objt[1].type == "Pill" then
+         local mdata = querytoTable(db,string.format("SELECT * from magicitems where key='%s'",key))
+      	 tableConcat(objex,checkMagicItem(objt[1],mdata[1]))
+      end
+
 
       -- Collate Results
       if #objex > 0 then
@@ -185,16 +195,20 @@ function checkMobStrings(mobt,rawt)
    end
    if rawt.name == nil then
       table.insert(ex,"\tRaw strings haven't been collected. Run 'mstatall strings'.")
-   elseif string.len(rawt.name) > 50 then
-      table.insert(ex,"\tName is longer than 50 characters.")
+   else
+      if string.len(rawt.name) > 50 then
+         table.insert(ex,"\tName is longer than 50 characters.")
+      end
       if countMatches(rawt.name,'@') > 0 then
          table.insert(ex,"\tName contains color codes. (not allowed for mobs)")
       end
    end
    if rawt.roomname == nil then
       table.insert(ex,"\tRoom Name is blank.")
-   elseif string.len(rawt.roomname) > 80 then
-      table.insert(ex,"\tRoom Name is longer than 80 characters.")
+   else
+   	  if string.len(rawt.roomname) > 80 then
+         table.insert(ex,"\tRoom Name is longer than 80 characters.")
+      end
       if countMatches(rawt.roomname,'@') > 0 then
          table.insert(ex,"\tRoom Name contains color codes. (not allowed for mobs)")
       end
@@ -211,6 +225,11 @@ function checkKeywords(t)
    local keywords = split(t.keywords,' ')
    local nmatch = false
    local rnmatch = 0
+   if string.find(t.keywords,'(',1,1) then
+      table.insert(ex,"\tKeywords have parenthesis in them, this breaks my script, and probably shouldn't be in game.")
+      return ex
+   end
+
    if t.name ~= nil then
       for i,kw in ipairs(keywords) do
          if countMatches(t.name,kw) > 0 then nmatch = true end
@@ -467,6 +486,181 @@ function checkObjFlags(objt)
    end
    return ex
 end
+
+function checkContainer(objt,cdata)
+   local ex = {}
+   local maxcap = 5 * objt.level
+   if maxcap > 1000 then maxcap = 1000 end
+   local maxitems =  (math.floor((objt.level-1)/10) + 1) * 5
+   if maxitems > 100 then maxitems = 100 end
+   if cdata.capacity > maxcap then
+      table.insert(ex,"\tContainer capacity (weight inside) is above allowed.  Allowed: "..maxcap..", Set: "..cdata.capacity)
+   end
+   if cdata.maxitem > maxitems then
+      table.insert(ex,"\tContainer max items is above allowed.  Allowed: "..maxitems..", Set: "..cdata.maxitem)
+   end   
+   return ex
+end
+
+function checkMagicItem(objt,mdata)
+   local ex = {}
+   if mdata.level > objt.level then
+      table.insert(ex,"\tSpell level for magic item is higher than the object level! Object level: "..objt.level..", Spell level: "..mdata.level)
+   end
+   local illegalspells = {
+   "Abomination",
+   "Absorb",
+   "Acid Blast",
+   "Acid Stream",
+   "Acid Proof",
+   "Acid Wave",
+   "Air Focus",
+   "Air Skewer",
+   "Angelfire",
+   "Antimagic Shell",
+   "Apocalypse",
+   "Augmented Healing",
+   "Balefire",
+   "Blades of Light",
+   "Blast Undead",
+   "Blazing Fury",
+   "Call Lightning",
+   "Call Upon Faith",
+   "Caustic Rain",
+   "Chaos Portal",
+   "Cleansing",
+   "Combat Empathy",
+   "Combat Mind",
+   "Conceal",
+   "Condemn",
+   "Create Poultice",
+   "Creator's Wisdom",
+   "Cyclone",
+   "Damnation",
+   "Death Field",
+   "Demonfire",
+   "Desolation",
+   "Displacement",
+   "Disrupt",
+   "Divine Faith",
+   "Earth Shroud",
+   "Earthquake",
+   "Earth Focus",
+   "Earthen Hammer",
+   "Elemental Ward",
+   "Energy Ball",
+   "Energy Drain",
+   "Energy Shield",
+   "Engulf",
+   "Eruption",
+   "Exorcise",
+   "Extinguish",
+   "Finger Of Death",
+   "Fire Breath",
+   "Fire Focus",
+   "Fire Rain",
+   "Forest Fire",
+   "Gaia's Revenge",
+   "Glare",
+   "Globe of Invulnerability",
+   "Hand Of Justice",
+   "Healing Touch",
+   "Heavenly Balance",
+   "High Explosive",
+   "Holy Arrow",
+   "Holy Strike",
+   "Holy Word",
+   "Ice Bolt",
+   "Ice Cloud",
+   "Ice Daggers",
+   "Ice Storm",
+   "Immolate",
+   "Indestructible",
+   "Aura",
+   "Infernal Voice",
+   "Incomplete Healing",
+   "Knock",
+   "Lightning Strike",
+   "Lightspeed",
+   "Line of Protection",
+   "Megablast",
+   "Miasma",
+   "Miracle",
+   "Neural Overload",
+   "Necrocide",
+   "Nightmare Touch",
+   "Nova",
+   "Panic",
+   "Party Heal",
+   "Party Sanctuary",
+   "Pillar Of Fire",
+   "Power Projection",
+   "Protection From Fire",
+   "Psychosis",
+   "Pure Faith",
+   "Purgatory",
+   "Purge",
+   "Pyromania",
+   "Rally",
+   "Regeneration",
+   "Renew",
+   "Rejuvenate",
+   "Repentance",
+   "Resonate",
+   "Restore",
+   "life",
+   "Reverse Align",
+   "Scorch",
+   "Scourge",
+   "Sense Anger",
+   "Sense Life",
+   "Shard Of Ice",
+   "Shifty's Sleight of Hand",
+   "Shock Aura",
+   "Slow",
+   "Soul Rip",
+   "Spasm",
+   "Spear of Odin",
+   "Spirit Strike",
+   "Spiritual Disruption",
+   "Starburst",
+   "Summon Life",
+   "Suppressed Healing",
+   "Tempest",
+   "Terminate",
+   "Test of Faith",
+   "Totem Force",
+   "Totem Guidance",
+   "Tornado",
+   "Toxic Cloud",
+   "Translocate",
+   "Trauma",
+   "Ultrablast",
+   "Valgard's Might",
+   "Vampiric Touch",
+   "Vengeance",
+   "Voice Of God",
+   "Water Focus",
+   "Web",
+   "Willpower",
+   "Winds Of Reckoning",
+   "Wolf Spirits",
+   "Wrath Of God",
+   "Wraith Form"
+   }
+   
+   if (objt.type == 'Staff' or objt.type == 'Wand') and (mdata.uses > 5) then
+      table.insert(ex,"\tWands and staves are allowed a maximum of 5 uses. Currently set to: "..mdata.uses)
+   end
+   
+   for i,ispell in ipairs(illegalspells) do
+   	  if string.find(mdata.spells,ispell) ~= nil then
+   	  	 table.insert(ex,"\tMagic item has illegal spell: "..ispell)
+   	  end
+   end
+   return ex
+end
+
 
 function checkWDice(objt,wdata)
    local ex = {}

@@ -1041,7 +1041,8 @@ function create_initial_tables(db)
 					totalsize	INTEGER,
 					startsize	INTEGER,
 					flags TEXT,
-					FOREIGN KEY(key) REFERENCES objects(key)
+					FOREIGN KEY(key) REFERENCES objects(key),
+					PRIMARY KEY(key)
 					);
 				]]
        DebugNote("Query returns: "..db:execute(query))
@@ -1058,7 +1059,8 @@ function create_initial_tables(db)
 					multiplier	INTEGER,
 					keyobject		TEXT,
 					flags			  TEXT,
-					FOREIGN KEY(key) REFERENCES objects(key)
+					FOREIGN KEY(key) REFERENCES objects(key),
+					PRIMARY KEY(key)
 					);
 				]]
        DebugNote("Query returns: "..db:execute(query))
@@ -1073,7 +1075,8 @@ function create_initial_tables(db)
           level				INTEGER,
 					uses				INTEGER,
 					spells			INTEGER,
-					FOREIGN KEY(key) REFERENCES objects(key)
+					FOREIGN KEY(key) REFERENCES objects(key),
+					PRIMARY KEY(key)
 					);
 				]]
        DebugNote("Query returns: "..db:execute(query))
@@ -1453,6 +1456,7 @@ function writeObjecttoDB(key,t,oat,db)
    end
 
    if t['type'] == 'Container' then
+   	  Note("Updating container data...")
       local wlist = "key,capacity,maxitem,multiplier,keyobject,flags"
       qs = bindQs(wlist)
       query = "INSERT OR REPLACE INTO containers("..wlist..") VALUES("..qs..");"

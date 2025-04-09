@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE muclient>
+<!-- Saved on Thursday, November 07, 2024, 10:56 AM -->
+<!-- MuClient version 5.07-pre -->
+
+<muclient>
+<plugin
+   name="imm_robbo"
+   author="Robbo"
+   id="bb9d8cb14452304eb7692bd5"
+   language="Lua"
+   purpose="Robbo's Imm triggers and aliases"
+   save_state="y"
+   date_written="2024-11-07 10:55:10"
+   requires="5.07"
+   version="1.0"
+   >
+<description trim="y">
+<![CDATA[
+Set wizi idle timer to xx minutes:
+autowizi xx
+
+Default is 30 minutes.
+]]>
+</description>
+
+</plugin>
+
+
+<!--  Triggers  -->
+
+<triggers>
+  <trigger
+   enabled="y"
+   match="* just sent you a tell."
+   sequence="100"
+   sound="D:\data\MUSHclient_imm\sounds\tell.wav"
+  >
+  </trigger>
+  <trigger
+   enabled="y"
+   match="You are now invisible to players below level *"
+   send_to="12"
+   sequence="100"
+  >
+  <send>SetVariable("isWizi","yes")</send>
+  </trigger>
+  <trigger
+   enabled="y"
+   match="You are now visible to all."
+   send_to="12"
+   sequence="100"
+  >
+  <send>SetVariable("isWizi","no")</send>
+  </trigger>
+</triggers>
+
+<!--  Aliases  -->
+
+<aliases>
+  <alias
+   match="recall"
+   enabled="y"
+   sequence="100"
+  >
+  <send>zgoto aylor</send>
+  </alias>
+  <alias
+   match="setlevel *"
+   enabled="y"
+   sequence="100"
+  >
+  <send>echo Don't do that on main port!</send>
+  </alias>
+  <alias
+   name="alias_Wizi"
+   match="wizi"
+   enabled="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>if GetVariable("IsWizi") == "no" then
+   Send("wizi 204")
+else
+   Send("wizi")
+end</send>
+  </alias>
+  <alias
+   name="alias_goWizi"
+   match="gowizi"
+   enabled="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>if GetVariable("IsWizi") == "no" then
+   Send("wizi 204")
+end</send>
+  </alias>
+  <alias
+   name="alias_autoWizi"
+   match="autowizi *"
+   enabled="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>local isNumber = tonumber("%1")
+  if isNumber then
+     SetVariable("wiziTimeout",isNumber)
+     Note("Set wizi timeout to "..isNumber.." minutes.")
+  end
+     </send>
+  </alias>
+
+  <alias
+   match="hom"
+   enabled="y"
+   sequence="100"
+  >
+  <send>rgoto immhomes-179</send>
+  </alias>
+  <alias
+   match="listtimers"
+   enabled="y"
+   send_to="12"
+   sequence="100"
+  >
+  <send>  tl = GetTimerList ()
+if tl then
+  for k, v in ipairs (tl) do 
+    Note (v) 
+  end  -- for
+end -- if we have any timers
+</send>
+  </alias>
+
+
+
+</aliases>
+
+<!--  Timers  -->
+
+<timers>
+cd /etc/  <timer name="AutoSave_World" enabled="y" minute="15" second="0.00" offset_second="0.00"    send_to="12"
+omit_from_output="y" >
+  <send>if GetInfo (111) then
+  Save ()
+  ColourNote ("white", "blue", "World file saved.")
+end -- if world file changed</send>
+
+  </timer>
+</timers>
+<!--  Variables  -->
+
+<!--  Plugin help  -->
+
+<aliases>
+  <alias
+   script="OnHelp"
+   match="imm_autowizi:help"
+   enabled="y"
+  >
+  </alias>
+</aliases>
+
+<script>
+<![CDATA[
+local wiziTimeout
+if GetVariable("wiziTimeout") == nil then
+   SetVariable("wiziTimeout",5)
+else
+   SetVariable("wiziTimeout",5)
+end
+wiziTimeout = GetVariable("wiziTimeout")
+
+function OnHelp ()
+  world.Note (world.GetPluginInfo (world.GetPluginID (), 3))
+end
+
+function OnPluginCommandEntered ()
+   if IsTimer("wiziTimer") then
+      local rc = DeleteTimer("wiziTimer")
+   else
+      Note("Wizi timer not found, adding...")
+   end
+   local returncode = AddTimer("wiziTimer", 0, wiziTimeout,0,"", timer_flag.Enabled + timer_flag.OneShot, "executeWiziTimer")
+end
+
+function OnPluginInstall ()
+  Send("wizi 204")
+  
+end
+
+function executeWiziTimer ()
+   Note("Timer expired, going wizi if needed...")
+   Execute("gowizi")
+end
+
+]]>
+</script> 
+
+</muclient>

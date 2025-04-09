@@ -758,7 +758,7 @@
   <trigger
    name="trg_oeditContainerB"
    enabled="n"
-   match="A\) Max Item\s+: (\d+)"
+   match="B\) Max Item\s+: (\d+)"
    regexp="y"
    sequence="100"
    script="oeditContainersB"
