@@ -127,8 +127,21 @@ end</send>
   <send>  tl = GetTimerList ()
 if tl then
   for k, v in ipairs (tl) do 
-    Note (v) 
-  end  -- for
+    	Note (v)
+		local status
+
+		local hour
+		local minute
+		local second
+		local response
+		local flags
+		local scriptname
+
+		status, hour, minute, second, response, flags, scriptname = 
+	  	GetTimer ("v")
+
+		print (hour, minute, second, response, flags, scriptname)
+	  end  -- for
 end -- if we have any timers
 </send>
   </alias>
@@ -194,6 +207,7 @@ function executeWiziTimer ()
    Note("Timer expired, going wizi if needed...")
    Execute("gowizi")
 end
+
 
 ]]>
 </script> 

@@ -33,11 +33,10 @@ awconfirm: Confirms the last entered word for that player. It'll make a popup wi
 
 
 <!--  Triggers  -->
-
 <triggers>
   <trigger
    enabled="y"
-   match="^\#\#\# \(Debug\) \: Debuginfo\: aylor\-7 line\: 117\, (.*?) is checking the word \'(.*?)\' with the WordSmith\!$"
+   match="^\#\#\# \(Debug\) \: .+ Debuginfo\: aylor\-7 line\: \d+\, (.*?) is checking the word \'(.*?)\' with the WordSmith\!$"
    name="Aardwords_Capture"
    regexp="y"
    send_to="12"
