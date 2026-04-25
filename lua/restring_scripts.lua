@@ -389,16 +389,14 @@ function restringHelp(name,line,wildcards)
 end
 
 function tportalHelp(name,line,wildcards)
-   Note("To perform restring, use:")
-   Note("   keywords <all keywords here> (first two keywords will automatically be 'trivia portal', you do not need these.)") 
+   Note("To finish the portal, use:")
+   Note("   kw <all keywords here> (first two keywords will automatically be 'trivia portal', you do not need these.)")
    Note("   short <shortdesc here>")
    Note("   long <roomdesc here>")
    Note("   owner <playername>")
-   Note("You can use 'tportal check' followed by 'tportal create' once you're done. You must check before you create.")
-   Note("Once the portal has been completed, use 'tportal charge' to pcharge the owner.")
+   Note("You can use 'tportal check' (optional) followed by 'tportal create' once you're done. This will charge the player")
    Note("You can use 'tportal balance' to check their TP balance before you create the portal.")
    Note("")
-   Execute("tportal check")
 end
 
 function checkShort(name,line,wildcards)
@@ -618,6 +616,7 @@ function tportalCommand(name,line,wildcards)
          long = nil
          keywords = nil
          zone = s
+         tportalHelp()
       else
       	 Note("That zone is unknown. If it exists, ensure it's in the plugin! (restring_scripts.lua)")
       end
