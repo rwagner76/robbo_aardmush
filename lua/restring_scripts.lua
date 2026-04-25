@@ -570,7 +570,7 @@ function tportalCommand(name,line,wildcards)
       Note("Dest    : "..dest)
    elseif s == "create" then
       local kw = "trivia portal "..addkeywords
-      if keywords == nil or short == nil or long == nil or owner == nil or dest == nil or zone == nil then Note("You must set all the required fields. Use 'tportal check' to verify your work!") return end
+      if addkeywords == nil or short == nil or long == nil or owner == nil or dest == nil or zone == nil then Note("You must set all the required fields. Use 'tportal check' to verify your work!") return end
       Send("oload badtrip-9")
       Send("ostring 'trivia portal' short "..'"'..short..'"')
       Send("ostring 'trivia portal' long "..'"'..long..'"')
