@@ -328,6 +328,10 @@ local dest = nil
 local owner = nil
 local id = nil
 local zone = nil
+local basekeywords = nil
+local addkeywords = nil
+
+
 
 function firstToUpper(str)
     return (str:gsub("^%l", string.upper))
@@ -345,14 +349,12 @@ function split (inputstr, sep)
 end
 
 function captureKeywords(name,line,wildcards)
-   local s = wildcards[1]
-   SetVariable("restring_Keywords",s)SetVariable("restring_Keywords",s)
+   basekeywords = wildcards[1]
    EnableTrigger("trg_restringKeywords",false)
 end
 
 function capture_restringID(name,line,wildcards)
-   local id = wildcards[1]
-   SetVariable("restring_ID",id)
+   id = wildcards[1]
    EnableTrigger("trg_restringID",false)
    DoAfterSpecial(.5,'restringHelp()',sendto.script)
 end
@@ -360,7 +362,7 @@ end
 function capture_firstroom(name,line,wildcards)
    local rid = wildcards[1]
    EnableTrigger("trg_FirstRoom",false)
-   SetVariable("tportal_Dest",rid)
+   dest = rid
    DoAfterSpecial(.5,'tportalHelp()',sendto.script)
 end
 
@@ -378,7 +380,7 @@ end
 
 function restringHelp(name,line,wildcards)
    Note("To perform restring, use:")
-   Note("   keywords <all keywords here>  This will be appended to current keywords: '"..GetVariable("restring_Keywords").."'") 
+   Note("   keywords <all keywords here>  This will be appended to current keywords: '"..basekeywords.."'")
    Note("   short <shortdesc here>")
    Note("   long <roomdesc here>")
    Note("You can use 'restring check' followed by 'restring set' once you're done. You must check before you set.")
@@ -415,15 +417,18 @@ function checkLong(name,line,wildcards)
    EnableTrigger("trg_checkLong",false)
 end
 
-function setShort(name,line,wildcards)
-   local s = wildcards[1]
+function isCharBusy()
    -- Ensure we're not editing or writing notes.
-   local state
-   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
-   if state == "5" or state == "6" then Send(line) return end
+   local res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
+   if state == "5" or state == "6" then return true else return false end
+end
+
+function setShort(name,line,wildcards)
+   if isCharBusy() == true then Send(line) return end
+   local s = wildcards[1]
 
    if s == "clear" then
-      SetVariable("restring_Short","")
+      short = nil
       Note("Short description cleared.")
       return
    end
@@ -441,13 +446,11 @@ function setShort(name,line,wildcards)
 end
 
 function setLong(name,line,wildcards)
+   if isCharBusy() == true then Send(line) return end
    local s = wildcards[1]
-   -- Ensure we're not editing or writing notes.
-   local state
-   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
-   if state == "5" or state == "6" then Send(line) return end
+
    if s == "clear" then
-      SetVariable("restring_Long","")
+      long = nil
       Note("Long description cleared.")
       return
    end
@@ -464,15 +467,12 @@ function setLong(name,line,wildcards)
 end
 
 function setKeywords(name,line,wildcards)
+   if isCharBusy() == true then Send(line) return end
    -- To Do: add check that there are not more than 3 added keywords.
    local s = wildcards[1]
-   local res
-   -- Ensure we're not editing or writing notes.
-   local state
-   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
-   if state == "5" or state == "6" then Send(line) return end
+
    if s == "clear" then
-      SetVariable("restring_AddKeywords","")
+      addkeywords = nil
       Note("Extra keywords cleared.")
       return
    end
@@ -480,53 +480,44 @@ function setKeywords(name,line,wildcards)
    if string.find(s,"'") then Note("Error: keywords cannot contain quotes.") return end
    if string.find(s,'"') then Note("Error: keywords cannot contain quotes.") return end
    if string.find(s,'@') then Note("Error: keywords cannot contain color codes.") return end
-   keywords = s
-   Note("Additional Keywords for object will be: "..s)
-   Note("Full keywords will be: "..GetVariable("restring_Keywords").." "..s)
+   addkeywords = s
+   Note("Additional Keywords for object will be: "..addkeywords)
+   Note("Full keywords will be: "..basekeywords.." "..addkeywords)
 end
 
 function setOwner(name,line,wildcards)
+   if isCharBusy() == true then Send(line) return end
    local s = firstToUpper(wildcards[1])
-   -- Ensure we're not editing or writing notes.
-   local state
-   res, state = CallPlugin("3e7dedbe37e44942dd46d264","gmcpval","char.status.state")
-   if state == "5" or state == "6" then Send(line) return end
+
    owner = s
-   Note("Owner for the trivia portal will be: "..s)
+   Note("Owner for the trivia portal will be: "..owner)
 end
 
 function restringCommand(name,line,wildcards)
+   if isCharBusy() == true then Send(line) return end
    local s = wildcards[1]
    if s == "help" then pluginHelp() return end
    if s == "check" then
-      local addkw = GetVariable("restring_AddKeywords")
-      local short = GetVariable("restring_Short")
-      local long = GetVariable("restring_Long")
-      if addkw == '' then addkw = '(unchanged)' end
+      if addkeywords == '' then addkw = '(unchanged)' end
       if short == '' then short = '(unchanged)' end
       if long == '' then long = '(unchanged)' end
-      Note("Restring check for item "..GetVariable("restring_ID"))
-      Note("Keywords: "..GetVariable("restring_Keywords").." "..addkw)
+      Note("Restring check for item "..id)
+      Note("Keywords: "..basekeywords.." "..addkeywords)
       Note("Short   : "..short)
       Note("Long    : "..long)
-      SetVariable("restring_Checked","yes")
+      restring_checked = true
    elseif s == "set" then
-      if GetVariable("restring_Checked") == "yes" then
-         local id = GetVariable("restring_ID")
-         local short = GetVariable("restring_Short")
-         local long = GetVariable("restring_Long")
-         local kw = GetVariable("restring_Keywords").." "..GetVariable("restring_AddKeywords")
-         if kw ~= '' then Send("ostring "..id.." keywords "..'"'..kw..'"') else Note("Warning: keywords are unchanged, not attempting change keywords.") end
+      if restring_checked == true then
+         if addkeywords ~= '' then Send("ostring "..id.." keywords "..'"'..basekeywords .. " " .. addkeywords..'"') else Note("Warning: keywords are unchanged, not attempting change keywords.") end
          if short ~= '' then Send("ostring "..id.." short "..'"'..short..'"') else Note("Warning: Short desc is unchanged, not attempting to change short desc.") end
          if long ~= '' then Send("ostring "..id.." long "..'"'..long..'"') else Note("Warning: long desc is unchanged, not attempting to change long desc.") end
-         SetVariable("restring_Set","yes")
+         restring_set = true
       else
          Note("You should run 'restring check' first!")
       end
    elseif string.sub(s,1,6) == "charge" then
-      if GetVariable("restring_Set") == "yes" then
+      if restring_checked == true then
          local player = string.sub(s,8)
-         local id = GetVariable("restring_ID")
          if string.len(player) < 2 then
             Note("You must specify a player name!")
          else
@@ -545,16 +536,17 @@ function restringCommand(name,line,wildcards)
    else
       EnableTrigger("trg_restringID",true)
       EnableTrigger("trg_restringKeywords",true)
-      SetVariable("restring_AddKeywords","")
-      SetVariable("restring_Short","")
-      SetVariable("restring_Long","")
+      addkeywords = nil
+      short = nil
+      long = nil
       Send("ostat '"..s.."' here")
-      SetVariable("restring_Checked","no")
-      SetVariable("restring_Set","no")
+      restring_checked = false
+      restring_set = false
    end
 end
 
 function tportalCommand(name,line,wildcards)
+   if isCharBusy() == true then Send(line) return end
    local s = wildcards[1]
    local arguments = split(s," ")
    if #arguments > 1 then Note("Error: tportal only expects 1 argument. Type 'tportal help' for help.") return end
@@ -565,7 +557,7 @@ function tportalCommand(name,line,wildcards)
    if s == "help" then pluginHelp() return end
    if s == "check" then
       local kw
-      if keywords == nil then kw = '<none additional set>' else kw = "trivia portal "..keywords end
+      if addkeywords == nil then kw = '<none additional set>' else kw = "trivia portal "..addkeywords end
       if short == nil then short = 'Needs to be set!' end
       if long == '' then long = 'Needs to be set!' end
       if owner == '' then owner = 'Needs to be set!' end
@@ -577,7 +569,7 @@ function tportalCommand(name,line,wildcards)
       Note("Owner   : "..owner)
       Note("Dest    : "..dest)
    elseif s == "create" then
-      local kw = "trivia portal "..keywords
+      local kw = "trivia portal "..addkeywords
       if keywords == nil or short == nil or long == nil or owner == nil or dest == nil or zone == nil then Note("You must set all the required fields. Use 'tportal check' to verify your work!") return end
       Send("oload badtrip-9")
       Send("ostring 'trivia portal' short "..'"'..short..'"')
@@ -587,16 +579,12 @@ function tportalCommand(name,line,wildcards)
       Send("oset 'trivia portal' destination "..dest)
       Send("keep 'trivia portal'")
       Send("pcharge "..owner.." 0 15 0 New Trivia Portal to area "..zone)
-   elseif s == "charge" then
-      if GetVariable("restring_Set") == "yes" then
-         if owner == '' then
-            Note("You must define an owner for the trivia portal first! (owner <playername>)")
-         else
-            Send("pcharge "..owner.." 0 15 0 New Trivia Portal to area "..zone)
-         end
-      else
-         Note("You should probably run 'tportal create' first!")
-      end
+      short = nil
+      long = nil
+      dest = nil
+      owner = nil
+      addkeywords = nil
+      basekeywords = nil
    elseif s == "balance" then
       if owner == '' then
          Note("You must define an owner for the trivia portal first! (owner <playername>)")
@@ -616,7 +604,7 @@ function tportalCommand(name,line,wildcards)
          long = nil
          keywords = nil
          zone = s
-         SetVariable("restring_Keywords","portal trivia")
+         basekeywords = "portal trivia"
          tportalHelp()
       else
       	 Note("That zone is unknown. If it exists, ensure it's in the plugin! (restring_scripts.lua)")
