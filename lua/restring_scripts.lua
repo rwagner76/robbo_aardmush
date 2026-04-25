@@ -346,7 +346,7 @@ end
 
 function captureKeywords(name,line,wildcards)
    local s = wildcards[1]
-   SetVariable("restring_Keywords",s)
+   SetVariable("restring_Keywords",s)SetVariable("restring_Keywords",s)
    EnableTrigger("trg_restringKeywords",false)
 end
 
@@ -616,6 +616,7 @@ function tportalCommand(name,line,wildcards)
          long = nil
          keywords = nil
          zone = s
+         SetVariable("restring_Keywords","portal trivia")
          tportalHelp()
       else
       	 Note("That zone is unknown. If it exists, ensure it's in the plugin! (restring_scripts.lua)")
