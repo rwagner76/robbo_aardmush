@@ -5,7 +5,15 @@ Robbo's Aardwolf Immortal Plugins for MUSHclient
 This is a plugin only for imms, as it won't do anything for regular players.  It's used to restring items as well as create new trivia portals.
 
 ### Installation
-Download imm_restring.xml as well as lua/restring_scripts.lua and place into your MUSHClient Worlds\Plugins folder, (ensuring that restring_scripts is placed in a lua subdirectory) then install the plugin.  Alternatively, just git checkout this repository to your worlds\plugins folder.
+Easiest is to ensure you have 'git' installed. You can download git for Windows (just google it quick) or it's available in all Linux distributions (use your package manager)
+- Navigate to your worlds/plugins folder.
+- ```git clone git@github.com:rwagner76/robbo_aardmush.git```
+- Load plugins from the robbo_aardmush folder
+
+### Updating
+- Navigate to your worlds/plugins folder.
+-   ```git pull```
+- Reload plugins as desired.
 
 ### Usage
 ```
